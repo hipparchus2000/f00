@@ -1,0 +1,721 @@
+-- ACTIVE-CAD-2-VHDL, 2.5.5.51, Mon Oct 04 00:09:51 1999
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+-- Simulation netlist only
+-- synopsys translate_off
+library UNISIM;
+use UNISIM.vcomponents.all;
+-- synopsys translate_on
+
+entity ADSU16 is port (
+	A : in STD_LOGIC_VECTOR (15 downto 0);
+	B : in STD_LOGIC_VECTOR (15 downto 0);
+	S : out STD_LOGIC_VECTOR (15 downto 0);
+	ADD : in STD_LOGIC;
+	CI : in STD_LOGIC;
+	CO : out STD_LOGIC;
+	OFL : out STD_LOGIC
+); end ADSU16;
+
+architecture SCHEMATIC of ADSU16 is
+
+--COMPONENTS
+
+component CY4 port (
+	C7 : in STD_LOGIC;
+	C6 : in STD_LOGIC;
+	C5 : in STD_LOGIC;
+	C4 : in STD_LOGIC;
+	C3 : in STD_LOGIC;
+	C2 : in STD_LOGIC;
+	C1 : in STD_LOGIC;
+	C0 : in STD_LOGIC;
+	A1 : in STD_LOGIC;
+	A0 : in STD_LOGIC;
+	B1 : in STD_LOGIC;
+	B0 : in STD_LOGIC;
+	ADD : in STD_LOGIC;
+	CIN : in STD_LOGIC;
+	COUT : out STD_LOGIC;
+	COUT0 : out STD_LOGIC
+); end component;
+
+component CY4_39 port (
+	C7 : out STD_LOGIC;
+	C6 : out STD_LOGIC;
+	C5 : out STD_LOGIC;
+	C4 : out STD_LOGIC;
+	C3 : out STD_LOGIC;
+	C2 : out STD_LOGIC;
+	C1 : out STD_LOGIC;
+	C0 : out STD_LOGIC
+); end component;
+
+component AND2 port (
+	I0 : in STD_LOGIC;
+	I1 : in STD_LOGIC;
+	O : out STD_LOGIC
+); end component;
+
+component XNOR2 port (
+	I0 : in STD_LOGIC;
+	I1 : in STD_LOGIC;
+	O : out STD_LOGIC
+); end component;
+
+component OR3 port (
+	I0 : in STD_LOGIC;
+	I1 : in STD_LOGIC;
+	I2 : in STD_LOGIC;
+	O : out STD_LOGIC
+); end component;
+
+component XOR2 port (
+	I0 : in STD_LOGIC;
+	I1 : in STD_LOGIC;
+	O : out STD_LOGIC
+); end component;
+
+component CY4_12 port (
+	C7 : out STD_LOGIC;
+	C6 : out STD_LOGIC;
+	C5 : out STD_LOGIC;
+	C4 : out STD_LOGIC;
+	C3 : out STD_LOGIC;
+	C2 : out STD_LOGIC;
+	C1 : out STD_LOGIC;
+	C0 : out STD_LOGIC
+); end component;
+
+component CY4_42 port (
+	C7 : out STD_LOGIC;
+	C6 : out STD_LOGIC;
+	C5 : out STD_LOGIC;
+	C4 : out STD_LOGIC;
+	C3 : out STD_LOGIC;
+	C2 : out STD_LOGIC;
+	C1 : out STD_LOGIC;
+	C0 : out STD_LOGIC
+); end component;
+
+component CY4_13 port (
+	C7 : out STD_LOGIC;
+	C6 : out STD_LOGIC;
+	C5 : out STD_LOGIC;
+	C4 : out STD_LOGIC;
+	C3 : out STD_LOGIC;
+	C2 : out STD_LOGIC;
+	C1 : out STD_LOGIC;
+	C0 : out STD_LOGIC
+); end component;
+
+component XNOR4 port (
+	I0 : in STD_LOGIC;
+	I1 : in STD_LOGIC;
+	I2 : in STD_LOGIC;
+	I3 : in STD_LOGIC;
+	O : out STD_LOGIC
+); end component;
+
+--SIGNALS
+
+signal X36_NET00168_X95 : STD_LOGIC;
+signal X36_NET00169_X95 : STD_LOGIC;
+signal X36_NET00170_X95 : STD_LOGIC;
+signal X36_NET00171_X95 : STD_LOGIC;
+signal X36_NET00172_X95 : STD_LOGIC;
+signal X36_NET00173_X95 : STD_LOGIC;
+signal X36_NET00174_X95 : STD_LOGIC;
+signal X36_NET00175_X95 : STD_LOGIC;
+signal X36_NET00176_X95 : STD_LOGIC;
+signal X36_NET00177_X95 : STD_LOGIC;
+signal X36_NET00178_X95 : STD_LOGIC;
+signal X36_NET00179_X95 : STD_LOGIC;
+signal X36_NET00180_X95 : STD_LOGIC;
+signal X36_NET00181_X95 : STD_LOGIC;
+signal X36_NET00182_X95 : STD_LOGIC;
+signal X36_NET00183_X95 : STD_LOGIC;
+signal X36_NET00184_X95 : STD_LOGIC;
+signal X36_NET00185_X95 : STD_LOGIC;
+signal X36_NET00186_X95 : STD_LOGIC;
+signal X36_NET00187_X95 : STD_LOGIC;
+signal X36_NET00188_X95 : STD_LOGIC;
+signal X36_NET00189_X95 : STD_LOGIC;
+signal X36_NET00190_X95 : STD_LOGIC;
+signal X36_NET00191_X95 : STD_LOGIC;
+signal X36_NET00192_X95 : STD_LOGIC;
+signal X36_NET00193_X95 : STD_LOGIC;
+signal X36_NET00194_X95 : STD_LOGIC;
+signal X36_NET00195_X95 : STD_LOGIC;
+signal X36_NET00196_X95 : STD_LOGIC;
+signal X36_NET00197_X95 : STD_LOGIC;
+signal X36_NET00198_X95 : STD_LOGIC;
+signal X36_NET00199_X95 : STD_LOGIC;
+signal X36_NET00200_X95 : STD_LOGIC;
+signal X36_NET00201_X95 : STD_LOGIC;
+signal X36_NET00202_X95 : STD_LOGIC;
+signal X36_NET00203_X95 : STD_LOGIC;
+signal X36_NET00204_X95 : STD_LOGIC;
+signal X36_NET00205_X95 : STD_LOGIC;
+signal X36_NET00206_X95 : STD_LOGIC;
+signal X36_NET00207_X95 : STD_LOGIC;
+signal X36_NET00208_X95 : STD_LOGIC;
+signal X36_NET00209_X95 : STD_LOGIC;
+signal X36_NET00210_X95 : STD_LOGIC;
+signal X36_NET00211_X95 : STD_LOGIC;
+signal X36_NET00212_X95 : STD_LOGIC;
+signal X36_NET00213_X95 : STD_LOGIC;
+signal X36_NET00214_X95 : STD_LOGIC;
+signal X36_NET00215_X95 : STD_LOGIC;
+signal X36_NET00216_X95 : STD_LOGIC;
+signal X36_NET00217_X95 : STD_LOGIC;
+signal X36_NET00218_X95 : STD_LOGIC;
+signal X36_NET00219_X95 : STD_LOGIC;
+signal X36_NET00220_X95 : STD_LOGIC;
+signal X36_NET00221_X95 : STD_LOGIC;
+signal X36_NET00222_X95 : STD_LOGIC;
+signal X36_NET00223_X95 : STD_LOGIC;
+signal X36_NET00224_X95 : STD_LOGIC;
+signal X36_NET00225_X95 : STD_LOGIC;
+signal X36_NET00226_X95 : STD_LOGIC;
+signal X36_NET00227_X95 : STD_LOGIC;
+signal X36_NET00228_X95 : STD_LOGIC;
+signal X36_NET00229_X95 : STD_LOGIC;
+signal X36_NET00230_X95 : STD_LOGIC;
+signal X36_NET00231_X95 : STD_LOGIC;
+signal X36_NET00232_X95 : STD_LOGIC;
+signal X36_NET00233_X95 : STD_LOGIC;
+signal X36_NET00234_X95 : STD_LOGIC;
+signal X36_NET00235_X95 : STD_LOGIC;
+signal X36_NET00236_X95 : STD_LOGIC;
+signal X36_NET00237_X95 : STD_LOGIC;
+signal X36_NET00238_X95 : STD_LOGIC;
+signal X36_NET00239_X95 : STD_LOGIC;
+signal X36_NET00240_X95 : STD_LOGIC;
+signal X36_NET00241_X95 : STD_LOGIC;
+signal X36_NET00242_X95 : STD_LOGIC;
+signal X36_NET00243_X95 : STD_LOGIC;
+signal X36_NET00244_X95 : STD_LOGIC;
+signal X36_NET00245_X95 : STD_LOGIC;
+signal X36_NET00246_X95 : STD_LOGIC;
+signal X36_NET00247_X95 : STD_LOGIC;
+signal X36_NET00248_X95 : STD_LOGIC;
+signal B15_M1 : STD_LOGIC;
+signal B15_M2 : STD_LOGIC;
+signal C0 : STD_LOGIC;
+signal C1 : STD_LOGIC;
+signal C10 : STD_LOGIC;
+signal C11 : STD_LOGIC;
+signal C12 : STD_LOGIC;
+signal C13 : STD_LOGIC;
+signal C14 : STD_LOGIC;
+signal C15 : STD_LOGIC;
+signal C2 : STD_LOGIC;
+signal C3 : STD_LOGIC;
+signal C4 : STD_LOGIC;
+signal C5 : STD_LOGIC;
+signal C6 : STD_LOGIC;
+signal C7 : STD_LOGIC;
+signal C8 : STD_LOGIC;
+signal C9 : STD_LOGIC;
+signal C_IN : STD_LOGIC;
+signal COR1 : STD_LOGIC;
+signal COR2 : STD_LOGIC;
+signal COR3 : STD_LOGIC;
+signal OOR1 : STD_LOGIC;
+signal OOR2 : STD_LOGIC;
+signal OOR3 : STD_LOGIC;
+signal CO_ASSIGN_O : STD_LOGIC;
+signal OFL_ASSIGN_O : STD_LOGIC;
+signal S15_ASSIGN_O : STD_LOGIC;
+signal S14_ASSIGN_O : STD_LOGIC;
+signal S13_ASSIGN_O : STD_LOGIC;
+signal S12_ASSIGN_O : STD_LOGIC;
+signal S11_ASSIGN_O : STD_LOGIC;
+signal S10_ASSIGN_O : STD_LOGIC;
+signal S9_ASSIGN_O : STD_LOGIC;
+signal S8_ASSIGN_O : STD_LOGIC;
+signal S7_ASSIGN_O : STD_LOGIC;
+signal S6_ASSIGN_O : STD_LOGIC;
+signal S5_ASSIGN_O : STD_LOGIC;
+signal S4_ASSIGN_O : STD_LOGIC;
+signal S3_ASSIGN_O : STD_LOGIC;
+signal S2_ASSIGN_O : STD_LOGIC;
+signal S1_ASSIGN_O : STD_LOGIC;
+signal S0_ASSIGN_O : STD_LOGIC;
+
+
+begin
+
+--SIGNAL ASSIGNMENTS
+
+CO <= CO_ASSIGN_O;
+OFL <= OFL_ASSIGN_O;
+S(15) <= S15_ASSIGN_O;
+S(14) <= S14_ASSIGN_O;
+S(13) <= S13_ASSIGN_O;
+S(12) <= S12_ASSIGN_O;
+S(11) <= S11_ASSIGN_O;
+S(10) <= S10_ASSIGN_O;
+S(9) <= S9_ASSIGN_O;
+S(8) <= S8_ASSIGN_O;
+S(7) <= S7_ASSIGN_O;
+S(6) <= S6_ASSIGN_O;
+S(5) <= S5_ASSIGN_O;
+S(4) <= S4_ASSIGN_O;
+S(3) <= S3_ASSIGN_O;
+S(2) <= S2_ASSIGN_O;
+S(1) <= S1_ASSIGN_O;
+S(0) <= S0_ASSIGN_O;
+
+--COMPONENT INSTANCES
+
+X36_1I100 : CY4 port map(
+	C7 => X36_NET00191_X95,
+	C6 => X36_NET00190_X95,
+	C5 => X36_NET00189_X95,
+	C4 => X36_NET00188_X95,
+	C3 => X36_NET00187_X95,
+	C2 => X36_NET00186_X95,
+	C1 => X36_NET00185_X95,
+	C0 => X36_NET00184_X95,
+	A1 => A(5),
+	A0 => A(4),
+	B1 => B(5),
+	B0 => B(4),
+	ADD => ADD,
+	CIN => C3,
+	COUT => C5,
+	COUT0 => C4
+);
+X36_1I101 : CY4 port map(
+	C7 => X36_NET00199_X95,
+	C6 => X36_NET00198_X95,
+	C5 => X36_NET00197_X95,
+	C4 => X36_NET00196_X95,
+	C3 => X36_NET00195_X95,
+	C2 => X36_NET00194_X95,
+	C1 => X36_NET00193_X95,
+	C0 => X36_NET00192_X95,
+	A1 => A(7),
+	A0 => A(6),
+	B1 => B(7),
+	B0 => B(6),
+	ADD => ADD,
+	CIN => C5,
+	COUT => C7,
+	COUT0 => C6
+);
+X36_1I146 : CY4_39 port map(
+	C7 => X36_NET00200_X95,
+	C6 => X36_NET00201_X95,
+	C5 => X36_NET00202_X95,
+	C4 => X36_NET00203_X95,
+	C3 => X36_NET00204_X95,
+	C2 => X36_NET00205_X95,
+	C1 => X36_NET00206_X95,
+	C0 => X36_NET00207_X95
+);
+X36_1I30 : CY4 port map(
+	C7 => X36_NET00200_X95,
+	C6 => X36_NET00201_X95,
+	C5 => X36_NET00202_X95,
+	C4 => X36_NET00203_X95,
+	C3 => X36_NET00204_X95,
+	C2 => X36_NET00205_X95,
+	C1 => X36_NET00206_X95,
+	C0 => X36_NET00207_X95,
+	A1 => 'Z',
+	A0 => CI,
+	B1 => 'Z',
+	B0 => 'Z',
+	ADD => 'Z',
+	CIN => 'Z',
+	COUT => C_IN
+);
+X36_1I39 : CY4 port map(
+	C7 => X36_NET00241_X95,
+	C6 => X36_NET00242_X95,
+	C5 => X36_NET00243_X95,
+	C4 => X36_NET00244_X95,
+	C3 => X36_NET00245_X95,
+	C2 => X36_NET00246_X95,
+	C1 => X36_NET00247_X95,
+	C0 => X36_NET00248_X95,
+	A1 => 'Z',
+	A0 => 'Z',
+	B1 => 'Z',
+	B0 => 'Z',
+	ADD => 'Z',
+	CIN => C15
+);
+X36_1I560 : AND2 port map(
+	I0 => A(15),
+	I1 => B15_M1,
+	O => OOR1
+);
+X36_1I563 : XNOR2 port map(
+	I0 => ADD,
+	I1 => B(15),
+	O => B15_M1
+);
+X36_1I564 : AND2 port map(
+	I0 => C15,
+	I1 => B15_M1,
+	O => OOR2
+);
+X36_1I566 : OR3 port map(
+	I0 => OOR3,
+	I1 => OOR2,
+	I2 => OOR1,
+	O => X36_NET00223_X95
+);
+X36_1I568 : AND2 port map(
+	I0 => A(15),
+	I1 => C15,
+	O => OOR3
+);
+X36_1I585 : AND2 port map(
+	I0 => A(15),
+	I1 => C15,
+	O => COR3
+);
+X36_1I593 : AND2 port map(
+	I0 => C15,
+	I1 => B15_M2,
+	O => COR2
+);
+X36_1I594 : OR3 port map(
+	I0 => COR3,
+	I1 => COR2,
+	I2 => COR1,
+	O => CO_ASSIGN_O
+);
+X36_1I595 : XNOR2 port map(
+	I0 => ADD,
+	I1 => B(15),
+	O => B15_M2
+);
+X36_1I597 : AND2 port map(
+	I0 => A(15),
+	I1 => B15_M2,
+	O => COR1
+);
+X36_1I598 : XOR2 port map(
+	I0 => C15,
+	I1 => X36_NET00223_X95,
+	O => OFL_ASSIGN_O
+);
+X36_1I602 : CY4_12 port map(
+	C7 => X36_NET00208_X95,
+	C6 => X36_NET00209_X95,
+	C5 => X36_NET00210_X95,
+	C4 => X36_NET00211_X95,
+	C3 => X36_NET00212_X95,
+	C2 => X36_NET00213_X95,
+	C1 => X36_NET00214_X95,
+	C0 => X36_NET00215_X95
+);
+X36_1I81 : CY4 port map(
+	C7 => X36_NET00208_X95,
+	C6 => X36_NET00209_X95,
+	C5 => X36_NET00210_X95,
+	C4 => X36_NET00211_X95,
+	C3 => X36_NET00212_X95,
+	C2 => X36_NET00213_X95,
+	C1 => X36_NET00214_X95,
+	C0 => X36_NET00215_X95,
+	A1 => 'Z',
+	A0 => A(14),
+	B1 => 'Z',
+	B0 => B(14),
+	ADD => ADD,
+	CIN => C13,
+	COUT => C15,
+	COUT0 => C14
+);
+X36_1I82 : CY4 port map(
+	C7 => X36_NET00216_X95,
+	C6 => X36_NET00217_X95,
+	C5 => X36_NET00218_X95,
+	C4 => X36_NET00219_X95,
+	C3 => X36_NET00220_X95,
+	C2 => X36_NET00221_X95,
+	C1 => X36_NET00222_X95,
+	C0 => X36_NET00224_X95,
+	A1 => A(13),
+	A0 => A(12),
+	B1 => B(13),
+	B0 => B(12),
+	ADD => ADD,
+	CIN => C11,
+	COUT => C13,
+	COUT0 => C12
+);
+X36_1I83 : CY4_42 port map(
+	C7 => X36_NET00241_X95,
+	C6 => X36_NET00242_X95,
+	C5 => X36_NET00243_X95,
+	C4 => X36_NET00244_X95,
+	C3 => X36_NET00245_X95,
+	C2 => X36_NET00246_X95,
+	C1 => X36_NET00247_X95,
+	C0 => X36_NET00248_X95
+);
+X36_1I85 : CY4_13 port map(
+	C7 => X36_NET00216_X95,
+	C6 => X36_NET00217_X95,
+	C5 => X36_NET00218_X95,
+	C4 => X36_NET00219_X95,
+	C3 => X36_NET00220_X95,
+	C2 => X36_NET00221_X95,
+	C1 => X36_NET00222_X95,
+	C0 => X36_NET00224_X95
+);
+X36_1I86 : CY4_13 port map(
+	C7 => X36_NET00225_X95,
+	C6 => X36_NET00226_X95,
+	C5 => X36_NET00227_X95,
+	C4 => X36_NET00228_X95,
+	C3 => X36_NET00229_X95,
+	C2 => X36_NET00230_X95,
+	C1 => X36_NET00231_X95,
+	C0 => X36_NET00232_X95
+);
+X36_1I87 : CY4_13 port map(
+	C7 => X36_NET00233_X95,
+	C6 => X36_NET00234_X95,
+	C5 => X36_NET00235_X95,
+	C4 => X36_NET00236_X95,
+	C3 => X36_NET00237_X95,
+	C2 => X36_NET00238_X95,
+	C1 => X36_NET00239_X95,
+	C0 => X36_NET00240_X95
+);
+X36_1I88 : CY4 port map(
+	C7 => X36_NET00225_X95,
+	C6 => X36_NET00226_X95,
+	C5 => X36_NET00227_X95,
+	C4 => X36_NET00228_X95,
+	C3 => X36_NET00229_X95,
+	C2 => X36_NET00230_X95,
+	C1 => X36_NET00231_X95,
+	C0 => X36_NET00232_X95,
+	A1 => A(11),
+	A0 => A(10),
+	B1 => B(11),
+	B0 => B(10),
+	ADD => ADD,
+	CIN => C9,
+	COUT => C11,
+	COUT0 => C10
+);
+X36_1I89 : CY4 port map(
+	C7 => X36_NET00233_X95,
+	C6 => X36_NET00234_X95,
+	C5 => X36_NET00235_X95,
+	C4 => X36_NET00236_X95,
+	C3 => X36_NET00237_X95,
+	C2 => X36_NET00238_X95,
+	C1 => X36_NET00239_X95,
+	C0 => X36_NET00240_X95,
+	A1 => A(9),
+	A0 => A(8),
+	B1 => B(9),
+	B0 => B(8),
+	ADD => ADD,
+	CIN => C7,
+	COUT => C9,
+	COUT0 => C8
+);
+X36_1I90 : CY4 port map(
+	C7 => X36_NET00175_X95,
+	C6 => X36_NET00174_X95,
+	C5 => X36_NET00173_X95,
+	C4 => X36_NET00172_X95,
+	C3 => X36_NET00171_X95,
+	C2 => X36_NET00170_X95,
+	C1 => X36_NET00169_X95,
+	C0 => X36_NET00168_X95,
+	A1 => A(1),
+	A0 => A(0),
+	B1 => B(1),
+	B0 => B(0),
+	ADD => ADD,
+	CIN => C_IN,
+	COUT => C1,
+	COUT0 => C0
+);
+X36_1I91 : CY4 port map(
+	C7 => X36_NET00183_X95,
+	C6 => X36_NET00182_X95,
+	C5 => X36_NET00181_X95,
+	C4 => X36_NET00180_X95,
+	C3 => X36_NET00179_X95,
+	C2 => X36_NET00178_X95,
+	C1 => X36_NET00177_X95,
+	C0 => X36_NET00176_X95,
+	A1 => A(3),
+	A0 => A(2),
+	B1 => B(3),
+	B0 => B(2),
+	ADD => ADD,
+	CIN => C1,
+	COUT => C3,
+	COUT0 => C2
+);
+X36_1I92 : CY4_13 port map(
+	C7 => X36_NET00175_X95,
+	C6 => X36_NET00174_X95,
+	C5 => X36_NET00173_X95,
+	C4 => X36_NET00172_X95,
+	C3 => X36_NET00171_X95,
+	C2 => X36_NET00170_X95,
+	C1 => X36_NET00169_X95,
+	C0 => X36_NET00168_X95
+);
+X36_1I94 : CY4_13 port map(
+	C7 => X36_NET00183_X95,
+	C6 => X36_NET00182_X95,
+	C5 => X36_NET00181_X95,
+	C4 => X36_NET00180_X95,
+	C3 => X36_NET00179_X95,
+	C2 => X36_NET00178_X95,
+	C1 => X36_NET00177_X95,
+	C0 => X36_NET00176_X95
+);
+X36_1I95 : CY4_13 port map(
+	C7 => X36_NET00191_X95,
+	C6 => X36_NET00190_X95,
+	C5 => X36_NET00189_X95,
+	C4 => X36_NET00188_X95,
+	C3 => X36_NET00187_X95,
+	C2 => X36_NET00186_X95,
+	C1 => X36_NET00185_X95,
+	C0 => X36_NET00184_X95
+);
+X36_1I96 : CY4_13 port map(
+	C7 => X36_NET00199_X95,
+	C6 => X36_NET00198_X95,
+	C5 => X36_NET00197_X95,
+	C4 => X36_NET00196_X95,
+	C3 => X36_NET00195_X95,
+	C2 => X36_NET00194_X95,
+	C1 => X36_NET00193_X95,
+	C0 => X36_NET00192_X95
+);
+S0_COMP : XNOR4 port map(
+	I0 => ADD,
+	I1 => B(0),
+	I2 => A(0),
+	I3 => C_IN,
+	O => S0_ASSIGN_O
+);
+S1_COMP : XNOR4 port map(
+	I0 => C0,
+	I1 => ADD,
+	I2 => B(1),
+	I3 => A(1),
+	O => S1_ASSIGN_O
+);
+S10_COMP : XNOR4 port map(
+	I0 => ADD,
+	I1 => B(10),
+	I2 => A(10),
+	I3 => C9,
+	O => S10_ASSIGN_O
+);
+S11_COMP : XNOR4 port map(
+	I0 => C10,
+	I1 => ADD,
+	I2 => B(11),
+	I3 => A(11),
+	O => S11_ASSIGN_O
+);
+S12_COMP : XNOR4 port map(
+	I0 => ADD,
+	I1 => B(12),
+	I2 => A(12),
+	I3 => C11,
+	O => S12_ASSIGN_O
+);
+S13_COMP : XNOR4 port map(
+	I0 => C12,
+	I1 => ADD,
+	I2 => B(13),
+	I3 => A(13),
+	O => S13_ASSIGN_O
+);
+S14_COMP : XNOR4 port map(
+	I0 => ADD,
+	I1 => B(14),
+	I2 => A(14),
+	I3 => C13,
+	O => S14_ASSIGN_O
+);
+S15_COMP : XNOR4 port map(
+	I0 => C14,
+	I1 => ADD,
+	I2 => B(15),
+	I3 => A(15),
+	O => S15_ASSIGN_O
+);
+S2_COMP : XNOR4 port map(
+	I0 => ADD,
+	I1 => B(2),
+	I2 => A(2),
+	I3 => C1,
+	O => S2_ASSIGN_O
+);
+S3_COMP : XNOR4 port map(
+	I0 => C2,
+	I1 => ADD,
+	I2 => B(3),
+	I3 => A(3),
+	O => S3_ASSIGN_O
+);
+S4_COMP : XNOR4 port map(
+	I0 => ADD,
+	I1 => B(4),
+	I2 => A(4),
+	I3 => C3,
+	O => S4_ASSIGN_O
+);
+S5_COMP : XNOR4 port map(
+	I0 => C4,
+	I1 => ADD,
+	I2 => B(5),
+	I3 => A(5),
+	O => S5_ASSIGN_O
+);
+S6_COMP : XNOR4 port map(
+	I0 => ADD,
+	I1 => B(6),
+	I2 => A(6),
+	I3 => C5,
+	O => S6_ASSIGN_O
+);
+S7_COMP : XNOR4 port map(
+	I0 => C6,
+	I1 => ADD,
+	I2 => B(7),
+	I3 => A(7),
+	O => S7_ASSIGN_O
+);
+S8_COMP : XNOR4 port map(
+	I0 => C7,
+	I1 => ADD,
+	I2 => B(8),
+	I3 => A(8),
+	O => S8_ASSIGN_O
+);
+S9_COMP : XNOR4 port map(
+	I0 => C8,
+	I1 => ADD,
+	I2 => B(9),
+	I3 => A(9),
+	O => S9_ASSIGN_O
+);
+
+end SCHEMATIC;

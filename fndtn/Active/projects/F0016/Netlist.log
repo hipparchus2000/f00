@@ -1,0 +1,104 @@
+Loading - ISM
+   Forcing zero-delay default timing values
+Info 9239: The following node is loadless:
+   NODE: ALU_ADD.
+Info 9239: The following node is loadless:
+   NODE: ALU_CARRY_IN.
+Info 9239: The following node is loadless:
+   NODE: BUS_NOT_SIGNEXTEND_TO_TEMP.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_ADDER_TO_RESULT.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_AND_TO_RESULT.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_BUS_TO_ALU.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_CARRY_FROM_ALU.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_CARRY_OUT_TO_SHIFT_IN.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_DATABUS_TO_LOGICAL.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_GROUND_TO_BUS.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_INSTRUCTION_STATE.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_INTERNAL_TO_EXTERNAL.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_INVERT_TO_RESULT.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_LOAD_SHIFT.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_MMU_PHYS_TO_BUS.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_OR_TO_RESULT.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_OVERFLOW_FROM_ALU.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_PC_TO_BUS.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_RESULT_TO_BUS.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_SHIFT_OUT_TO_CARRY_IN.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_SHIFT_OUT_TO_SHIFT_IN.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_SHIFTER_TO_RESULT.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_SUPERREG_READ.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_SUPERREG_WRITE.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_USR_FROM_BUS.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_USR_TO_BUS.
+Info 9239: The following node is loadless:
+   NODE: ENABLE_ZERO_TO_USR.
+Info 9239: The following node is loadless:
+   NODE: INTERRUPT.
+Info 9239: The following node is loadless:
+   NODE: LOAD_CARRY_BIT.
+Info 9239: The following node is loadless:
+   NODE: LOAD_OPERAND.
+Info 9239: The following node is loadless:
+   NODE: LOAD_OVERFLOW_BIT.
+Info 9239: The following node is loadless:
+   NODE: LOAD_PC.
+Info 9239: The following node is loadless:
+   NODE: LOAD_RESULT_LATCH.
+Info 9239: The following node is loadless:
+   NODE: LOAD_SHIFT.
+Info 9239: The following node is loadless:
+   NODE: LOAD_ZERO_BIT.
+Info 9239: The following node is loadless:
+   NODE: READ_MMU.
+Info 9239: The following node is loadless:
+   NODE: SHIFT_LEFT_NOT_RIGHT.
+Info 9239: The following node is loadless:
+   NODE: SHIFT_OUT_BIT.
+Info 9239: The following node is loadless:
+   NODE: SREGADDR_FROM_IWORD_NOT_UCODE.
+Info 9239: The following node is loadless:
+   NODE: SUPERREG_ADDR_FROM_UCODE0.
+Info 9239: The following node is loadless:
+   NODE: SUPERREG_ADDR_FROM_UCODE1.
+Info 9239: The following node is loadless:
+   NODE: SUPERREG_ADDR_FROM_UCODE2.
+Info 9239: The following node is loadless:
+   NODE: UC_LOAD_FREEZE.
+Info 9239: The following node is loadless:
+   NODE: UC_LOAD_ILLEGAL.
+Info 9239: The following node is loadless:
+   NODE: UC_LOAD_INTENABLE.
+Info 9239: The following node is loadless:
+   NODE: UC_LOAD_SOFTINT.
+Info 9239: The following node is loadless:
+   NODE: WRITE_MMU.
+===============================
+Memory usage statistics:
+    Total number of allocated memory blocks: 27 (0)
+    Total number of memory reallocations: 0
+    Total length of memory used to load the netlist: 0 kB (0)
+    Number of system memory blocks (total/long): 1/0
+Netlist loaded in: 3 seconds
+===============================

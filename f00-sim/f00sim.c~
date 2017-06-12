@@ -1,0 +1,324 @@
+//F00 simulator version 0.01
+#include <stdio.h>
+
+FILE *RomFile;
+unsigned int carryflag;
+unsigned int shortimm;
+unsigned int opcode;
+unsigned int superflag;
+unsigned int softintflag;
+unsigned int intenableflag;
+unsigned int freezeflag;
+unsigned int illegalflag;
+unsigned int pc;
+unsigned int operand1;
+unsigned int operand2;
+unsigned int temp;
+unsigned int value;
+unsigned int address;
+unsigned int reg[32];
+unsigned int goflag;
+unsigned int  pc;
+unsigned int  usr; //user status reg
+unsigned int  sr[5]; //supervisor registers - sr[0] is supervisor status register
+unsigned int  mmu[512]; //mmu table, partitioned into two halves, above 256=user data, 
+
+		  //below=user code
+
+//rom in physical address 0-ffff
+unsigned int  rom[32768];
+
+//ram in physical address 10000-1ffff 
+unsigned int ram[32768];
+
+//memory mapped io consists of char in,  and char out through
+//a sort of virtual uart at 32767
+
+
+
+main(int argc,char *argv[])
+{
+int x;
+int io;
+unsigned int  value;
+int goflag=1;
+
+//unsigned int  defined somewhere as 16 bit value depending on compiler
+
+//any more than one argument and forget it
+if (argc!=1) {
+  printf("fcpu-sim requires, and only takes one argument, (the name of the rom file) \n");
+  return(0);
+};
+
+//get argument (ignore any but first)
+RomFile=fopen(argv[1],"r");
+
+
+x=0;
+
+//start run from instruction 0
+pc=0;
+sr[0]=0b'0000000000010000';
+
+
+//read in romfile
+while(feof(RomFile)==0)
+{
+  //each line is two 16 bit value expressed as a decimal number
+  io=fscanf("%d %d",address, value);
+  rom[address]=value;
+  x++;
+};
+
+fclose(RomFile);
+
+//writing a 1 to the supervisor status register in bit "freeze" will
+//cause goflag=0
+while(goflag==1)
+{
+  process();
+};
+
+
+};
+
+unsigned int  writemem(unsigned int  address, unsigned int  data, superflag, codeflag) {
+
+unsigned int  logaddress;
+unsigned int  page;
+
+if (superflag==0) {
+	page=(address/4096)+(256*
+	logaddress=address
+};
+ 
+};
+
+
+unsigned int  readmem(unsigned int  address, superflag, codeflag) {
+
+};
+
+//============= the 'readphysmemory' function =================
+unsigned int  readphysmemory(unsigned int  address)
+{
+  if(address<32767)
+  {
+    //rom being read
+    return(rom(address && 32767));
+  };
+
+  if(address>32767)
+  {
+    //ram being read
+    return(ram(address && 32767));
+  };
+
+  //the only other thing in physical space is the virtual 'in' uart
+  //at location 32767!
+  return (getch());
+
+};
+
+//============= the 'writephysmemory' function =================
+int writephysmemory(unsigned int  address,unsigned int  wrdata)
+{
+  if(address<32767)
+  {
+    //rom cannot be written
+    return(0);
+  };
+
+  if(address<32767)
+  {
+    //ram being written
+    ram[address && 32767]=wrdata;
+    return(0);
+  };
+
+  //the only other thing in physical space is the virtual 'out' uart
+  printf("%c",wrdata && 255);
+
+};
+
+
+
+//============= the 'process' function ================
+int process()
+{
+unsigned int  instructionfetched=readmemory(pc);
+
+decode(instructionfetched);
+
+
+//increment pc 
+pc=pc+1;
+
+
+
+};
+
+
+//============ the decode function =================
+decode(unsigned int  instructionword)
+{
+opcode=instructionword && 0b1111110000000000/1024;
+operand1=instructionword && 0b0000001111100000;
+operand2=instructionword && 0b0000000000011111;
+shortimm=instructionword && 0b0000001111111111;
+carryflag=usr&0b0000000000000001;
+zeroflag=(usr&0b0000000000000010)/2;
+superflag=(sr[0]&0b0000000000010000)/16;
+softintlag=(sr[0]&0b0000000000001000)/8;
+intenableflag=(sr[0]&0b0000000000000100)/5;
+freezeflag=(sr[0]&0b0000000000000010)/2;
+illegalflag=sr[0]&0b0000000000000001;
+
+if (shortimm>511) shortimm= -(1024-shortimm);
+
+switch (opcode)  {
+
+    case 48: //syscall
+           sr[0]=sr[0]||0b0000000000011000; //set super, set soft-int
+           sr[0]=sr[0]&&0b1111111111111000; //reset int enable, freeze and illegal
+           superflag=1;
+           softintflag=1;
+           intenableflag=0;
+           freezeflag=0;
+           illegalflag=0;
+           writemem(sr[1],pc,superflag,1); //data space irrelevant but set anyway
+           pc=sr[2];
+           break;
+    case 32: //and
+           reg[operand2]=reg[operand1] && [operand2];
+           if (reg[operand2]==0) {
+		zeroflag=1;
+	} 
+	else {
+		zeroflag=0;
+	};
+           break;
+    case 33: //or
+           reg[operand2]=reg[operand1] || [operand2];
+           if (reg[operand2]==0) {
+		zeroflag=1;
+	} 
+	else {
+		zeroflag=0;
+	};
+           break;         
+    case 34: //not
+           reg[operand2]=not(reg[operand1]);
+           if (reg[operand2]==0) {
+		zeroflag=1;
+	} 
+	else {
+		zeroflag=0;
+	};
+
+           break;         
+    case 35: //shiftl
+           reg[operand2]=reg[operand1] << [operand2];
+           if (reg[operand2]==0) {
+		zeroflag=1;
+	} 
+	else {
+		zeroflag=0;
+	};
+           break;         
+    case 36: //shiftr
+           reg[operand2]=reg[operand1] >> [operand2];
+           if (reg[operand2]==0) {
+		zeroflag=1;
+	} 
+	else {
+		zeroflag=0;
+	};
+           break;         
+    case 37: //rotatel
+           printf("to be implemented - opcode %d\n",opcode);
+           break;         
+    case 38: //rotater
+           printf("to be implemented - opcode %d\n",opcode);
+           break;         
+    case 39: //shiftlc
+           printf("to be implemented - opcode %d\n",opcode);
+           break;         
+    case 40: //shiftrc
+           printf("to be implemented - opcode %d\n",opcode);
+           break;         
+    case 41: //rotatelc
+           printf("to be implemented - opcode %d\n",opcode);
+           break;         
+    case 42: //rotaterc
+           printf("to be implemented - opcode %d\n",opcode);
+           break;         
+    case 43: //add
+           reg[operand2]=reg[operand1] + [operand2];
+           break;         
+    case 16: //loadimm
+           pc++;
+           reg[operand1]=readmem(pc,superflag,0); // the ,0 indicates from the code space (user mode)
+           break;         
+    case 0: //load
+           reg[operand2]=readmem(reg[operand1],superflag,1); //the ,1 indicates from the data
+                                                                         //space (user mode)
+           break;         
+    case 1: //store
+           writemem(reg[operand1],[operand2],superflag,1); //1 indicates data space
+						          // (user mode)
+           break;         
+    case 3: //superswap
+           if (superflag==1) {
+           		temp=reg[operand2];
+           		reg[operand2]=sr[operand1];
+           		sr[operand1]=temp;
+	}
+	else {
+	//illegal instruction
+           sr[0]=sr[0]||0b0000000000010001; //set super, set soft-int
+           sr[0]=sr[0]&&0b1111111111111001; //reset int enable, freeze and illegal
+           superflag=1;
+           softintflag=1;
+           intenableflag=0;
+           freezeflag=0;
+           illegalflag=0;
+           writemem(sr[1],pc,superflag,1); //data space irrelevant but set anyway
+           pc=sr[2];
+	}
+           break;         
+    case 4: //jumprel
+	pc+=reg[operand1];
+           break;         
+    case 5: //jumpabs
+	pc=reg[operand1];
+           break;         
+    case 6: //jumprimm
+	pc+=shortimm;
+           break;         
+    case 7: //jumprimmc
+	if (carryflag==1) pc+=shortimm;
+           break;         
+    case 8: //jumprimmz
+	if (zeroflag==1) pc+=shortimm;
+           break;         
+    case default: //unknown instruction (illegal instruction)
+           sr[0]=sr[0]||0b0000000000010001; //set super, set soft-int
+           sr[0]=sr[0]&&0b1111111111111001; //reset int enable, freeze and illegal
+           superflag=1;
+           softintflag=1;
+           intenableflag=0;
+           freezeflag=0;
+           illegalflag=0;
+           writemem(sr[1],pc,superflag,1); //data space irrelevant but set anyway
+           pc=sr[2];
+
+
+} //end opcode
+
+}
+
+
+
+

@@ -1,0 +1,740 @@
+F00 Microcode Version 0.04
+==========================
+Initial target is 16 bit external data bus. 16 bit internal data bus.
+
+
+26-9-99  Jeff Davies
+
+This is a fully complete draft of the microarchitecture microcode (as executed by the state machine)
+for F00 CPU version 0.04 (see diagram).
+
+Please note the addition of the string "/temp" to the name of the data address latch.
+I decided to use this register for MOV and SUPERSWAP.
+
+
+*NOTE NOT DISPLAYED ON DIAGRAM, FOR EVERY Tristate buffer, there is a signal "Enable"
+which converts the output from high impedance to low impedance (either to +Vcc or
+0V according to the input logic). i.e a standard tristate buffer.
+Most Tristate buffers are 16 bit wide with the exception of user status reg's Buffer #1
+which is only 1 bit wide (allows the Zero bit to be written to).
+
+SR Load Decoder
+===============
+From a 5 bit address (top 2 bits ignored) for Opand#1 coming from instruction latch,
+a decoded output is created
+
+Truth Table
+-----------
+0 0 0   SSR.Load(H)
+0 0 1   SR1.Load(H)
+0 1 0   SR2.Load(H)
+0 1 1   SR3.Load(H)
+1 0 0   SR4.Load(H)
+
+all other states - no output.
+
+
+SR Enable Decoder
+===============
+From a 5 bit address (top 2 bits ignored) for Opand#1 coming from instruction latch,
+a decoded output is created
+
+Truth Table
+-----------
+0 0 0   Buffer3.Enable(H)
+0 0 1   Buffer4.Enable(H)
+0 1 0   Buffer5.Enable(H)
+0 1 1   Buffer15.Enable(H)
+1 0 0   Buffer16.Enable(H)
+
+all other states - no output.
+
+
+OPERATION CODE MAPPING
+======================
+As performed by Microcode "Jump" ROM. Note this can for the moment be regarded as a ROM,
+but imagine that when the mapping is fully known this can be reduced by algebra to a much
+smaller combinational logic circuit.
+
+
+           [INSTR GROUP] [ - - - SUB OP CODE - - -]   [ - - FLAGS -]
+      GATED BIT15  BIT14  BIT13  BIT12  BIT11  BIT10   ZERO CARRY USER   Function
+FREEZE INT                                                       SUPER
+
+1     0     X      X      X      X      X      X       X    X     X      FREEZE
+
+1     1     X      X      X      X      X      X       X    X     X      HARDINT
+
+0     1     X      X      X      X      X      X       X    X     X      HARDINT
+      ---------------------------------------------------------------------------------------
+0     0     1      1      0      0      0      0       0    0     0      SYSCALL  (Soft int)
+0     0     1      1      all other codes -------------------------      ILLEGAL  instruction
+      ---------------------------------------------------------------------------------------
+0     0     1      0      0      0      0      0       X    X     X      AND
+0     0     1      0      0      0      0      1       X    X     X      OR
+0     0     1      0      0      0      1      0       X    X     X      NOT
+0     0     1      0      0      0      1      1       X    X     X      SHIFTL
+0     0     1      0      0      1      0      0       X    X     X      SHIFTR
+0     0     1      0      0      1      0      1       X    X     X      ROTATEL
+0     0     1      0      0      1      1      0       X    X     X      ROTATER
+0     0     1      0      0      1      1      1       X    X     X      SHIFTLC
+0     0     1      0      1      0      0      0       X    X     X      SHIFTRC
+0     0     1      0      1      0      0      1       X    X     X      ROTATELC
+0     0     1      0      1      0      1      0       X    X     X      ROTATERC
+0     0     1      0      1      0      1      1       X    X     X      ADD
+0     0     1      0      1      1      0      0       X    X     X      ILLEGAL  instruction
+0     0     1      0      1      1      0      1       X    X     X      ILLEGAL  instruction
+0     0     1      0      1      1      1      0       X    X     X      ILLEGAL  instruction
+0     0     1      0      1      1      1      1       X    X     X      ILLEGAL  instruction
+      ---------------------------------------------------------------------------------------
+0     0     0      1      0      0      0      0       X    X     X      LOADIMM
+0     0     0      1      0      0      0      1       X    X     X      ILLEGAL  instruction
+0     0     0      1      0      0      1      0       X    X     X      ILLEGAL  instruction
+0     0     0      1      0      0      1      1       X    X     X      ILLEGAL  instruction
+0     0     0      1      0      1      0      0       X    X     X      ILLEGAL  instruction
+0     0     0      1      0      1      0      1       X    X     X      ILLEGAL  instruction
+0     0     0      1      0      1      1      0       X    X     X      ILLEGAL  instruction
+0     0     0      1      0      1      1      1       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      0      0      0       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      0      0      1       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      0      1      0       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      0      1      1       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      1      0      0       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      1      0      1       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      1      1      0       X    X     X      ILLEGAL  instruction
+0     0     0      1      1      1      1      1       X    X     X      ILLEGAL  instruction
+      ---------------------------------------------------------------------------------------
+0     0     0      0      0      0      0      0       x    x     x      LOAD
+0     0     0      0      0      0      0      1       x    x     x      STORE
+0     0     0      0      0      0      1      0       x    x     0      ILLEGAL instruction
+0     0     0      0      0      0      1      1       x    x     1      SUPERSWAP
+0     0     0      0      0      1      0      0       x    x     x      JUMPREL
+0     0     0      0      0      1      0      1       x    x     x      JUMPABS
+0     0     0      0      0      1      1      0       x    x     x      JUMPRIMM
+0     0     0      0      0      1      1      1       x    0     x      JUMPRIMM
+0     0     0      0      1      0      0      0       x    1     x      JUMPRIMMNOTC   (NOP)
+0     0     0      0      1      0      0      1       0    x     x      JUMPRIMM
+0     0     0      0      1      0      1      0       1    x     x      JUMPRIMMNOTZ   (NOP)
+0     0     0      0      1      0      1      1       x    x     x      ILLEGAL  instruction      
+0     0     0      0      1      1      0      0       x    x     x      ILLEGAL  instruction
+0     0     0      0      1      1      0      1       x    x     x      ILLEGAL  instruction
+0     0     0      0      1      1      1      0       x    x     x      ILLEGAL  instruction
+0     0     0      0      1      1      1      1       x    x     x      ILLEGAL  instruction
+      ---------------------------------------------------------------------------------------
+
+
+
+
+LOGIC UNIT FUNCTION CODES
+=========================
+0000 AND
+0001 OR
+0010 NOT
+0011 SHIFTL
+0100 SHIFTR
+0101 ROTATEL
+0110 ROTATER
+0111 SHIFTLC
+1000 SHIFTRC
+1001 ROTATELC
+1010 ROTATERC
+
+
+MATH UNIT FUNCTION CODES
+========================
+none at moment, as the unit only adds.
+
+
+
+RESET
+=====
+When the unit is reset, the State register is reset to zero.
+This causes execution starting at Instruction State zero. In here should be
+graceful powerup microcode.
+
+
+Instruction Fetch Sequence 
+(number is clock cycle, all events within a cycle occur in parallel)
+====================================================================
+1. ProgramCounter.Count(H)
+   Buffer23.Enable(H)    
+   Buffer22.Enable(L)
+// now, the Instruction code - to translated State address ("Jump") is allowed through to the State Latch
+// at the next clock cycle, this is loaded into the State Latch, and the instruction processed.
+2. ProgramCounter.Count(L)
+   Buffer6.Enable(H)
+   Buffer8.Enable(L)
+   ExternalMemory.Read(H)
+   ExternalMemory.Code(H)
+   ExternalMemory.Memreq(H)
+   Buffer17.Enable(H)
+   InstructionLatch.Load(L)
+3  InstructionLatch.Load(H)
+
+
+MOVE
+====
+1.  Buffer26.Enable(H)
+    RegisterFile.CS(H)
+    RegisterFile.OE(L)
+    DataAddressLatchTemp.Load(L)
+2.  RegisterFile.OE(H) //wait one clock cycle for address into RegFile to stabilise (assumes latching address)
+    RegisterFile.CS(H) //before enabling output
+3.  DataAddressLatchTemp.Load(H) //copy it to temp
+    Buffer26.Enable(L) //if it is latched, no need to keep this open
+    Buffer27.Enable(H) //look at destination now
+    RegisterFile.OE(H)
+    RegisterFile.CS(H)
+4.  Buffer14.Enable(H) //enable output from temp
+5.  RegisterFile.WR(H) // write it into reg file
+    RegisterFile.CS(H)
+    // this is the fetch next instruction sequence
+    NextStateAddress=(Goto) InstructionFetch
+    Buffer23.Enable(L)
+    Buffer22.Enable(H)
+
+
+LOADIMM
+========
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.WR(L)
+   ProgramCounter.Count(L)
+   // this bit where gets second word is similar to instruction fetch
+   // only this instruction does this.
+2. ProgramCounter.Count(H)
+3. Buffer6.Enable(H)
+   Buffer8.Enable(L)
+   ExternalMemory.Code(H)
+   ExternalMemory.Read(H)
+   ExternalMemory.Memreq(H)
+   Buffer17.Enable(H)
+   //end of fetch next word, now enter it into regfile
+4. Regfile.WR(H)
+   // this is the fetch next instruction sequence
+   NextStateAddress=(Goto) InstructionFetch
+    Buffer23.Enable(L)
+    Buffer22.Enable(H)
+
+
+
+AND		
+===
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0000)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+8. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+OR
+==
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0001)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+8. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+		
+NOT		
+===
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0010)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+8. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+SHIFTL
+======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0011)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+8. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+SHIFTR
+======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0100)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+8. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+ROTATEL
+=======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0101)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+8. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+ROTATER
+=======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0110)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+8. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+SHIFTLC
+=======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(0111)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+   Buffer1b.Enable(L)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+   Buffer1b.Enable(H)
+   UserStatusRegister.LoadCBit(L)
+8. RegisterFile.WR(H)
+   UserStatusRegister.LoadCBit(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+SHIFTRC
+=======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(1000)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+   Buffer1b.Enable(L)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+   Buffer1b.Enable(H)
+   UserStatusRegister.LoadCBit(L)
+8. RegisterFile.WR(H)
+   UserStatusRegister.LoadCBit(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+ROTATELC
+========
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(1001)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+   Buffer1b.Enable(L)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+   Buffer1b.Enable(H)
+   UserStatusRegister.LoadCBit(L)
+8. RegisterFile.WR(H)
+   UserStatusRegister.LoadCBit(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+ROTATERC
+========
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+   LogicUnit.FunctionCode(1010)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(H)
+   Buffer19.Enable(L)
+6. ResultLatch.Load(H)
+   Buffer1b.Enable(L)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+   Buffer1b.Enable(H)
+   UserStatusRegister.LoadCBit(L)
+8. RegisterFile.WR(H)
+   UserStatusRegister.LoadCBit(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+ADD
+===
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+   RegisterFile.OE(L)
+2. RegisterFile.OE(H)
+   RegisterFile.CS(H)
+   OperandLatch.Load(L)
+3  OperandLatch.Load(H)
+4  Buffer26.Enable(L)
+5  Buffer26.Enable(H)
+   Buffer20.Enable(L)
+   Buffer19.Enable(H)
+6. ResultLatch.Load(H)
+   Buffer1b.Enable(L)
+7. Buffer21.Enable(H)
+   RegisterFile.OE(L)
+   RegisterFile.WR(L)
+   Buffer1b.Enable(H)
+   UserStatusRegister.LoadCBit(L)
+8. RegisterFile.WR(H)
+   UserStatusRegister.LoadCBit(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+LOAD
+====
+1. Buffer26.Enable(H)
+   Buffer27.Enable(L)
+   RegisterFile.CS(H)
+2. RegisterFile.OE(H)
+3. DataAddressLatchTemp.Load(H)
+   Buffer8.Enable(H)
+   Buffer6.Enable(L)
+   Buffer17.Enable(H)
+   RegisterFile.OE(L)
+4. Buffer26.Enable(L)
+   Buffer27.Enable(H)
+   RegisterFile.WR(L)
+   ExternalMemory.ReadWrite(H)  //read from ext mem
+5. RegisterFile.WR(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+STORE
+=====
+1. Buffer26.Enable(H)
+   Buffer27.Enable(L)
+   RegisterFile.CS(H)
+2. RegisterFile.OE(H)
+3. DataAddressLatchTemp.Load(H)
+   Buffer8.Enable(H)
+   Buffer6.Enable(L)
+   Buffer17.Enable(H)
+   RegisterFile.OE(L)
+   ExternalMemory.ReadWrite(L)
+4. Buffer26.Enable(L)
+   Buffer27.Enable(H)
+   RegisterFile.OE(H)
+   ExternalMemory.Memreq(L)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+SUPERSWAP
+=========
+1.  Buffer28.Enable(H)
+2.  DataAddressLatchTemp.Load(H)
+3.  Buffer28.Enable(L)
+    DataAddressLatchTemp.Load(L)
+    Buffer27.Enable(H)
+    RegisterFile.CS(H)
+4.  RegisterFile.OE(H)
+5.  Buffer29.Enable(H)  //loads regfile (y) value into SR(x)
+6.  Buffer29.Enable(L)
+    Regfile.OE(L)
+7.  Buffer14.Enable(H)
+    RegisterFile.WR(H)
+    NextStateAddress=(Goto) InstructionFetch
+    Buffer23.Enable(L)
+    Buffer22.Enable(H)
+
+JUMPABS
+=======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+2. RegisterFile.OE(H)
+3. PC.Load(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+JUMPREL
+=======
+1. Buffer26.Enable(H)
+   RegisterFile.CS(H)
+2. RegisterFile.OE(H)
+3. OperandLatch.Load(H)
+4. Buffer13.Enable(H)
+   Buffer19.Enable(H)
+5. ResultLatch.Load(H)
+6. Buffer13.Enable(L)
+   Buffer19.Enable(L)
+   Buffer21.Enable(H)
+7. PC.Load(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+JUMPRIMM
+========
+(Note used by JUMPRIMMC and JUMPRIMMZ when relevant flag is set)
+1. Buffer30.Enable(H)
+2. OperandLatch.Load(H)
+3. Buffer13.Enable(H)
+   Buffer30.Enable(L)
+   Buffer19.Enable(H)
+4. ResultLatch.Load(H)
+5. Buffer13.Enable(L)
+   Buffer19.Enable(L)
+   Buffer21.Enable(H)
+6. PC.Load(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+JUMPRIMMNOTC
+============
+(NOP) - jump straight to Instruction Fetch Sequence
+
+JUMPRIMMNOTZ (on zero)
+======================
+(NOP) - jump straight to Instruction Fetch Sequence
+
+
+SYSCALL
+=======
+1. Buffer4.Enable(H)   // save PC into (SR1) which is context pointer
+   SSR.SoftInt(H)
+   SSR.IntEnable(L)    // must prevent interrupt before chance to change context pointer
+2. DataAddresslatchTemp.Load(H)
+   Buffer8.Enable(H)
+   Buffer13.Enable(H)
+   Buffer6.Enable(L)
+   Buffer18.Enable(H)
+   SSR.LoadIEbit(H)
+   SSR.LoadSoftIntBit(H)
+   ExternalMemory.ReadWrite(L)
+3. ExternalMemory.Memreq(H)   //PC is now saved
+4. Buffer5.Enable(H)   // SR2 holds int handler address
+5. PC.Load(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+
+HARDWAREINTERRUPT
+=================
+1. Buffer4.Enable(H)   // save PC into (SR1) which is context pointer
+   SSR.SoftInt(L)
+   SSR.IntEnable(L)    // must prevent interrupt before chance to change context pointer
+2. DataAddresslatchTemp.Load(H)
+   Buffer8.Enable(H)
+   Buffer13.Enable(H)
+   Buffer6.Enable(L)
+   Buffer18.Enable(H)
+   SSR.LoadIEbit(H)
+   SSR.LoadSoftIntBit(H)
+   ExternalMemory.ReadWrite(L)
+3. ExternalMemory.Memreq(H)   //PC is now saved
+4. Buffer5.Enable(H)   // SR2 holds int handler address
+5. PC.Load(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+ILLEGALINSTRUCTION
+==================
+1. Buffer4.Enable(H)   // save PC into (SR1) which is context pointer
+   SSR.Illegal(H)
+   SSR.IntEnable(L)    // must prevent interrupt before chance to change context pointer
+2. DataAddresslatchTemp.Load(H)
+   Buffer8.Enable(H)
+   Buffer13.Enable(H)
+   Buffer6.Enable(L)
+   Buffer18.Enable(H)
+   SSR.LoadIEbit(H)
+   SSR.LoadIllegalBit(H)
+   ExternalMemory.ReadWrite(L)
+3. ExternalMemory.Memreq(H)   //PC is now saved
+4. Buffer5.Enable(H)   // SR2 holds int handler address
+5. PC.Load(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+RESET
+=====
+Reset is achieved by the reset line controlling a pair of buffers to the State Machine ROM.
+The buffers are antagonsitically activated (when one is on, the other is off).
+The buffer either allows normal use, or directs the input address to the State Machine ROM to a word of value 0.
+In the State Machine ROM at Zero is:
+
+1. SSR.SoftInt(L)
+   SSR.IntEnable(L)
+   SSR.Illegal(L)
+   SSR.Freeze(L)
+   SSR.Supervisor(H)
+   Buffer23.Enable(H) //allow the state machine to progress
+   Buffer22.Enable(L)
+2. SSR.LoadSoftIntBit(H)
+   SSR.LoadIEBit(H)
+   SSR.LoadFreezeBit(H)
+   SSR.LoadSuperBit(H)
+   SSR.LoadIllegalBit(H)
+   Buffer31.Enable(H)
+3. PC.Load(H)
+   NextStateAddress=(Goto) InstructionFetch
+   Buffer23.Enable(L)
+   Buffer22.Enable(H)
+
+
+
+FREEZE
+======
+Freeze is a state which can only be altered by hardware interrupt.
+
+1. Buffer22.Enable(H)
+   Buffer23.Enable(L)    // this prevents the sate modifying itself over clock cycles, and
+
+only when the microcode address changes (by hardware interrupt) will normal execution resume.
+
+

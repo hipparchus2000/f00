@@ -1,0 +1,443 @@
+
+			The F00 Core  (Embedded Processor arising from FCPU project).
+			============
+
+			Draft Spec 0.04
+			-----------------
+
+			Jeff Davies    26-09-1999
+
+0. Change List:
+===============
+0.1. Draft 0.01 to Draft 0.02 (20-09-1999)
+----------------------------------------
+0.1.a. LOADIMM (load immediate) added . This is
+very convenient. Theoretically you can make do without
+it but it makes life painful. (As some code I tried
+writing became).
+0.1.b. Numbering added to Spec.
+0.1.c. Wait/Waiting section added (15).
+0.1.d. (16.4.5) Branches section created, jumps should not have been under transfer.
+0.1.e. Architectural diagram removed to seperate file.
+0.1.f. Added  (reg, position, + immediate in next word) addressing mode to cater
+       for 0.1.a
+0.1.g. IllegalInstruction flag added to Supervisor Status Register
+0.1.h. Word alignment of jump entry points dropped in favour of losing 1 bit from
+       word address space.
+0.1.i. Section 19 added on Binary Compatibility.
+0.1.j. Recommendation for FP instruction format changed to Format 00 from Format 01.
+0.1.k. Errors removed from SR2 and SR1 descriptions.
+0.1.l. Example of MPEG Windowing system involving multiple F00s added in section 20.
+
+0.2. Draft 0.02 to Draft 0.03 (25-09-1999)
+----------------------------------------
+0.2.a  For first F00, entirely 16 bit design to be made, 16 bit internal data bus, 16 bit address bus,
+       16 bit external data bus, all registers 16 bit, and instruction word length 16 bit.
+       The next F00 will be 32 bit in all areas apart from instruction word length.
+       To move from 16 to 32 bits the following will be added:
+       1. bit 0 of address selects which 16 bit word within the 32 bit data word is used as the instruction word.
+       2. LOADIMM loads 16 bit value into lower 16 bit word of a register (and zero into upper).
+          new instruction LOADIMMH loads 16 bit word into upper 16 bit word of register (and zero into lower).
+
+0.2.b  Concession to VM added - it's easy to add if required later.
+0.2.c  Instruction formats changed and harmogenised. now that a more definite architecture for the instruction
+       state machine is available, the instruction set has been designed.
+
+0.3. Draft 0.03 to 0.04 (26-09-1999)
+------------------------------------
+0.3.a  The State machine has now been fully designed. Some expediencies discovered including all previous reg
+       instructions have become reg2reg.       
+0.3.b  SR register numbers changed
+0.3.c  Initial design to be 16 bit through whole design. Note change to 32 and 64 bit will be minimal.
+0.3.d  information on superswap added
+0.3.e  All logic operations have become SrcA DestB type operations
+
+
+1. F00 Architecture:
+====================
+Word size: intended to be 64 bit, but can be 16 bit <very low end embedded>, 32 or 64 or bigger>
+Reg width and Address width is same. 16 bit initially.
+
+2. Register Set:
+================
+User Status Register		[C][Z]
+Supervisor Status Register      [Supervisor/Usr][SOFT-INT][INT-ENABLE][Freeze][IllegalInstruction]
+		note Illegal Instruction bit indicates unknown instruction or user attempted super instruction.
+		The kernel must recover the instruction to determine the cause of the error.
+
+SR1				supervisor reg 1 - on interrupt the PC is stored at the location referenced by this pointer in Supervisor space. (Physical Memory)
+SR2				supervisor reg 0 - contains interrupt vector accessed via SUPERSWAP
+SR3				MMU address - in supervisor mode the MMU is 'unplugged' from the memory address translation
+				mechanism, and is programmable/readbale by setting this address
+SR4				And superswapping this (old data out, new in).
+
+R0..R31 			general purpose registers. (note maybe only space for 16 on the first FPGA implementations).
+					note: 32 regs is massive num compared to your average embedded cpu
+
+3. Applications:
+================
+Intended for embedded applications. With core extensions, should be able to handle complex CE tasks eg: web TV,
+broadband GUI (all buttons will be audio/video stream windows) 
+Can also be used in arrays for multiprocessor tasks. A seperate project for design of a multiprocessor broadband
+OS has been specified. Also might have multiprocessor applications for use in fast ANNs. The inter-processor
+communication mechanism is an issue for the system implementer, and is irrelevant to the processor design and
+the seperate OS project.
+
+4. Constraints:
+===============
+Want to try and shoe-horn into a not too expensive FPGA. For example $20 Xilinx Spartan
+with 20-40,000 gates.
+
+5. Endianess/Word size:
+=======================
+5.1 There is no sub-word or supra-word size. One size is what you get. No endian issue.
+Instructions are 16 bit and are stored in little endian format within memory words.
+
+Code address pointers are right shifted and the low end bits decoded and via a xbar, select
+the relevant instruction from the word for decoding.
+
+
+6. Memory Management:
+=====================
+Harvard architecture is used, so a node connecting CPU to MMU informs MMU whether code or data is being
+referenced. The OS is free to map a code page to the same physical page as a data page to emulate 
+
+OS recommendation: Class is stored in core memory area, Objects (including Class reference) are then
+all data. This should force cleaner re-entrancy.
+
+7. Kernel Notes:
+================
+The kernel is minimalist, and the only thing running in Supervisor mode. It routes events (software interrupts
+and hardware interrupts) to the relevant user mode program for processing. The Kernel controls MMU.
+A user level driver program can therefore access memory mapped IO by the kernel by simply
+mapping that page into the logical address map of the user mode program.
+
+Sessions should be managed in all communications between compnent parts of operating systems so that
+the messy structure as see in DOS packet drivers (single tasking) requiring a shim (multi task to single task
+interface) does not occur in the operating system.
+
+8. Virtual Memory:
+==================
+The F00 is intended to run embedded or CE (Consumer Equipment) applications like WebTV (eventually).
+As broadband applications where MPEG2 stream is being decoded into a window (a MPEG2 stream window might be 
+a widget in place of the traditional BUTTON!!!) are the eventual target area of the F00, it makes no sense
+to cater for Virtual Memory. When a system uses Virtual Memory it slows down by an order of magnitude of 1000s
+of it's former speed. This is unacceptable to users, despite it's current prevalence (1999).
+Especially in CE applications the response time is critical to usability. All systems should have response times
+that are not noticable (ie do not slow down the human operator - we don't cater for alien species).
+Any response time that is noticable should be treated as a bug. <noticable to percentiles of human population>.
+
+Looking at the MMU and Instruction State machine, if VM is required by someone, it is very very easy to add
+in any case.
+
+9. Core Extensions:
+===================
+Yes F00 is VERY BARE. The intention is to extend it with purpose built modules eg: MPEG2 codec.
+Other Core extensions may include: FFT module, Fast Serial to other CPUs (for multiprocessor).
+
+
+10. Interrupt/Exception processing:
+===================================
+Software Int is determined by Soft-Int bit in Supervisor status register.
+Interrupt Enable is cleared in first cycle of interrupt processing
+Supervisor mode is enabled (supervisor mode disables MMU), cpu jumps destination stored in SR0.
+
+User can read interrupt type from some part of his circuit. Most peripherals record in a flag
+the cause of an interrupt. So inspection of these flags can determine source of interrupt, or
+seperate complex interrupt controller can be implemented with masks (rotating if required) in hardware
+with priority and vectoring (use vector as offset into jump table). This is outside the F00 anyway,
+another core blob in your FPGA.
+
+11. MMU:
+========
+11.1 Implementation
+-------------------
+A 9 line in, 8 line out RAM:
+
+Putting the top say 8 address lines into a 
+RAM (as the address of the RAM) and the physical address coming out ofthe
+8 data lines of the RAM. 
+
+The other line in is used to select between code and data to give harvard architecture.
+
+By changing location 1 in that ram from say 3
+to 5, now logical page 1 points to physical page 5.
+
+
+11.2 Protection
+---------------
+Don't map pages that are not available to the current thread
+if you have 6 pages.
+
+physical page 0     Kernel page 0    (I say kernel as I think most OS
+features should be run in user mode threads, including drivers)
+physical page 1     Thread 1 page 0
+physical page 2     Thread 2 page 1
+physical page 3     Thread 2 page 0
+physical page 4     Unallocated
+physical page 5     Thread 1 page 1
+
+This is how memory looks to the OS.
+
+When thread1 is run:
+logical page 0      Thread 1 page 1
+logical page 1      Thread 1 page 2
+logical page 2 etc   Nothing
+
+In the Kernel mode, MMU is bypassed. In the thread1 case,
+MMU contents are:
+Logical In             Physical Out
+0                      1                   
+1                      5
+2 etc                  flag set to cause not-mapped exception
+
+12. Stack
+=========
+Do it in macro, software or via OS call - whatever you want.
+
+13. Cache/Pipeline:
+===================
+Later
+
+
+14. Reset
+=========
+On reset the CPU begins execution at 00000000 in physical memory. Supervisor mode is enabled,
+interrupt enable is cleared.
+
+15. Wait/Waiting
+================
+Not implemented - if you are dealing with slow memory (eg ROM at startup, use slower
+CPU clock). Note the eventual aim is to be tightly integrated with RAM, and other peripherals.
+(i.e. on the same chip).
+
+16. F00CPU INSTRUCTION SET
+==========================
+16.1. Instruction Size
+----------------------
+16 bit
+
+16.2. Address modes
+-------------------
+reg
+reg2reg (A,B) 		no third opand as on FCPU.
+short immediate
+no address
+reg, position, + immediate in next word
+
+16.3. INSTRUCTION FORMAT
+------------------------
+16 bit: (sometimes with next word (32 bits) as 
+5 bits per reg number 1 bit supervisor = 6 bits
+bit 15 and 14 indicate instruction format
+    Format			Opcode		Opands
+    1 1  no address		4 bits		10 bits unused
+
+    1 0  reg2reg		4 bits		5 bits + 5 bits for register number
+
+    0 1  reg + immediate in following word
+				4 bits		5 bits reg  5 bits unused 
+
+    0 0  short immediate	4 bits		optional 10 bit immediate which is sign extended to the
+    						address bus width, and "added" to PC
+
+
+    
+currently 11 reg* instructions, note Format 00 could be used for more reg* instructions.
+Maybe Float instructions could be RPN: eg: 
+	FPUSH A 
+	FOP B,optype !
+	FPOP C
+
+
+16.4. INSTRUCTION SET LIST
+--------------------------
+(Mnemonic)	(Implementation)
+
+16.4.1. LOGIC
+-------------
+AND		Boolean B=A.B
+ reg2reg
+OR		Boolean B=A+B
+ reg2reg
+NOT		Boolean B='A
+ reg2reg
+
+16.4.2. BIT MANIPULATION
+------------------------
+SHIFTL/R[C]	B=shift A     by one bit only (no arithmetic implementation at hardware level) [C] shifts through carry in User Status Reg
+ reg2reg
+ROTATER/L[C]	B=rotate A     by one bit only (ditto)          [C] rotates through carry in User Status Register
+ reg2reg
+
+16.4.3. MATH
+------------
+ADD		B=A+B   unsigned add
+ reg2reg
+
+16.4.4. TRANSFER
+----------------
+LOAD/STORE	A,(B)    Note there is no load immediate - the constants must tbe in the data
+ reg2reg  
+MOVE		A,B	
+ reg2reg
+SUPERSWAP	A,B	SUPERVISOR MODE ONLY: Supervisor can swap one of SR0 registers with user regs.
+ reg2reg                A is supervisor reg: SSR (00000) SR1(00001) to SR4 (00100) no other are decoded
+                        please note SSR has 5 bits in it. Other bits will be lost on swap.
+LOAD IMMEDIATE		
+ reg + immediate in following word
+
+16.4.5. BRANCH
+--------------
+JUMPABS		A	Flag to enter user mode on arrival (this will turn MMU on before instruction fetch.
+ reg mode
+JUMPRIMM[C]	short immediate (small offset as part of instruction) relative. immediate is sign extended.
+                
+ short immediate 
+JUMPREL		A relative
+ reg mode
+SYSCALL		Software Exception - bit set in Supervisor Status Reg to indicate soft nature
+		of exception. All exceptions set Supervisor mode. Also set Interrupt mask in
+		Supervisor status register.
+ no address
+
+
+
+16.5. MACRO IMPLEMENTATION
+==========================
+CLEAR		MACRO for AND with mask (immediate)
+SET		MACRO for OR with mask (immediate)
+XOR		MACRO? Boolean '((A.B)+('A.'B))
+INC/DEC		MACRO A+Imm const
+GET/PUT 	MACRO to LOAD/STORE with extra bit set (internal registers)
+CSKIP		MACRO Skip on Carry Set - JUMPRIMMC *+2    (* is the address of current instruction)
+TRAP		Macro: to SYSCALL
+RFE		MACRO: This is actually just a JUMPIMM that sets User mode.
+		The software implementation would restore required registers,
+NOR		MACRO: Boolean '(A+B)
+NAND		MACRO: Boolean '(A.B)
+SUBTRACT	MACRO: add 2's complement of B to A
+HALT		Perhaps performs Sleep operation? might be useful for debug (Interrupt wakes)
+		Hold on - Macro: this could be enabled by the Supervisor writing to a bit in
+		the supervisor status register. The bit should be called "Freeze".
+
+
+16.6. LATER
+===========
+MULT			perhaps not in first F00
+DIVIDE			perhaps not in first F00
+		
+
+16.7. FLOATING POINT (LATER STILL)
+==================================
+FMULT			When FPU added
+FDIVIDE			When FPU added Perhaps Macro (1/A) * B
+FADD/SUB		When FPU added
+FSQR			When FPU added MACRO A*A
+FINV			When FPU added (or software call)
+FINVSQRT		When FPU added (or software call)
+INT2F			When FPU added (or software call)
+F2INT			When FPU added (or software call)
+FSQRT			When FPU added (or software call)		
+
+16.8. FCPU INSTRUCTIONS NOT IMPLEMENTED ON F00
+==============================================
+MOD		NOT IMPLEMENTED: PERHAPS LATER BY MACRO or software
+LOGIC		NOT IMPLEMENTED (in same way): SEE NOR/NAND/AND
+TEST		NOT IMPLEMENTED: ZERO AND CARRY FLAG SET BY OPERATIONS
+
+
+
+
+
+17. Notes on add/subtract
+=========================
+//** not properly tested yet **//
+Arithmetic Add macro (or hardware) information:
+		Negative numbers found by Not followed by +1
+		(this is called 2's complement)
+		taking 8 bit examples:
+		Adding two negs		-0x31 is 0xCF     	 	 	 11001111
+					-0x54 is 0xAC		 	 	 10101100
+			Result:   	17B (i.e carry and +7B)			101111011
+					result should be -0x85  = FB	 	 01111011
+					so in this case (where  A6.B6 =0,
+					should ignore carry and set bit 7)
+					
+
+		Adding two negs (adding up to more than 7F)
+					-0x50 is 0xB0			 	 10110000
+					-0x54 is 0xAC			 	 10101100
+			Result:		15C (ie carry and +5C)			101011100
+					result should be -0xA4 
+					result should still be negative, so bit 7 should be set.  
+					
+
+		Adding two pos (adding up to more than 7f)
+					0x50
+					0x54
+			Result:		0xA4			top bit from A should be moved to Carry
+
+
+		General rule: 	R7=(A7.B7).(('A6.'B6)+'(A6.B6))
+				Carry=('A7.'B7).(A6.B6)+(A7.B7).('A6.'B6)
+		
+
+		note: sub 1 (used for converting back from neg to pos) can be done
+		by add FF.
+
+
+
+18. Architecture
+================
+<IMG SRC="f00architecture-version0.04a.gif"  :^) >
+<IMG SRC="f00architecture-version0.04b.gif"  :^) >
+<IMG SRC="f00architecture-version0.04c.gif"  :^) >
+
+18.1. In supervisor mode, tristate buffers around the MMU isolate it from the memory address
+translation path and allow it to be interacted with through SR3 and SR4.
+
+18.2. The float unit, multiplier etc can be added to the bus, and extra instruction decode
+logic put in for these devices.
+
+18.3. Instruction decoder could be implemented as a state machine based on a ROM.
+The function of this block could be reduced by a bit of applied logic to be a much
+smaller sequential circuit.
+
+
+19. Binary Compatibility
+========================
+Because the instruction word length has been set as 16 bit, the instruction space is
+tight. Therefore if there are major upheavals, then it is likely that the instruction
+format will be changed drastically (unlike Freedom F1). Therefore Binary Compatibility
+(between variants) will not be supported.
+
+20. Example Multiprocessor application for Broadband Desktop
+============================================================
+
+            MPEG Stream                MPEG Stream
+                |                      |
+                \/                     \/
+           [ F00/MPEG decompressor ]   [ F00/MPEG decompressor ]
+                |                      |
+                \/                     \/
+        Decompressed window           Decompressed window
+        Pixel Array                   Pixel Array
+                |                      |
+                \/                     \/
+          Windowing Controller [Yet another F00]
+                |
+                \/
+              Display
+
+Note the interface Pixel Array size is realyed to the MPEG decompressor F00 CPUs
+by the Windowing Controller F00 CPU. This means the algorithms can be tailored to
+make the window the correct size, so all the windowing controller has to do is
+copy the data over.
+
+The overall Window structure would be fairly easy to map over the available CPUs.
+Simultaneously, load monitoring would allow flexible mapping of any other work threads
+over the various CPUs. (totally seperate task mapping system).
+
+For 3d worlds, a Texture Map F00 could be inserted in the Network between the MPEG
+decompressor F00 and the Windowing Controller F00.

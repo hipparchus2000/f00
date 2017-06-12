@@ -1,0 +1,14 @@
+ACTIVITY LOG
+============
+19-Oct-99 Put up latest Xilinx files and Postscript Drawings produced in the following manner.
+HP Paintjet XL300 driver added to Windows 95. Set to print to file. Huge schematic was broken into
+numerous smaller schematics on A4 to A2 paper. A2 printed over 4 pages (you have the option in Foundation
+to print over one of four pages) is still readable.
+Tried originally just getting psmegaplot working (relies on cdf library) , but it wouldn't work with this
+the original output giant schematic for some reason. (Produced a large .ps file, but When viewed using ghostview,
+appeared on one page still).
+
+Notes; decided to abandon harvard arch for the moment in favour of simplicity.
+As the Xilinx Standard Cell for Add/Subtract has been used, Subtract is available for use in an instruction,
+and an Overflow (for 2's complement arithmatic) has been added to the user status register.
+

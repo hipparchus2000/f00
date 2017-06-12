@@ -1,0 +1,51 @@
+-rwxr-xr-x root/root     67418 1999-10-19 00:28 Postscript Circuit Diagrams/F001610.ps    Supervisor Reg Address Decode
+											  Instruction Latch
+											  State Latch (will probably go)
+-rwxr-xr-x root/root     49438 1999-10-19 00:26 Postscript Circuit Diagrams/F001612.ps	  Register File
+-rwxr-xr-x root/root     59353 1999-10-19 00:27 Postscript Circuit Diagrams/F001613.ps    SR1 to 4,
+											  SR3 to logical buffer
+											  SR4 to MMU Write buffer
+											  MMU physical adress to bus buffer
+-rwxr-xr-x root/root     59288 1999-10-19 00:27 Postscript Circuit Diagrams/F001614.ps	  Program Counter,
+											  Data Address Latch/Temp
+											  Common_Address_Bus to Physical 
+											  or Logical
+-rwxr-xr-x root/root     47252 1999-10-19 00:23 Postscript Circuit Diagrams/F001615a.ps   Instruction State Machine Symbol
+-rwxr-xr-x root/root     45450 1999-10-19 00:24 Postscript Circuit Diagrams/F001615b.ps
+-rwxr-xr-x root/root     45781 1999-10-19 00:25 Postscript Circuit Diagrams/F001615c.ps
+-rwxr-xr-x root/root     40772 1999-10-19 00:25 Postscript Circuit Diagrams/F001615d.ps
+-rwxr-xr-x root/root     73326 1999-10-19 00:32 Postscript Circuit Diagrams/F00161a.ps     MMU Unit
+-rwxr-xr-x root/root     40967 1999-10-19 00:33 Postscript Circuit Diagrams/F00161b.ps
+-rwxr-xr-x root/root     55093 1999-10-19 00:33 Postscript Circuit Diagrams/F00161c.ps
+-rwxr-xr-x root/root     42289 1999-10-19 00:33 Postscript Circuit Diagrams/F00161d.ps
+-rwxr-xr-x root/root     57110 1999-10-19 00:32 Postscript Circuit Diagrams/F00166.ps	   Supervisor Status Register
+-rwxr-xr-x root/root     81967 1999-10-19 00:30 Postscript Circuit Diagrams/F00167a.ps	   ALU
+-rwxr-xr-x root/root     54198 1999-10-19 00:30 Postscript Circuit Diagrams/F00167b.ps     
+-rwxr-xr-x root/root     63199 1999-10-19 00:31 Postscript Circuit Diagrams/F00167c.ps
+-rwxr-xr-x root/root     54084 1999-10-19 00:31 Postscript Circuit Diagrams/F00167d.ps
+-rwxr-xr-x root/root     73347 1999-10-19 00:29 Postscript Circuit Diagrams/F00168.ps      Memory I/O pins
+											   Physical Address Bus Pins
+											   MMU Physical to Physical
+											   Sign Extend for Relative Immediate
+											   Jumps, (see DataAddressLatch/Temp)
+											   Pull-ups to unneeded control lines
+											   Memreq, ReadNotWrite,Reset and
+											   Clock Pins
+-rwxr-xr-x root/root     54959 1999-10-19 00:29 Postscript Circuit Diagrams/F00169.ps	   Zero constant circuit (not needed
+											   probably)
+											   And Supervisor bit MMU bypass
+											   Logic
+-rwxr-xr-x root/root     38763 1999-10-19 00:36 Postscript Circuit Diagrams/MACRO1.ps      The are macros used to
+-rwxr-xr-x root/root     66807 1999-10-19 00:38 Postscript Circuit Diagrams/MACRO2.ps      replace various tristate buffer
+-rwxr-xr-x root/root     48020 1999-10-19 00:40 Postscript Circuit Diagrams/MACRO3.ps      arrangements.
+-rwxr-xr-x root/root     78616 1999-10-19 00:41 Postscript Circuit Diagrams/MACRO4.ps
+-rwxr-xr-x root/root     43485 1999-10-19 00:46 Postscript Circuit Diagrams/MACRO5.ps
+-rwxr-xr-x root/root   2148341 1999-10-19 00:10 Postscript Circuit Diagrams/ism-diag.ps    State machine Diagram for MOVE
+											   operation (and reset and
+											   Instruction Fetch).
+-rwxr-xr-x root/root   1547318 1999-10-19 00:11 Postscript Circuit Diagrams/ism-test.ps    The above State Machine working
+											   On the simulator.
+			Missing Sheet F001611 User Status Register - this isn't extremely exciting
+			anyway, just three D type latches (see VHDL file). Will put this up in next release.
+			
+			

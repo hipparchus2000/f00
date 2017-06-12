@@ -1,0 +1,52 @@
+Piranha Project
+
+To Do List 19.10.99 
+===================
+2. Small State machine entered to State machine compiler.
+Extend this using the HDL tool to execute all instructions-  use ABEL for now.
+(State machine has been tested in the simulator).
+3. Try running test program in the simulator on Xilinx Foundation.
+4. Write more comprehensive test.
+5. Write MicroKernel?
+6. Finish current Assembler and Simulator
+7. Make both GUI.
+
+7a. Look at making the F00 superscalar.
+8a. Work on F0032.
+8b. Port GCC. Port and Compile Linux.
+9. Work on F0064.
+10. Work on Multiprocessor OS for any CPUs but particularly at the moment, for Piranha.
+
+Additional Core items to work on:
+---------------------------------
+CANbus Controller
+USB Controller
+PCI bridge?
+ISA bridge? (for PC104 type cards)
+PCMCIA controller
+Compact Flash interface
+Serial Controller
+IDE?
+Graphics controller (externally similar to VGA).
+
+
+
+To Do List 12.10.99
+===================
+1. Install and get running-> psmegaplot and netcdf (required by megaplot).
+This is so that I can take the huge Plot priduced from the Schematic
+(saved as postscript using a HP XL300 Paintjet driver, and split it up
+onto my A4 printer).
+Print out schematic
+2. Enter State machine to State machine compiler. use ABEL for now.
+3. Try running test program in the simulator on Xilinx Foundation.
+4. Write more comprehensive test.
+5. Write MicroKernel?
+6. Finish current Assembler and Simulator
+7. Make both GUI.
+
+8a. Work on F0032.
+8b. Port GCC. Port and Compile Linux.
+9. Work on F0064.
+10. Work on Multiprocessor OS for any CPUs but particularly at the moment, for Piranha.
+

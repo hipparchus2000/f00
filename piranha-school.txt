@@ -1,0 +1,41 @@
+This is an idea I had regarding the multi-processor operating system for
+piranha. (A mail I submitted to Freedom CPU list in around August 1999).
+
+"I also would like to refer to my idea of some time ago for a multi
+processor operating system. Each processor keeps a list of objects
+(code or data, or both), and a processor number.
+The connection topology of the processors is irrelevant.
+On bootup a protocol enables each processor to determine it's neighbours
+and eventually a route to each other processor. (You could for
+example have four CSMA/CD type serial buses routed around all processors,
+or just fast serial links to immediate neighbours, all this is implementation).
+
+So now a processor can find an object by reference anywhere in thesystem.
+Perhaps data objects are distributed as empirical data types, so an array
+of strings might be broken across many cpus.      MYARRAY {1..20], CPU=15
+      MYARRAY (21..40], CPU=16 etc
+An array of objects (ie reference to objects) would have the processor number
+as a data item for each member. Classical C pointers can't work, andobject ref
+number and processor number is used instead.
+Class libraries are copied to each relevant processor (for example string
+Class, and other data types). Then, when something like this isexecuted:
+For (x=0;x<15;x++){    cout << MyStringArray[x].Left(15)}
+what actually happens is that messages to execute Left(15) and pipe to the
+local cout object are sent to the processors when the array elements are.
+It will probably be easy to partition a code object (this is the only way
+to write a program for the above system) across multiple CPUs on the fly:
+Member functions could be split across processors according to load and
+memory space, and local stubs put in place which for example call a
+private member function by passing a message to the 
+the processor when the member function is residing.
+VM is not needed in this kind of system by the way, but you do need
+seperate memory space for each CPU. Why not keep the CPU simple,
+bundle 1Meg of RAM and have 64 cpus?(perhaps 10 per ASIC)." 
+
+jeff Davies
+ jef-@llandre.freeserve.co.uk
+
+Please see the Piranha draft documentation for more details on Piranha-School.
+
+
+

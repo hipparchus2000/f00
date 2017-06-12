@@ -1,0 +1,532 @@
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: Missing entity ports
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: Missing entity ports
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: Missing entity ports
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: Missing entity ports
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: Missing entity ports
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: Missing CLOCK signal for the Sreg0 machine. Please assign clock signal using Machine Properties window.
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: 0 errors
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: 0 errors
+CM: Synthesizing...
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: 0 errors
+CM: Synthesizing...
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\test.ASF
+CM: 0 errors
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+WR: :16:0: Missing transition from state S1
+CM: 0 errors, 1 warnings
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\Statemac two.asf
+CM: Fsm2Hdl v.2.0.1.52
+WR: :16:0: Missing transition from state S1
+CM: 0 errors, 1 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+WR: :16:0: Missing transition from state S1
+CM: 0 errors, 1 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\Statemac two.asf
+CM: Fsm2Hdl v.2.0.1.52
+WR: :16:0: Missing transition from state S1
+CM: 0 errors, 1 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+WR: :16:0: Missing transition from state S1
+CM: 0 errors, 1 warnings
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\Statemac two.asf
+CM: Fsm2Hdl v.2.0.1.52
+WR: :16:0: Missing transition from state S1
+CM: 0 errors, 1 warnings
+CM:  Missing transition from state S1
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\Statemac two.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\two.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1031: Undefined identifier name 'c'.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\fndtn\Active\projects\F0016\two.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: 
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1005: Identifier length exceeds 31 characters.
+CM: E:Syntax Error 1039: Identifier name 'RESET' is already defined.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 0 errors, 1 warnings
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 0 errors, 1 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 0 errors, 1 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1005: Identifier length exceeds 31 characters.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 0 errors, 1 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 0 errors, 1 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1034: ']' expected.
+CM: E:Syntax Error 1161: Set index not supported for set expression.
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: E:Syntax Error 1031: Undefined identifier name 'ENABLE_DOWN_REG_ADDRESS_TO_REG'.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 1 errors, 1 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 1 errors, 1 warnings
+CM:  Missing condition
+CM:  Missing transition from state MOVE5
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 1 errors, 1 warnings
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+WR: :164:0: Missing transition from state MOVE5
+CM: 1 errors, 1 warnings
+CM:  Missing condition
+CM:  Missing transition from state MOVE5
+CM: Fsm2Hdl v.2.0.1.52
+CM: 1 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 1 errors, 0 warnings
+CM:  Missing condition
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1034: ']' expected.
+CM: E:Syntax Error 1161: Set index not supported for set expression.
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: E:Syntax Error 1031: Undefined identifier name 'ENABLE_DOWN_REG_ADDRESS_TO_REG'.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Logical Error 1002: Source line length exceeds 150 characters.
+CM: E:Logical Error 1095: Block or macro nested too far. (Possible mis-use of macro arguments.)
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Logical Error 1002: Source line length exceeds 150 characters.
+CM: E:Logical Error 1095: Block or macro nested too far. (Possible mis-use of macro arguments.)
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: E:Syntax Error 1031: Undefined identifier name 'ENABLE_DOWN_REG_ADDRESS_TO_REG'.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: E:Syntax Error 1031: Undefined identifier name 'ENABLE_DOWN_REG_ADDRESS_TO_REG'.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: User break!
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: E:Syntax Error 1031: Undefined identifier name 'ENABLE_DOWN_REG_ADDRESS_TO_REG'.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: E:Syntax Error 1031: Undefined identifier name 'ENABLE_DOWN_REG_ADDRESS_TO_REG'.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1105: Signal name expected.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: 
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Netlist is up-to-date
+CM: Symbol 'ISM' successfully created
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: Synthesis Successful
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: 
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Netlist is up-to-date
+CM: Symbol 'ISM' successfully created
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1031: Undefined identifier name 'INSTRUCTION_BUS'.
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1034: ']' expected.
+CM: E:Syntax Error 1161: Set index not supported for set expression.
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1036: Can't compare set with 6 members to one with 1 members.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1036: Can't compare set with 6 members to one with 1 members.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: 
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Netlist is up-to-date
+CM: Symbol 'ISM' successfully updated
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: Fsm2Hdl v.2.0.1.52
+CM: 1 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 1 errors, 0 warnings
+CM:  Missing condition
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: 
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Netlist is up-to-date
+CM: Symbol 'ISM' successfully created
+CM: Fsm2Hdl v.2.0.1.52
+CM: 1 errors, 0 warnings
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: Synthesizing...
+CM: 
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Netlist is up-to-date
+CM: Symbol 'ISM' successfully updated
+CM: 
+CM: Netlist is up-to-date
+CM: Symbol 'ISM' successfully updated
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: HDL Description: C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.asf
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 0 errors
+CM: 
+CM: E:Syntax Error 1039: Identifier name 'RESET' is already defined.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: Synthesis Successful
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Symbol 'ISM' successfully updated
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: E:Syntax Error 1034: ']' expected.
+CM: E:Syntax Error 1161: Set index not supported for set expression.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: E:Syntax Error 1034: ']' expected.
+CM: E:Syntax Error 1161: Set index not supported for set expression.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: 
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: Synthesis Successful
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Symbol 'ISM' successfully updated
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: E:Syntax Error 1063: Dummy argument 'IBUS' not recognized.
+CM: E:Syntax Error 1049: Expression element expected.
+CM: E:Syntax Error 1037: ')' expected.
+CM: E:Syntax Error 1052: THEN expected.
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Fsm2Hdl v.2.0.1.52
+CM: 0 errors, 0 warnings
+CM: 
+CM: Synthesis Successful
+CM: Use Synthesis/View Report for detailed synthesis report
+CM: Symbol 'ISM' successfully updated

@@ -1,0 +1,1257 @@
+%-12345X@PJL JOB
+@PJL ENTER LANGUAGE=POSTSCRIPT
+
+%!PS-Adobe-3.0
+%%Title: Schematic Editor- 23:32:9 F00166.SCH
+%%Creator: PSCRIPT.DRV Version 4.0
+%%CreationDate: 10/18/99 23:32:15
+%%BoundingBox: 14 13 581 829 
+%%Pages: (atend)
+%%PageOrder: Ascending
+%%Requirements: 
+%%DocumentNeededFonts: (atend)
+%%DocumentSuppliedFonts: (atend)
+%%DocumentData: Clean7Bit
+%%LanguageLevel: 2
+%%EndComments
+
+%%BeginProlog 
+%%BeginProcSet: Pscript_Win_ErrorHandler 1.0 1
+/currentpacking where{pop/oldpack currentpacking def/setpacking where{pop
+false setpacking}if}if/$brkpage 64 dict def $brkpage begin/prnt{dup type
+/stringtype ne{=string cvs}if dup length 6 mul/tx exch def/ty 10 def
+currentpoint/toy exch def/tox exch def 1 setgray newpath tox toy 2 sub moveto
+0 ty rlineto tx 0 rlineto 0 ty neg rlineto closepath fill tox toy moveto 0
+setgray show}bind def/nl{currentpoint exch pop lmargin exch moveto 0 -10
+rmoveto}def/=={/cp 0 def typeprint nl}def/typeprint{dup type exec}readonly def
+/lmargin 72 def/rmargin 72 def/tprint{dup length cp add rmargin gt{nl/cp 0 def
+}if dup length cp add/cp exch def prnt}readonly def/cvsprint{=string cvs
+tprint( )tprint}readonly def/integertype{cvsprint}readonly def/realtype{
+cvsprint}readonly def/booleantype{cvsprint}readonly def/operatortype{(--)
+tprint =string cvs tprint(-- )tprint}readonly def/marktype{pop(-mark- )tprint}
+readonly def/dicttype{pop(-dictionary- )tprint}readonly def/nulltype{pop
+(-null- )tprint}readonly def/filetype{pop(-filestream- )tprint}readonly def
+/savetype{pop(-savelevel- )tprint}readonly def/fonttype{pop(-fontid- )tprint}
+readonly def/nametype{dup xcheck not{(/)tprint}if cvsprint}readonly def
+/stringtype{dup rcheck{(\()tprint tprint(\))tprint}{pop(-string- )tprint}
+ifelse}readonly def/arraytype{dup rcheck{dup xcheck{({)tprint{typeprint}forall
+(})tprint}{([)tprint{typeprint}forall(])tprint}ifelse}{pop(-array- )tprint}
+ifelse}readonly def/packedarraytype{dup rcheck{dup xcheck{({)tprint{typeprint}
+forall(})tprint}{([)tprint{typeprint}forall(])tprint}ifelse}{pop
+(-packedarray- )tprint}ifelse}readonly def/courier/Courier findfont 10
+scalefont def end errordict/handleerror{systemdict begin $error begin $brkpage
+begin newerror{/newerror false store vmstatus pop pop 0 ne{grestoreall}if
+showpage initgraphics courier setfont lmargin 720 moveto(ERROR: )prnt
+errorname prnt nl(OFFENDING COMMAND: )prnt/command load prnt $error/ostack
+known{nl nl(STACK:)prnt nl nl $error/ostack get aload length{==}repeat}if
+systemdict/showpage get exec(%%[ Error: )print errorname =print
+(; OffendingCommand: )print/command load =print( ]%%)= flush}if end end end}
+dup 0 systemdict put dup 4 $brkpage put bind readonly put/currentpacking where
+{pop/setpacking where{pop oldpack setpacking}if}if
+%%EndProcSet
+%%BeginProcSet: Pscript_Res_Emul 1.0 0
+/defineresource where{pop}{userdict begin/defineresource{userdict/Resources 2
+copy known{get begin}{15 dict dup begin put}ifelse exch readonly exch
+currentdict 1 index known not{dup 30 dict def}if load 3 -1 roll 2 index put
+end}bind readonly def/findresource{userdict/Resources get exch get exch get}
+bind readonly def/resourceforall{pop pop pop pop}bind readonly def
+/resourcestatus{userdict/Resources 2 copy known{get exch 2 copy known{get exch
+known{0 -1 true}{pop pop false}ifelse}{pop pop pop false}ifelse}{pop pop false
+}ifelse}bind readonly def end}ifelse
+%%EndProcSet
+%%BeginResource: procset Pscript_Win_Driver 2.0 0
+/Pscript_Win_Driver 200 dict dup begin
+%%BeginResource: file Pscript_FatalError 2.0 0
+/FatalErrorIf{{initgraphics findfont exch scalefont setfont counttomark 3 div
+cvi{moveto show}repeat showpage quit}{cleartomark}ifelse}bind def
+%%EndResource
+/VM? {vmstatus exch sub exch pop gt { [
+(This job requires more memory than is available in this printer.) 100 500
+(Try one or more of the following, and then print again:) 100 485
+(In the PostScript dialog box, click Optimize For Portability.) 115 470
+(In the Device Options dialog box, make sure the Available Printer Memory is accurate.) 115 455
+(Reduce the number of fonts in the document.) 115 440
+(Print the document in parts.) 115 425
+12 /Times-Roman showpage
+(%%[ PrinterError: Low Printer VM ]%%) =
+true FatalErrorIf}if} bind def
+30000  VM?
+%%BeginResource: file Pscript_Win_Utils 2.0 0
+/|/def load def/,/load load |/~/exch , |/?/ifelse , |/!/pop , |/`/begin , |/^
+/index , |/@/dup , |/+/translate , |/$/roll , |/U/userdict , |/M/moveto , |/-
+/rlineto , |/&/currentdict , |/:/gsave , |/;/grestore , |/F/false , |/T/true ,
+|/N/newpath , |/E/end , |/Ac/arc , |/An/arcn , |/A/ashow , |/D/awidthshow , |
+/C/closepath , |/V/div , |/O/eofill , |/L/fill , |/I/lineto , |/-C/rcurveto ,
+|/-M/rmoveto , |/+S/scale , |/Ji/setfont , |/Lc/setlinecap , |/Lj/setlinejoin
+, |/Lw/setlinewidth , |/S/show , |/LH/showpage , |/K/stroke , |/W/widthshow ,
+|/R/rotate , |/b{bind |}bind |/bd{bind |}bind |/xd{~ |}bd/ld{, |}bd/lw/Lw ld
+/lc/Lc ld/lj/Lj ld/sg/setgray ld/L2? F/languagelevel where{! languagelevel 2
+ge{! T}if}if |/g{@ not{U/DefIf_save save put}if U/DefIf_bool 2 ^ put}b
+/DefIf_El{if U/DefIf_bool get not @{U/DefIf_save get restore}if}b/e{DefIf_El !
+}b/self & |/reinitialize{[/TextInit/GraphInit/UtilsInit counttomark{@ where{
+self eq}{F}?{cvx exec}{!}?}repeat cleartomark}b/initialize{`{/ADO_mxRot ~ |
+/TextInitialised? F | reinitialize E}{U/Pscript_Win_Data 200 dict @ ` put
+/ADO_mxRot ~ |/TextInitialised? F | reinitialize}?}b/terminate{!{& self eq{
+exit}{E}?}loop E}b/suspend/terminate , |/resume{` Pscript_Win_Data `}b/snap{
+transform 0.25 sub round 0.25 add ~ 0.25 sub round 0.25 add ~ itransform}b
+/dsnap{dtransform round ~ round ~ idtransform}b<04>cvn{}|/setjn{{statusdict
+/jobname known{statusdict/jobname 3 -1 $ put}if}stopped cleartomark}b/solid{[]
+0 setdash}b/setdsh{0 setdash}b/colspRefresh{}b/rp{4 2 $ M 1 ^ 0 - 0 ~ - neg 0
+-}b/rr{1 ^ 0 - 0 ~ - neg 0 - C}b
+%%EndResource
+userdict /Level2ImagesError [
+(This job contains a bitmapped image that can be printed only on) 100 500
+(PostScript(R) Level 2 printers.  Please send this file to a PostScript) 100 485
+(Level 2 printer, or print your document again with the correct printer) 100 470
+(selected.) 100 455
+12 /Times-Roman
+] put
+%%BeginResource: file Pscript_Win_Utils_L1 2.0 0
+L2? not g{/rf{N rp L}b/fx{1 1 dtransform @ 0 ge{1 sub 1}{1 add -0.25}? 3 -1 $
+@ 0 ge{1 sub 1}{1 add -0.25}? 3 1 $ 4 1 $ idtransform 4 -2 $ idtransform}b/BZ{
+4 -2 $ snap + +S fx rf}b/rs{N rp C K}b/rc{N rp clip N}b/sg{setgray}b/sco{
+setrgbcolor}b/sgco{{sg}{sco}?}b}e
+%%EndResource
+%%BeginResource: file Pscript_Win_Utils_L2 2.0 0
+L2? g{/colspA/DeviceGray |/colspABC/DeviceRGB |/setAorABC{{colspA}{colspABC}?
+setcolorspace}b/rf/rectfill , |/fx{1 1 dtransform @ 0 ge{1 sub 0.5}{1 add -0.5
+}? 3 -1 $ @ 0 ge{1 sub 0.5}{1 add -0.5}? 3 1 $ 4 1 $ idtransform 4 -2 $
+idtransform}b/BZ{4 -2 $ snap + +S fx rf}b/rs/rectstroke , |/rc/rectclip , |/sg
+{@ @ setcolor}b/sco{setcolor}b/colspRefresh{colspABC setcolorspace}b/sgco{{sg
+}{sco}?}b/UtilsInit{F setglobal}b/definecolorrendering{/ColorRendering
+defineresource !}b/findcolorrendering{@/ColorRendering resourcestatus{! !
+/ColorRendering findresource T}{! F}?}b/selectcolorrendering{@/ColorRendering
+resourcestatus{! !/ColorRendering}{!/DefaultColorRendering/ColorRendering}?
+findresource setcolorrendering}b}e
+%%EndResource
+%%BeginResource: file Pscript_Win_Encoding 2.0 0
+/bullets{{/bullet}repeat}b/ANSIEncoding[/grave/acute/circumflex/tilde/macron
+/breve/dotaccent/dieresis/ring/cedilla/hungarumlaut/ogonek/caron/dotlessi 18
+bullets StandardEncoding 32 95 getinterval aload ! 3 bullets/quotesinglbase
+/florin/quotedblbase/ellipsis/dagger/daggerdbl/circumflex/perthousand/Scaron
+/guilsinglleft/OE 4 bullets/quoteleft/quoteright/quotedblleft/quotedblright
+/bullet/endash/emdash/tilde/trademark/scaron/guilsinglright/oe 2 bullets
+/Ydieresis/space/exclamdown/cent/sterling/currency/yen/brokenbar/section
+/dieresis/copyright/ordfeminine/guillemotleft/logicalnot/hyphen/registered
+/macron/degree/plusminus/twosuperior/threesuperior/acute/mu/paragraph
+/periodcentered/cedilla/onesuperior/ordmasculine/guillemotright/onequarter
+/onehalf/threequarters/questiondown/Agrave/Aacute/Acircumflex/Atilde/Adieresis
+/Aring/AE/Ccedilla/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute
+/Icircumflex/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis
+/multiply/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute/Thorn/germandbls
+/agrave/aacute/acircumflex/atilde/adieresis/aring/ae/ccedilla/egrave/eacute
+/ecircumflex/edieresis/igrave/iacute/icircumflex/idieresis/eth/ntilde/ograve
+/oacute/ocircumflex/otilde/odieresis/divide/oslash/ugrave/uacute/ucircumflex
+/udieresis/yacute/thorn/ydieresis]| ANSIEncoding @ 39/quotesingle put 96/grave
+put/ANSIEncodingOld ANSIEncoding 256 array copy | ANSIEncodingOld @[138 153
+154 169 172 174 177 178 179 181 185 188 189 190 208 215 221 222 240 247 253
+254]{/bullet put @}forall 166/bar put 176/ring put
+%%EndResource
+%%BeginResource: file Pscript_Win_Text 2.0 0
+/TextInit{TextInitialised? not{/Pscript_Windows_Font & |/TextInitialised? T |
+/fM[1 0 0 -1 0 0]|/mFM matrix |/iMat[1 0 0.212557 neg 1 0 0]|}if}b/xUP null |
+/yUP null |/uW null |/xSP null |/ySP null |/sW null |/copyfont{1 ^ length add
+dict `{1 ^/FID ne{|}{! !}?}forall & E}b/rF{3 copyfont @ `/Encoding
+ANSIEncoding &/CharStrings known{CharStrings/Eth known not{! ANSIEncodingOld}
+if}if | E}b/mF{findfont ~{@/Encoding get @ StandardEncoding eq{! T}{{
+ISOLatin1Encoding}stopped{! F}{eq}?{T}{@ ` T 32 1 127{Encoding 1 ^ get
+StandardEncoding 3 -1 $ get eq and}for E}?}?}{F}?{rF}{3 copyfont}? `
+/OrigFontType ~ |/OrigFontName ~ | & E 2 ^ ~ definefont fM 5 4 -1 $ put fM 4 0
+put fM makefont Pscript_Windows_Font 3 1 $ put}b/xF{scalefont
+Pscript_Windows_Font 3 1 $ put}b/xMF{mFM astore makefont Pscript_Windows_Font
+3 1 $ put}b/xF2/scalefont , |/xMF2{mFM astore makefont}b/sLT{: Lw -M
+currentpoint snap M 0 - 0 Lc K ;}b/sSU{N/uW ~ |/yUP ~ |/xUP ~ |}b/sU{xUP yUP
+uW sLT}b/sST{N/sW ~ |/ySP ~ |/xSP ~ |}b/sT{xSP ySP sW sLT}b/sR{: + R 0 0 M}b
+/sRxy{: matrix astore concat 0 0 M}b/eR/; , |
+%%EndResource
+%%BeginResource: file Pscript_Win_Text_Bold 2.0 0
+/mBF{@ 4 copyfont `/FontName ~ |/OrigFontType ~ |/OrigFontName ~ | 0
+FontMatrix idtransform ! &/PaintType known{PaintType 0 eq{/PaintType 2 |
+/StrokeWidth ~ |}{PaintType 1 eq PaintType 2 eq or PaintType 3 eq or &
+/StrokeWidth known and{StrokeWidth add/StrokeWidth ~ |}{!}?}?}{!}? @ & E
+definefont Pscript_Windows_Font 3 1 $ put}b/xBF{Pscript_Windows_Font ` 1 ^
+/FontName get 1 ^ scalefont 3 1 $ scalefont 2 copy ~ | ~ ! | E}b/xMBF{mFM
+astore Pscript_Windows_Font ` 1 ^/FontName get 1 ^ makefont 3 1 $ makefont 2
+copy ~ | ~ ! | E}b/xBF2{/sB0 ~ mBF/sB1 sB0 3 -1 $ xBF sB1}b/xMBF2{/sB0 ~ mBF
+mFM astore/sB1 sB0 3 -1 $ xMBF sB1}b/sB{: Pscript_Windows_Font currentfont get
+Ji @ S ; S}b/asB{: Pscript_Windows_Font currentfont get Ji 3 copy A ; A}b/wsB{
+: Pscript_Windows_Font currentfont get Ji 4 copy W ; W}b/awsB{:
+Pscript_Windows_Font currentfont get Ji 6 copy D ; D}b/sBT3{: @ S ; 1 1 -M S}b
+/asBT3{: 3 copy A ; 1 1 -M A}b/wsBT3{: 4 copy W ; 1 1 -M W}b/awsBT3{: 6 copy D
+; 1 1 -M D}b/mIF{iMat 4 3 -1 $ put 2 copyfont `/OrigFontType ~ |/OrigFontName
+~ | @ & E definefont iMat makefont Pscript_Windows_Font 3 1 $ put}b
+%%EndResource
+%%BeginResource: file Pscript_Win_Graphics 2.0 0
+/SavedCTM null |/CTMsave{/SavedCTM SavedCTM currentmatrix |}b/CTMrestore{
+SavedCTM setmatrix}b/mp null |/ADO_mxRot null |/GDIHMatrix null |
+/GDIHPatternDict 22 dict | GDIHPatternDict `/PatternType 1 |/PaintType 2 |
+/Reps L2?{1}{5}? |/XStep 8 Reps mul |/YStep XStep |/BBox[0 0 XStep YStep]|
+/TilingType 1 |/PaintProc{` 1 Lw[]0 setdash PaintData , exec E}b/FGnd null |
+/BGnd null |/HS_Horizontal{horiz}b/HS_Vertical{vert}b/HS_FDiagonal{fdiag}b
+/HS_BDiagonal{biag}b/HS_Cross{horiz vert}b/HS_DiagCross{fdiag biag}b/MaxXYStep
+XStep YStep gt{XStep}{YStep}? |/horiz{Reps{0 4 M XStep 0 - 0 8 +}repeat 0 -8
+Reps mul + K}b/vert{Reps{4 0 M 0 YStep - 8 0 +}repeat 0 -8 Reps mul + K}b/biag
+{Reps{0 0 M MaxXYStep @ - 0 YStep neg M MaxXYStep @ - 0 8 +}repeat 0 -8 Reps
+mul + 0 YStep M 8 8 - K}b/fdiag{Reps{0 0 M MaxXYStep @ neg - 0 YStep M
+MaxXYStep @ neg - 0 8 +}repeat 0 -8 Reps mul + MaxXYStep @ M 8 -8 - K}b E
+/makehatch{GDIHPatternDict/PaintData 3 -1 $ put CTMsave GDIHMatrix setmatrix
+GDIHPatternDict matrix mp CTMrestore ~ U ~ 2 ^ put}b/h0{/h0/HS_Horizontal
+makehatch}b/h1{/h1/HS_Vertical makehatch}b/h2{/h2/HS_FDiagonal makehatch}b/h3{
+/h3/HS_BDiagonal makehatch}b/h4{/h4/HS_Cross makehatch}b/h5{/h5/HS_DiagCross
+makehatch}b/GDIBWPatternDict 17 dict @ `/PatternType 1 |/PaintType L2?{1}{2}?
+|/RepsV L2?{1}{6}? |/RepsH L2?{1}{5}? |/BBox[0 0 RepsH 1]|/TilingType 1 |
+/XStep 1 |/YStep 1 |/Height 8 RepsV mul |/Width 8 |/mx[Width 0 0 Height neg 0
+Height]|/FGnd null |/BGnd null |/SetBGndFGnd L2?{{BGnd null ne{BGnd aload !
+sgco BBox aload ! 2 ^ sub ~ 3 ^ sub ~ rf}if FGnd null ne{FGnd aload ! sgco}if}
+}{{}}? b/PaintProc{` SetBGndFGnd RepsH{Width Height F mx PaintData imagemask
+Width 0 +}repeat E}b E |/GDIBWPatternMx null |/pfprep{save 4 1 $
+/PatternOfTheDay 4 1 $ GDIBWPatternDict `/PaintData ~ |/BGnd ~ |/FGnd ~ | E
+CTMsave GDIBWPatternMx setmatrix GDIBWPatternDict matrix mp CTMrestore ~ !}b
+/hrf null |/prf{pfprep ~ 6 1 $ 5 hrf restore}b/GraphInit{GDIHMatrix null eq{
+/SavedCTM matrix | : ADO_mxRot concat 0 0 snap + : 0.48 @ GDIHPatternDict `
+YStep mul ~ XStep mul ~ dsnap YStep V ~ XStep V ~ E +S/GDIHMatrix matrix
+currentmatrix readonly | ; : 0.24 -0.24 +S GDIBWPatternDict ` Width Height E
+dsnap +S/GDIBWPatternMx matrix currentmatrix readonly | ; ;}if}b/cirp{360 0 An
+C}b/ellp{CTMsave + +S 0.5 0 M 0 0 0.5 360 0 An C CTMrestore}b/rrp{/rad ~ |/y2
+~ |/x2 ~ |/y1 ~ |/x1 ~ | x2 x1 add 2 V y1 M x1 y1 x1 y2 rad arct x1 y2 x2 y2
+rad arct x2 y2 x2 y1 rad arct x2 y1 x1 y1 rad arct C}b/RRp{CTMsave + +S/dyS ~
+|/dxS ~ | dxS 2 V 0 M 0 0 0 dyS 0.5 arct 0 dyS dxS dyS 0.5 arct dxS dyS dxS 0
+0.5 arct dxS 0 0 0 0.5 arct C CTMrestore}b
+%%EndResource
+%%BeginResource: file Pscript_Win_Graphics_L1 2.0 0
+L2? not g{/arct{arcto ! ! ! !}b/GDIpattfill{@ ` BGnd null ne PaintType 2 eq
+and{: BGnd aload ! sgco fEOFill{O}{L}? ; FGnd aload ! U/fGray 2 ^ put{2}{4}?
+-1 $}if E @ patterncalc : 4 ^/PaintType get 2 eq{fGray{6 -1 $ sg}{8 -3 $ sco}?
+}if fEOFill{eoclip}{clip}? N patternfill ; N}b/hrf{/fGray 1 ^ 6 eq | -4 $ N rp
+C/fEOFill F | GDIpattfill}b/hfMain{/fEOFill ~ |/fGray ~ | GDIpattfill}b/hf{T
+hfMain}b/hfW{F hfMain}b/hs{currentpoint strokepath M hfW}b/pfMain{/fEOFill ~ |
+pfprep GDIpattfill restore N}b/pf{T pfMain}b/pfW{F pfMain}b/ps{currentpoint
+strokepath M pfW}b/mpstr 1 string |/mp{~ @ length 12 add dict copy `
+/PatternCTM matrix currentmatrix |/PatternMatrix ~ |/PatWidth XStep mpstr
+length mul |/PatHeight YStep |/FontType 3 |/Encoding 256 array | 3 string 0 1
+255{Encoding ~ @ 3 ^ cvs cvn put}for !/FontMatrix matrix |/FontBBox BBox |
+/BuildChar{! @ ` XStep 0 FontBBox aload ! setcachedevice/PaintProc , E : exec
+;}b & E ~ @ 3 -1 $ definefont}b/patterncalc{` : PatternCTM setmatrix
+PatternMatrix concat BBox aload ! ! ! + pathbbox ; PatHeight V ceiling 4 1 $
+PatWidth V ceiling 4 1 $ PatHeight V floor 4 1 $ PatWidth V floor 4 1 $ 2 ^
+sub cvi abs ~ 3 ^ sub cvi abs ~ 4 2 $ PatHeight mul ~ PatWidth mul ~ E}b
+/patternfill{5 -1 $ @ ` Ji PatternCTM setmatrix PatternMatrix concat 0 2 ^ 2 ^
+M 0 1 mpstr length 1 sub{1 ^ mpstr 3 1 $ put}for ! 2 ^{currentpoint 5 ^{mpstr
+S}repeat YStep add M}repeat ! ! ! ! E}b}e
+%%EndResource
+%%BeginResource: file Pscript_Win_Graphics_L2 2.0 0
+L2? g{/mp/makepattern , |/hrf{6 eq setAorABC setpattern rectfill}b/hf{
+setAorABC setpattern O}b/hfW{setAorABC setpattern L}b/hs{setAorABC setpattern
+K}b/pf{pfprep setpattern O restore N}b/pfW{pfprep setpattern L restore N}b/ps{
+pfprep setpattern K restore N}b}e
+%%EndResource
+%%BeginResource: file Pscript_Win_BW_Images 2.0 0
+/iw 0 |/ih 0 |/im_save 0 |/s 0 |/polarity 0 |/smoothflag 0 |/mystring 0 |/bpc
+0 |/setup1asciiproc{[currentfile mystring/readhexstring cvx/! cvx]cvx bind}b
+/setup1binaryproc{[currentfile mystring/readstring cvx/! cvx]cvx bind}b
+/setup2asciiproc{currentfile/ASCII85Decode filter/RunLengthDecode filter}b
+/setup2binaryproc{currentfile/RunLengthDecode filter}b/mycolorspace{colspABC}|
+/myimagedict{/myimagedict 10 dict | myimagedict @ `/ImageType 1 |
+/MultipleDataSource F | E}b/imageprocarray[/setup1binaryproc/setup1asciiproc
+/setup2binaryproc/setup2asciiproc/setup1binarydecodeproc/setup1asciidecodeproc
+]|/L2Polarity{{[1 0]}{[0 1]}?}b/Q{/im_save save | imageprocarray ~ get/s ~ , |
+L2Polarity/polarity ~ |/smoothflag ~ | snap +/dx 2 ^ |/dy 1 ^ | +S/mystring ~
+string |/bpc ~ |/ih ~ |/iw ~ |}b/X{/im_save save | imageprocarray ~ get/s ~ ,
+| L2Polarity/polarity ~ |/smoothflag ~ | snap +/dx 2 ^ |/dy 1 ^ | +S/mystring
+~ string |/bpc ~ |/ih ~ |/iw ~ |}b/Z{im_save restore}b/Y{sgco myimagedict @ `
+/Width iw |/Height ih |/Decode polarity |/ImageMatrix[iw 0 0 ih 0 0]|
+/DataSource s |/BitsPerComponent 1 |/Interpolate smoothflag | E imagemask}b
+%%EndResource
+%%BeginResource: file Pscript_Win_BW_Images_L1 2.0 0
+L2? not g{/setup2asciiproc{[/Level2ImagesError , aload ! T FatalErrorIf}b
+/setup2binaryproc/setup2asciiproc , |/L2Polarity{}|/Y{sgco iw ih polarity[iw 0
+0 ih 0 0]s imagemask}b}e
+%%EndResource
+%%BeginResource: file Pscript_Win_Co_Images_L1 2.0 0
+L2? not g{/testsystemdict{where{systemdict eq{T}{F}?}{F}?}b/c 1 |/colorimage
+where{! T}{F}?{/c 0 statusdict `/processcolors where{! ! processcolors}{
+/deviceinfo where{! deviceinfo/Colors known{!{deviceinfo/Colors get}}if}if}? E
+| c 0 ne{/colorimage testsystemdict/setcolortransfer testsystemdict
+/currentcolortransfer testsystemdict/currentcmykcolor testsystemdict and and
+and not{/c 0 |}if}if}if c @ 1 ne ~ @ 3 ne ~ 4 ne and and{/c 0 |}if c 1 eq g{
+/expandbw{expandfactor mul round cvi bwclut ~ get 255 V}b/doclutimage{!/bwclut
+~ | bpc @ 8 eq{! 255}{4 eq{15}{3}?}?/expandfactor ~ |[/expandbw ,/exec , @
+currenttransfer ~]cvx bind settransfer iw ih bpc[iw 0 0 ih 0 0]s image}b}e c @
+3 eq ~ 4 eq or g{/nullproc{{}}|/concatutil{/exec , 7 -1 $/exec ,}b/defsubclut{
+1 add getinterval |}b/spconcattransfer{/Dclut ~ |/Cclut ~ |/Bclut ~ |/Aclut ~
+|/ncompute ~ , | currentcolortransfer[{Aclut ncompute}concatutil]cvx[{Bclut
+ncompute}concatutil]cvx[{Cclut ncompute}concatutil]cvx[{Dclut ncompute}
+concatutil]cvx setcolortransfer}b/setuprgbcluts{/bit3x rgbclut length 3 sub |
+/bit1x bit3x 3 idiv |/rclut rgbclut |/gclut rclut 1 bit3x defsubclut/bclut
+rclut 2 bit3x defsubclut}b}e c 3 eq g{/3compute{~ bit3x mul round cvi get 255
+V}b/doclutimage{/rgbclut ~ | ! setuprgbcluts/3compute rclut gclut bclut @
+spconcattransfer iw ih bpc[iw 0 0 ih 0 0][s/exec ,/@ , @]cvx nullproc nullproc
+T 3 colorimage}b}e c 4 eq g{/ftoint{1 ~ sub 255 mul round cvi}b/stuffclut{
+cmykindex 3 -1 $ put}b/4compute{~ bit4x mul round cvi get 255 V}b
+/invalidcolortable? T |/computecmykclut{setuprgbcluts/bit4x rgbclut length 3
+idiv 4 mul 4 sub |/cmykclut bit4x 4 add string |/cclut cmykclut |/mclut cclut
+1 bit4x defsubclut/yclut cclut 2 bit4x defsubclut/kclut cclut 3 bit4x
+defsubclut/cmykindex 0 | 0 1 bit1x{@/cmykindex ~ bit1x ~ sub 4 mul | 3 mul @
+rclut ~ get 255 V ~ @ gclut ~ get 255 V ~ bclut ~ get 255 V setrgbcolor
+currentcmykcolor ftoint kclut stuffclut ftoint yclut stuffclut ftoint mclut
+stuffclut ftoint cclut stuffclut}for}b/doclutimage{/rgbclut ~ | !
+invalidcolortable?{computecmykclut}if/4compute cclut mclut yclut kclut
+spconcattransfer iw ih bpc[iw 0 0 ih 0 0][s/exec ,/@ , @ @]cvx nullproc
+nullproc nullproc T 4 colorimage}b}e c 0 eq g{/a{3 mul 3 getinterval
+putinterval ~ 3 add ~ 3 copy}b/8lookup/a , |/4lookup{/byte 1 ^ | -4 bitshift a
+byte 15 and a}b/2lookup{/byte 1 ^ | -6 bitshift a byte -4 bitshift 3 and a
+byte -2 bitshift 3 and a byte 3 and a}b/colorexpand{mystringexp 0 rgbclut 3
+copy 7 -1 $/mylookup , forall ! ! ! ! !}b/createexpandstr{/mystringexp ~
+mystring length mul string |}b/doclutimage{/rgbclut ~ | !/mylookup bpc 8 eq{3
+createexpandstr/8lookup}{bpc 4 eq{6 createexpandstr/4lookup}{12
+createexpandstr/2lookup}?}? , | iw ih bpc[iw 0 0 ih 0 0][s/exec ,/colorexpand
+,/exec ,]cvx F 3 colorimage}b}e/colorimage where{! T}{F}? g{/do24image{iw ih 8
+[iw 0 0 ih 0 0]s F 3 colorimage}b}DefIf_El{/rgbtogray{/str ~ |/len str length
+|/smlen len 3 idiv |/rstr str |/gstr str 1 len 1 sub getinterval |/bstr str 2
+len 2 sub getinterval | str @ 0 1 smlen 1 sub{@ 3 mul rstr 1 ^ get 0.3 mul
+gstr 2 ^ get 0.59 mul add bstr 3 -1 $ get 0.11 mul add round cvi put @}for ! 0
+smlen getinterval}b/do24image{iw ih 8[iw 0 0 ih 0 0][s/exec ,/rgbtogray ,/exec
+,]cvx bind image}b}e/doNimage{bpc 24 eq{do24image}{iw ih bpc[iw 0 0 ih 0 0]s
+image}?}b}e
+%%EndResource
+%%BeginResource: file Pscript_Win_Co_Images_L2 2.0 0
+L2? g{/doclutimage{/rgbclut ~ | ! bpc @ 8 eq{! 255}{4 eq{15}{3}?}?/hival ~ |[
+/Indexed colspABC hival rgbclut]setcolorspace myimagedict @ `/Width iw |
+/Height ih |/Decode[0 hival]|/ImageMatrix[iw 0 0 ih 0 0]|/DataSource s |
+/BitsPerComponent bpc |/Interpolate smoothflag | E image}b/doCMYKclutimage{
+/CMYKclut ~ | ! bpc @ 8 eq{! 255}{4 eq{15}{3}?}?/hival ~ |[/Indexed/DeviceCMYK
+hival CMYKclut]setcolorspace myimagedict @ `/Width iw |/Height ih |/Decode[0
+hival]|/ImageMatrix[iw 0 0 ih 0 0]|/DataSource s |/BitsPerComponent bpc |
+/Interpolate smoothflag | E image}b/doNimage{bpc 24 eq{colspABC}{colspA}?
+setcolorspace myimagedict @ `/Width iw |/Height ih |/Decode bpc 24 eq{[0 1 0 1
+0 1]}{[0 1]}? |/ImageMatrix[iw 0 0 ih 0 0]|/DataSource s |/BitsPerComponent
+bpc 24 eq{8}{bpc}? |/Interpolate smoothflag | E image}b/doCMYKimage{
+/DeviceCMYK setcolorspace myimagedict @ `/Width iw |/Height ih |/Decode[0 1 0
+1 0 1 0 1]|/ImageMatrix[iw 0 0 ih 0 0]|/DataSource s |/BitsPerComponent 8 |
+/Interpolate smoothflag | E image}b}e
+%%EndResource
+%%BeginResource: file Pscript_Win_Type3_Hdr 2.0 0
+/GreNewFont{10 dict @ 3 1 $ | @ ` 4 1 $/FontType 3 |/FontMatrix ~ |/FontBBox ~
+|/Encoding 256 array | 0 1 255{Encoding ~/.notdef put}for/CharProcs 257 dict |
+CharProcs/.notdef{}put/Metrics 257 dict | Metrics/.notdef 3 -1 $ put/BuildChar
+{/char ~ |/fontdict ~ |/charname fontdict/Encoding get char get | fontdict
+/Metrics get charname get aload ! setcachedevice fontdict ` Encoding char get
+CharProcs ~ get E exec}| E definefont !}|/AddChar{` Encoding 3 1 $ put
+CharProcs 3 1 $ put Metrics 3 1 $ put E}|
+%%EndResource
+%%BeginResource: file Pscript_Win_Type1_Hdr 2.0 0
+/FEbuf 2 string |/FEglyph 3 string |/FE{(G00)FEglyph copy ! 1 ~{@ 16 lt{
+/offset 2 store}{/offset 1 store}? @ 16 FEbuf cvrs FEglyph ~ offset ~
+putinterval 1 ^ ~ FEglyph cvn put}for}bind |/Type1Hdr{11 dict `/FontName ~ |
+/PaintType ~ |/FontType 1 |/FontMatrix[1 3 ^ V 0 0 1 6 ^ V 0 0]| !/Encoding
+256 array 0 1 255{1 ^ ~/.notdef put}for 3 ^ 3 ^ FE | ! !/FontBBox{0 0 0 0}| &
+E currentfile eexec}bind |
+%%EndResource
+/pp 1 string |/ss 1 string |/rledecodebinary{/DC 0 |/BC 0 |{DC mystring length
+ge{exit}if currentfile ss readstring ! 0 get/BC ~ | BC 127 le{/BC BC 1 add |
+DC 1 DC BC add 1 sub{mystring ~ currentfile ss readstring ! 0 get put}for}{/BC
+257 BC sub | currentfile ss readstring ! 0 get/pp ~ | DC 1 DC BC add 1 sub{
+mystring ~ pp put}for}?/DC DC BC add |}loop mystring}b/rledecodeascii{/DC 0 |
+/BC 0 |{DC mystring length ge{exit}if currentfile ss readhexstring ! 0 get/BC
+~ | BC 127 le{/BC BC 1 add | DC 1 DC BC add 1 sub{mystring ~ currentfile ss
+readhexstring ! 0 get put}for}{/BC 257 BC sub | currentfile ss readhexstring !
+0 get/pp ~ | DC 1 DC BC add 1 sub{mystring ~ pp put}for}?/DC DC BC add |}loop
+mystring}b/setup1asciidecodeproc{[/rledecodeascii cvx]cvx bind}b
+/setup1binarydecodeproc{[/rledecodebinary cvx]cvx bind}b
+%%BeginResource: file Pscript_Win_Compat 2.0 0
+userdict/Pscript_Win_Compat 13 dict dup begin/bd{bind def}bind def/ld{load def
+}bd/CB{pop pop pop pop}bind def/B{pop pop pop pop}bind def/$x matrix def/SS{
+/pagesave save def}bind def/RS{/pagesave where{pop pagesave restore}{$x matrix
+invertmatrix concat}ifelse}bind def/ANSIVec[0/grave 1/acute 2/circumflex 3
+/tilde 4/macron 5/breve 6/dotaccent 7/dieresis 8/ring 9/cedilla 10
+/hungarumlaut 11/ogonek 12/caron 13/dotlessi 39/quotesingle 96/grave 124/bar
+130/quotesinglbase 131/florin 132/quotedblbase 133/ellipsis 134/dagger 135
+/daggerdbl 136/circumflex 137/perthousand 138/Scaron 139/guilsinglleft 140/OE
+145/quoteleft 146/quoteright 147/quotedblleft 148/quotedblright 149/bullet 150
+/endash 151/emdash 152/tilde 153/trademark 154/scaron 155/guilsinglright 156
+/oe 159/Ydieresis 160/space 161/exclamdown 164/currency 165/yen 166/brokenbar
+167/section 168/dieresis 169/copyright 170/ordfeminine 171/guillemotleft 172
+/logicalnot 173/hyphen 174/registered 175/macron 176/degree 177/plusminus 178
+/twosuperior 179/threesuperior 180/acute 181/mu 182/paragraph 183
+/periodcentered 184/cedilla 185/onesuperior 186/ordmasculine 187
+/guillemotright 188/onequarter 189/onehalf 190/threequarters 191/questiondown
+192/Agrave 193/Aacute 194/Acircumflex 195/Atilde 196/Adieresis 197/Aring 198
+/AE 199/Ccedilla 200/Egrave 201/Eacute 202/Ecircumflex 203/Edieresis 204
+/Igrave 205/Iacute 206/Icircumflex 207/Idieresis 208/Eth 209/Ntilde 210/Ograve
+211/Oacute 212/Ocircumflex 213/Otilde 214/Odieresis 215/multiply 216/Oslash
+217/Ugrave 218/Uacute 219/Ucircumflex 220/Udieresis 221/Yacute 222/Thorn 223
+/germandbls 224/agrave 225/aacute 226/acircumflex 227/atilde 228/adieresis 229
+/aring 230/ae 231/ccedilla 232/egrave 233/eacute 234/ecircumflex 235/edieresis
+236/igrave 237/iacute 238/icircumflex 239/idieresis 240/eth 241/ntilde 242
+/ograve 243/oacute 244/ocircumflex 245/otilde 246/odieresis 247/divide 248
+/oslash 249/ugrave 250/uacute 251/ucircumflex 252/udieresis 253/yacute 254
+/thorn 255/ydieresis]def currentdict{dup type/operatortype eq{[exch]cvx def}{
+pop pop}ifelse}forall/initialize{currentdict exch begin begin}bind def
+/terminate{/@FL where not{pop end end}{pop}ifelse}bind def/suspend/terminate
+load def/resume/initialize load def/M/moveto load def end put/Courier findfont
+10 scalefont setfont
+%%EndResource
+end /ProcSet defineresource pop
+%%EndResource
+%%EndProlog
+
+%%BeginSetup 
+Pscript_Win_Compat dup /initialize get exec
+[ 1.000 0 0 1.000 0 0 ] false /Pscript_Win_Driver /ProcSet findresource dup /initialize get exec
+
+[{0 
+/languagelevel where{pop languagelevel}{1}ifelse 2 ge{1 dict dup/JobTimeout  4 -1 roll put setuserparams}{statusdict/setjobtimeout get exec}ifelse 
+} stopped cleartomark
+[{240 
+/languagelevel where{pop languagelevel}{1}ifelse 2 ge{1 dict dup/WaitTimeout 4 -1 roll put setuserparams}{statusdict/waittimeout 3 -1 roll put}ifelse 
+} stopped cleartomark
+[{1 
+/languagelevel where{pop languagelevel}{1}ifelse 2 ge{1 dict dup/NumCopies 4
+-1 roll put setpagedevice}{userdict/#copies 3 -1 roll put}ifelse
+
+} stopped cleartomark
+[{
+%%BeginFeature: *Print Quality Normal
+
+   1 dict dup /HWResolution [300 300] put setpagedevice
+   2 dict
+      dup /PostRenderingEnhance true put
+      dup /PostRenderingEnhanceDetails
+        2 dict 
+         dup /OutputMode (Normal) put
+         dup /Type 9 put
+   put 
+   setpagedevice
+%%EndFeature
+} stopped cleartomark
+[{
+1 dict dup /ManualFeed false put setpagedevice
+} stopped cleartomark
+[{
+%%BeginFeature: *InputSlot AutoSelect Tray
+
+%%EndFeature
+} stopped cleartomark
+[{
+%%BeginFeature: *PageSize A4
+
+      currentpagedevice /InputAttributes get 0 get
+      dup length dict copy
+      dup /PageSize [595 842] put
+      1 dict dup begin exch 0 exch def end
+   3 dict 
+   dup begin exch /InputAttributes exch def end
+   dup /PageSize [595 842] put 
+   dup /ImagingBBox null put 
+   setpagedevice
+%%EndFeature
+} stopped cleartomark
+[{
+%%BeginFeature: *MediaType Plain Paper
+
+   /DefaultColorRendering 
+   /PlainColorRendering
+   /ColorRendering findresource
+   dup length dict copy begin
+	/RangePQR [-0.07 1.5 -0.02 1.4 -0.09 4.8] def
+	/MatrixPQR [0.40024 -0.2263 0.0
+			0.7076 1.16532 0.0
+			-0.08081 0.0457 0.91822] def
+	/TransformPQR [ 
+			{ 5 1 roll 4{3 get 5 1 roll} repeat
+			3 index sub 1 index 6 2 roll sub 5 1 roll
+			sub 4 -2 roll mul exch div add} bind
+			{ 5 1 roll 4{4 get 5 1 roll} repeat
+			3 index sub 1 index 6 2 roll sub 5 1 roll
+			sub 4 -2 roll mul exch div add} bind
+			{ 5 1 roll 4{5 get 5 1 roll} repeat
+			3 index sub 1 index 6 2 roll sub 5 1 roll
+			sub 4 -2 roll mul exch div add} bind
+			 ] def 	
+	/BlackPoint [0.0543 0.0554 0.0654] def 
+   currentdict end
+   /ColorRendering defineresource pop
+   currentpagedevice /InputAttributes get 0 get
+   dup length dict copy
+   dup /MediaType (Plain) put
+   1 dict dup begin exch 0 exch def end
+   2 dict dup begin exch /InputAttributes exch def
+   /MediaType (Plain) def end 
+   setpagedevice
+%%EndFeature
+} stopped cleartomark
+1 setlinecap 1 setlinejoin 
+/mysetup [ 0.240 0 0 -0.240 14.000 829.000 ] | 
+%%EndSetup
+
+%%Page: 1 1
+%%BeginPageSetup
+[{
+%%BeginFeature: *Resolution 300dpi
+
+%%EndFeature
+} stopped cleartomark
+[{
+%%BeginFeature: *Duplex 
+
+%%EndFeature
+} stopped cleartomark
+userdict begin /pagesave save def end mysetup concat colspRefresh : 1.000 1.000 1.000 sco 0 0 2479 3508 rf ; 
+userdict begin /savelevel1 save def end
+%%EndPageSetup
+
+
+176 313 N M 2011 2775 rr 1 Lw 0 Lc 0 Lj solid 0 0 0.502 sco K : 154 302 2055 2797 rc 
+489 3006 N M 0 82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+720 3006 N M 0 82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+951 3006 N M 0 82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1181 3006 N M 0 82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1412 3006 N M 0 82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1643 3006 N M 0 82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1874 3006 N M 0 82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+489 395 N M 0 -82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+720 395 N M 0 -82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+951 395 N M 0 -82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1181 395 N M 0 -82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1412 395 N M 0 -82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1643 395 N M 0 -82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1874 395 N M 0 -82 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 322 3027 144 42 rc 0 0 0.502 sco %%IncludeFont: Helvetica
+(F0) cvn
+0.944 
+ (Helvetica) cvn /Type1 
+T 
+(Helvetica) cvn
+mF 
+(F0_36) cvn
+F0
+36 
+xF 
+F0_36
+Ji 
+370 3027 M 
+0.984 0 (1)A 
+; : 322 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+370 333 M 
+0.984 0 (1)A 
+; : 553 3027 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+601 3027 M 
+0.984 0 (2)A 
+; : 553 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+601 333 M 
+0.984 0 (2)A 
+; : 784 3027 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+832 3027 M 
+0.984 0 (3)A 
+; : 784 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+832 333 M 
+0.984 0 (3)A 
+; : 1015 3027 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1063 3027 M 
+0.984 0 (4)A 
+; : 1015 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1063 333 M 
+0.984 0 (4)A 
+; : 1246 3027 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1294 3027 M 
+0.984 0 (5)A 
+; : 1246 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1294 333 M 
+0.984 0 (5)A 
+; : 1477 3027 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1525 3027 M 
+0.984 0 (6)A 
+; : 1477 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1525 333 M 
+0.984 0 (6)A 
+; : 1708 3027 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1756 3027 M 
+0.984 0 (7)A 
+; : 1708 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1756 333 M 
+0.984 0 (7)A 
+; : 1939 3027 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1987 3027 M 
+0.984 0 (8)A 
+; : 1939 333 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+1987 333 M 
+0.984 0 (8)A 
+; : 154 302 2055 2797 rc 
+258 2679 N M -82 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+258 2353 N M -82 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+258 2027 N M -82 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+258 1700 N M -82 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+258 1374 N M -82 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+258 1048 N M -82 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+258 721 N M -82 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+2104 2679 N M 83 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+2104 2353 N M 83 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+2104 2027 N M 83 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+2104 1700 N M 83 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+2104 1374 N M 83 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+2104 1048 N M 83 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+2104 721 N M 83 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 2805 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 2805 M 
+0.988 0 (A)A 
+; : 2083 2805 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 2805 M 
+0.988 0 (A)A 
+; : 154 2478 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 2478 M 
+0.988 0 (B)A 
+; : 2083 2478 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 2478 M 
+0.988 0 (B)A 
+; : 154 2151 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 2151 M 
+1.008 0 (C)A 
+; : 2083 2151 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 2151 M 
+1.008 0 (C)A 
+; : 154 1824 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 1824 M 
+1.008 0 (D)A 
+; : 2083 1824 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 1824 M 
+1.008 0 (D)A 
+; : 154 1500 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 1500 M 
+0.988 0 (E)A 
+; : 2083 1500 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 1500 M 
+0.988 0 (E)A 
+; : 154 1173 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 1173 M 
+1.004 0 (F)A 
+; : 2083 1173 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 1173 M 
+1.004 0 (F)A 
+; : 154 846 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 846 M 
+0.992 0 (G)A 
+; : 2083 846 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 846 M 
+0.992 0 (G)A 
+; : 154 519 144 42 rc 0 0 0.502 sco F0_36
+Ji 
+202 519 M 
+1.008 0 (H)A 
+; : 2083 519 126 42 rc 0 0 0.502 sco F0_36
+Ji 
+2131 519 M 
+1.008 0 (H)A 
+; 
+258 395 N M 1846 2611 rr 0 0 0.502 sco K : 154 302 2055 2797 rc 
+1115 3003 N M 0 -184 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1115 2819 N M 987 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1665 3003 N M 0 -184 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1665 2866 N M 437 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1665 2912 N M 437 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1115 2959 N M 987 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 1078 2820 624 42 rc 0 0 0.502 sco F0_36
+Ji 
+1126 2820 M 
+-0.005 0 (Jeff Davies)A 
+; : 1078 2865 1131 42 rc 0 0 0.502 sco F0_36
+Ji 
+1126 2865 M 
+0.160 0 (Minyllan, Llandre, Bow Street,)A 
+; : 1078 2913 1131 42 rc 0 0 0.502 sco F0_36
+Ji 
+1126 2913 M 
+0.462 0 (Ceredigion, Wales, UK, SA44 6AF.)A 
+; : 1627 2820 582 42 rc 0 0 0.502 sco F0_36
+Ji 
+1675 2820 M 
+0.635 0 (Project: F0016)A 
+; : 1627 2865 582 42 rc 0 0 0.502 sco F0_36
+Ji 
+1675 2865 M 
+0.603 0 (Sheet: F00166)A 
+; : 1627 2913 582 42 rc 0 0 0.502 sco F0_36
+Ji 
+1675 2913 M 
+0.489 0 (Date: 09/30/99)A 
+; : 1078 2958 1056 42 rc 0 0 0.502 sco F0_36
+Ji 
+1126 2958 M 
+0.395 0 (GNU Public Licence: )A 
+; : 1627 2958 528 42 rc 0 0 0.502 sco F0_36
+Ji 
+1675 2958 M 
+0.216 0 (Version: )A 
+; : 1384 1731 432 42 rc 0 0.502 0 sco F0_36
+Ji 
+1432 1731 M 
+0.702 0 (ILLEGAL)A 
+; : 1381 1533 384 42 rc 0 0.502 0 sco F0_36
+Ji 
+1429 1533 M 
+0.997 0 (FREEZE)A 
+; : 1390 1332 576 42 rc 0 0.502 0 sco F0_36
+Ji 
+1438 1332 M 
+0.694 0 (INT ENABLE)A 
+; : 1381 1140 480 42 rc 0 0.502 0 sco F0_36
+Ji 
+1429 1140 M 
+0.747 0 (SOFT_INT)A 
+; : 1363 936 768 42 rc 0 0.502 0 sco F0_36
+Ji 
+1411 936 M 
+0.996 0 (SUPER_NOT_USER)A 
+; : 702 2169 1507 60 rc 0 0.502 0 sco (F0_52) cvn
+F0
+52 
+xF 
+F0_52
+Ji 
+769 2169 M 
+-0.032 0 (SUPERVISOR STATUS REGISTER)A 
+; 
+721 566 N M 1054 1685 rr 0 0.502 0 sco K : 1000 627 108 24 rc 0 0.502 0 sco (F0_21) cvn
+F0
+21 
+xF 
+F0_21
+Ji 
+1027 627 M 
+-0.419 0 (U9)A 
+; : 1000 747 594 24 rc 0 0.502 0 sco F0_21
+Ji 
+1027 747 M 
+-0.137 0 (F00162_8BIT_2CHANMUX)A 
+; : 154 302 2055 2797 rc 
+984 720 N M 44 0 - 1 Lc 1 Lj 0 0 0.502 sco K ; : 1009 705 243 24 rc 0 0 1.000 sco F0_21
+Ji 
+1036 705 M 
+-0.385 0 (A_NOT_B)A 
+; 
+984 676 N M 41 0 - 9 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K : 1009 663 216 24 rc 0 0 1.000 sco F0_21
+Ji 
+1036 663 M 
+0.021 0 (A[7:0])A 
+; 
+984 698 N M 41 0 - 0 0 0.502 sco K : 1009 684 216 24 rc 0 0 1.000 sco F0_21
+Ji 
+1036 684 M 
+0.188 0 (B[7:0])A 
+; 
+1225 698 N M -41 0 - 0 0 0.502 sco K : 1090 684 216 24 rc 0 0 1.000 sco F0_21
+Ji 
+1117 684 M 
+0.133 0 (O[7:0])A 
+; 
+1028 654 N M 153 88 rr 4 Lw 0 Lc 0 Lj solid 0 0 0.502 sco K : 1244 825 128 28 rc 0 0 0.502 sco (F0_26) cvn
+F0
+26 
+xF 
+F0_26
+Ji 
+1276 825 M 
+-0.829 0 (FD)A 
+; : 154 302 2055 2797 rc 
+1203 1028 N M 0 -176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 852 N M 176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 852 N M 0 176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1028 N M -176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 973 N M 11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1214 984 N M -11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 896 N M 44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 896 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 984 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 1192 966 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1219 966 M 
+-0.162 0 (C)A 
+; : 1186 879 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1213 879 M 
+-0.162 0 (D)A 
+; : 1327 879 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1354 879 M 
+-0.338 0 (Q)A 
+; : 1244 1023 128 28 rc 0 0 0.502 sco F0_26
+Ji 
+1276 1023 M 
+-0.829 0 (FD)A 
+; : 154 302 2055 2797 rc 
+1203 1226 N M 0 -176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1050 N M 176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1050 N M 0 176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1226 N M -176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1171 N M 11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1214 1182 N M -11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1094 N M 44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1094 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1182 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 1192 1164 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1219 1164 M 
+-0.162 0 (C)A 
+; : 1186 1077 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1213 1077 M 
+-0.162 0 (D)A 
+; : 1327 1077 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1354 1077 M 
+-0.338 0 (Q)A 
+; : 1244 1221 128 28 rc 0 0 0.502 sco F0_26
+Ji 
+1276 1221 M 
+-0.829 0 (FD)A 
+; : 154 302 2055 2797 rc 
+1203 1423 N M 0 -175 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1248 N M 176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1248 N M 0 175 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1423 N M -176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1368 N M 11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1214 1379 N M -11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1292 N M 44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1292 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1379 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 1192 1362 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1219 1362 M 
+-0.162 0 (C)A 
+; : 1186 1275 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1213 1275 M 
+-0.162 0 (D)A 
+; : 1327 1275 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1354 1275 M 
+-0.338 0 (Q)A 
+; : 1244 1419 128 28 rc 0 0 0.502 sco F0_26
+Ji 
+1276 1419 M 
+-0.829 0 (FD)A 
+; : 154 302 2055 2797 rc 
+1203 1621 N M 0 -176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1445 N M 176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1445 N M 0 176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1621 N M -176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1566 N M 11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1214 1577 N M -11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1489 N M 44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1489 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1577 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 1192 1560 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1219 1560 M 
+-0.162 0 (C)A 
+; : 1186 1470 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1213 1470 M 
+-0.162 0 (D)A 
+; : 1327 1470 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1354 1470 M 
+-0.338 0 (Q)A 
+; : 1244 1617 128 28 rc 0 0 0.502 sco F0_26
+Ji 
+1276 1617 M 
+-0.829 0 (FD)A 
+; : 154 302 2055 2797 rc 
+1203 1819 N M 0 -176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1643 N M 176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1643 N M 0 176 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1819 N M -176 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1764 N M 11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1214 1775 N M -11 11 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1379 1687 N M 44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1687 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1203 1775 N M -44 0 - 1 Lw 1 Lc 1 Lj solid 0 0 0.502 sco K ; : 1192 1758 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1219 1758 M 
+-0.162 0 (C)A 
+; : 1186 1668 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1213 1668 M 
+-0.162 0 (D)A 
+; : 1327 1668 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1354 1668 M 
+-0.338 0 (Q)A 
+; 
+N 10 9 1027 895 ellp : 0 0 1.000 sco O ; 1 Lw 1 Lc 1 Lj solid 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1028 896 N M 0 0 - 0.502 0 0 sco K ; 
+N 1027 1093 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1028 1094 N M 0 0 - 0.502 0 0 sco K ; 
+N 1027 1291 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1028 1292 N M 0 0 - 0.502 0 0 sco K ; 
+N 1027 1489 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1028 1489 N M 0 0 - 0.502 0 0 sco K ; 
+N 1005 1687 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1006 1687 N M 0 0 - 0.502 0 0 sco K ; : 908 1029 160 28 rc 0.502 0 0 sco F0_26
+Ji 
+940 1029 M 
+-0.819 0 (OR2)A 
+; 
+N 995.000 958.000 58.000 91.481 25.463 An 
+0.502 0 0 sco K 
+N 927.000 983.000 39.000 56.310 -55.905 An 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 951 N M 44 0 - 0.502 0 0 sco K ; 
+N 995.000 1010.000 58.000 -25.463 -91.481 An 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 1017 N M 44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 1006 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 962 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+1049 984 N M 44 0 - 0.502 0 0 sco K ; : 908 1227 160 28 rc 0.502 0 0 sco F0_26
+Ji 
+940 1227 M 
+-0.819 0 (OR2)A 
+; 
+N 995.000 1156.000 58.000 91.481 25.463 An 
+0.502 0 0 sco K 
+N 927.000 1181.000 39.000 56.310 -55.905 An 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 1149 N M 44 0 - 0.502 0 0 sco K ; 
+N CTMsave 
+995.000 1207.500 + 116 115 +S 
+0 0 0.500 -25.432 -91.475 An 
+CTMrestore 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 1215 N M 44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 1204 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 1160 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+1049 1182 N M 44 0 - 0.502 0 0 sco K ; : 908 1422 160 28 rc 0.502 0 0 sco F0_26
+Ji 
+940 1422 M 
+-0.819 0 (OR2)A 
+; 
+N CTMsave 
+995.000 1353.500 + 116 115 +S 
+0 0 0.500 91.462 25.880 An 
+CTMrestore 
+0.502 0 0 sco K 
+N 927.000 1379.000 39.000 55.905 -55.905 An 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 1346 N M 44 0 - 0.502 0 0 sco K ; 
+N CTMsave 
+995.000 1405.500 + 116 115 +S 
+0 0 0.500 -25.880 -91.462 An 
+CTMrestore 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 1412 N M 44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 1401 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 1357 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+1049 1379 N M 44 0 - 0.502 0 0 sco K ; : 908 1620 160 28 rc 0.502 0 0 sco F0_26
+Ji 
+940 1620 M 
+-0.819 0 (OR2)A 
+; 
+N CTMsave 
+995.000 1551.500 + 116 115 +S 
+0 0 0.500 91.475 25.432 An 
+CTMrestore 
+0.502 0 0 sco K 
+N 927.000 1577.000 39.000 55.905 -56.310 An 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 1544 N M 44 0 - 0.502 0 0 sco K ; 
+N 995.000 1603.000 58.000 -25.463 -91.481 An 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+951 1610 N M 44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 1599 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+962 1555 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+1049 1577 N M 44 0 - 0.502 0 0 sco K ; 
+N 851 808 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+852 808 N M 0 0 - 0.502 0 0 sco K ; 
+N 10 9 1554 895 ellp : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1555 896 N M 0 0 - 0.502 0 0 sco K ; 
+N 1554 1093 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1555 1094 N M 0 0 - 0.502 0 0 sco K ; 
+N 1554 1291 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1555 1292 N M 0 0 - 0.502 0 0 sco K ; 
+N 1554 1489 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1555 1489 N M 0 0 - 0.502 0 0 sco K ; 
+N 1576 1687 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1577 1687 N M 0 0 - 0.502 0 0 sco K ; : 1232 1923 224 28 rc 0 0 0.502 sco F0_26
+Ji 
+1264 1923 M 
+-0.868 0 (BUFT8)A 
+; : 154 302 2055 2797 rc 
+1269 2039 N M 0 -44 - 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1269 1995 N M 44 22 - 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1313 2017 N M -44 22 - 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1269 1973 N M 22 0 - 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1291 1973 N M 0 33 - 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1269 2017 N M -44 0 - 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1269 1973 N M -44 0 - 0 0 0.502 sco K ; : 154 302 2055 2797 rc 
+1313 2017 N M 66 0 - 0 0 0.502 sco K ; 
+1225 2017 N M 42 0 - 9 Lw solid 0 0 0.502 sco K 
+1379 2017 N M -42 0 - 0 0 0.502 sco K : 1210 1950 81 24 rc 0 0 1.000 sco F0_21
+Ji 
+1237 1950 M 
+-0.831 0 (T)A 
+; : 929 1818 160 28 rc 0.502 0 0 sco F0_26
+Ji 
+961 1818 M 
+-0.819 0 (OR2)A 
+; 
+N CTMsave 
+1017.000 1749.500 + 116 115 +S 
+0 0 0.500 91.475 25.432 An 
+CTMrestore 
+1 Lw solid 0.502 0 0 sco K 
+N CTMsave 
+949.000 1774.500 + 78 79 +S 
+0 0 0.500 55.770 -55.770 An 
+CTMrestore 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+973 1742 N M 44 0 - 0.502 0 0 sco K ; 
+N 1017.000 1801.000 58.000 -25.463 -91.481 An 
+0.502 0 0 sco K : 154 302 2055 2797 rc 
+973 1808 N M 44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+984 1797 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+984 1753 N M -44 0 - 0.502 0 0 sco K ; : 154 302 2055 2797 rc 
+1071 1775 N M 44 0 - 0.502 0 0 sco K ; 
+N 1071 1906 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1071 1907 N M 0 0 - 0.502 0 0 sco K ; 
+N 851 1906 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+852 1907 N M 0 0 - 0.502 0 0 sco K ; 
+N 1137 1731 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1137 1731 N M 0 0 - 0.502 0 0 sco K ; 
+N 1137 1511 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1137 1511 N M 0 0 - 0.502 0 0 sco K ; 
+N 1137 1313 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1137 1314 N M 0 0 - 0.502 0 0 sco K ; 
+N 1159 1137 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1159 1138 N M 0 0 - 0.502 0 0 sco K ; 
+N 1137 939 5.000 360 0 An C : 0 0 1.000 sco O ; 0 0 1.000 sco K : 154 302 2055 2797 rc 
+1137 940 N M 0 0 - 0.502 0 0 sco K ; 
+1137 2017 N M 88 0 - 9 Lw solid 0.502 0 0 sco K : 937 2010 405 24 rc 0 0.502 0 sco F0_21
+Ji 
+964 2010 M 
+-0.196 0 (SUPEROUT[7:0])A 
+; 
+1379 2017 N M 0 132 - 0.502 0 0 sco K 
+1379 2149 N M -571 0 - 0.502 0 0 sco K 
+808 2149 N M 0 -308 - 0.502 0 0 sco K : 1138 2118 621 24 rc 0 0.502 0 sco F0_21
+Ji 
+1165 2118 M 
+-0.313 0 (INTERNAL_DATABUS[7:0])A 
+; 
+1225 698 N M 88 0 - 0.502 0 0 sco K : 1291 690 405 24 rc 0 0.502 0 sco F0_21
+Ji 
+1318 690 M 
+-0.107 0 (SUPERBUS[7:0])A 
+; 
+984 698 N M -198 0 - 0.502 0 0 sco K : 808 669 621 24 rc 0 0.502 0 sco F0_21
+Ji 
+835 669 M 
+-0.313 0 (INTERNAL_DATABUS[7:0])A 
+; 
+940 610 N M 0 66 - 0.502 0 0 sco K 
+940 676 N M 44 0 - 0.502 0 0 sco K : 919 603 405 24 rc 0 0.502 0 sco F0_21
+Ji 
+946 603 M 
+-0.081 0 (SUPERSET[7:0])A 
+; : 154 302 2055 2797 rc 
+1028 896 N M 131 0 - 1 Lw solid 0 0 1.000 sco K ; : 1069 870 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1096 870 M 
+-0.244 0 (SUPERBUS0)A 
+; : 154 302 2055 2797 rc 
+1028 1094 N M 131 0 - 1 Lw solid 0 0 1.000 sco K ; : 1024 1068 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1051 1068 M 
+-0.244 0 (SUPERBUS1)A 
+; : 154 302 2055 2797 rc 
+1028 1292 N M 131 0 - 1 Lw solid 0 0 1.000 sco K ; : 1024 1266 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1051 1266 M 
+-0.244 0 (SUPERBUS2)A 
+; : 154 302 2055 2797 rc 
+1028 1489 N M 131 0 - 1 Lw solid 0 0 1.000 sco K ; : 1048 1464 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1075 1464 M 
+-0.244 0 (SUPERBUS3)A 
+; : 154 302 2055 2797 rc 
+1006 1687 N M 153 0 - 1 Lw solid 0 0 1.000 sco K ; : 1069 1662 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1096 1662 M 
+-0.244 0 (SUPERBUS4)A 
+; : 154 302 2055 2797 rc 
+1093 984 N M -44 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 984 N M 0 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 984 N M 110 0 - 1 Lw solid 0 0 1.000 sco K ; : 1090 960 405 24 rc 0 0 1.000 sco F0_21
+Ji 
+1117 960 M 
+-0.222 0 (LOAD_SUPERBIT)A 
+; : 154 302 2055 2797 rc 
+1093 1182 N M -44 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1182 N M 0 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1182 N M 110 0 - 1 Lw solid 0 0 1.000 sco K ; : 1024 1158 513 24 rc 0 0 1.000 sco F0_21
+Ji 
+1051 1158 M 
+-0.219 0 (LOAD_SOFT_INT_BIT)A 
+; : 154 302 2055 2797 rc 
+1093 1379 N M -44 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1379 N M 0 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1379 N M 110 0 - 1 Lw solid 0 0 1.000 sco K ; : 1114 1353 567 24 rc 0 0 1.000 sco F0_21
+Ji 
+1141 1353 M 
+-0.241 0 (LOAD_INT_ENABLE_BIT)A 
+; : 154 302 2055 2797 rc 
+1093 1577 N M -44 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1577 N M 0 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1577 N M 110 0 - 1 Lw solid 0 0 1.000 sco K ; : 1024 1551 459 24 rc 0 0 1.000 sco F0_21
+Ji 
+1051 1551 M 
+-0.070 0 (LOAD_FREEZE_BIT)A 
+; : 154 302 2055 2797 rc 
+852 808 N M 0 -88 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+852 720 N M 132 0 - 1 Lw solid 0 0 1.000 sco K ; : 826 738 486 24 rc 0 0 1.000 sco F0_21
+Ji 
+853 738 M 
+-0.316 0 (SUPERSET_NOT_BUS)A 
+; : 154 302 2055 2797 rc 
+1555 896 N M -132 0 - 1 Lw solid 0 0 1.000 sco K ; : 1441 870 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1468 870 M 
+-0.372 0 (SUPEROUT0)A 
+; : 154 302 2055 2797 rc 
+1555 1094 N M -132 0 - 1 Lw solid 0 0 1.000 sco K ; : 1441 1068 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1468 1068 M 
+-0.372 0 (SUPEROUT1)A 
+; : 154 302 2055 2797 rc 
+1555 1292 N M -132 0 - 1 Lw solid 0 0 1.000 sco K ; : 1465 1266 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1492 1266 M 
+-0.372 0 (SUPEROUT2)A 
+; : 154 302 2055 2797 rc 
+1555 1489 N M -132 0 - 1 Lw solid 0 0 1.000 sco K ; : 1465 1464 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1492 1464 M 
+-0.372 0 (SUPEROUT3)A 
+; : 154 302 2055 2797 rc 
+1577 1687 N M -154 0 - 1 Lw solid 0 0 1.000 sco K ; : 1465 1662 297 24 rc 0 0 1.000 sco F0_21
+Ji 
+1492 1662 M 
+-0.372 0 (SUPEROUT4)A 
+; : 154 302 2055 2797 rc 
+1115 1775 N M -66 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1775 N M 0 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1049 1775 N M 110 0 - 1 Lw solid 0 0 1.000 sco K ; : 1114 1749 486 24 rc 0 0 1.000 sco F0_21
+Ji 
+1141 1749 M 
+-0.089 0 (LOAD_ILLEGAL_BIT)A 
+; : 154 302 2055 2797 rc 
+1071 1907 N M 0 66 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1071 1973 N M 154 0 - 1 Lw solid 0 0 1.000 sco K ; : 1090 1947 459 24 rc 0 0 1.000 sco F0_21
+Ji 
+1117 1947 M 
+-0.348 0 (ENABLE_SUPEROUT)A 
+; : 154 302 2055 2797 rc 
+940 1753 N M -22 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+918 1753 N M 0 -44 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+918 1709 N M 219 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1137 1709 N M 0 22 - 1 Lw solid 0 0 1.000 sco K ; : 1069 1683 459 24 rc 0 0 1.000 sco F0_21
+Ji 
+1096 1683 M 
+-0.138 0 (UC_LOAD_ILLEGAL)A 
+; : 154 302 2055 2797 rc 
+918 1555 N M -22 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 1555 N M 0 -44 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 1511 N M 241 0 - 1 Lw solid 0 0 1.000 sco K ; : 1069 1485 432 24 rc 0 0 1.000 sco F0_21
+Ji 
+1096 1485 M 
+-0.122 0 (UC_LOAD_FREEZE)A 
+; : 154 302 2055 2797 rc 
+918 1357 N M -22 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 1357 N M 0 -43 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 1314 N M 241 0 - 1 Lw solid 0 0 1.000 sco K ; : 1024 1287 513 24 rc 0 0 1.000 sco F0_21
+Ji 
+1051 1287 M 
+-0.327 0 (UC_LOAD_INTENABLE)A 
+; : 154 302 2055 2797 rc 
+918 1160 N M -22 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 1160 N M 0 -44 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 1116 N M 219 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1115 1116 N M 0 44 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1115 1160 N M 44 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1159 1160 N M 0 -22 - 1 Lw solid 0 0 1.000 sco K ; : 1048 1092 459 24 rc 0 0 1.000 sco F0_21
+Ji 
+1075 1092 M 
+-0.313 0 (UC_LOAD_SOFTINT)A 
+; : 154 302 2055 2797 rc 
+918 962 N M -22 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 962 N M 0 -44 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+896 918 N M 241 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+1137 918 N M 0 22 - 1 Lw solid 0 0 1.000 sco K ; : 1114 894 486 24 rc 0 0 1.000 sco F0_21
+Ji 
+1141 894 M 
+-0.243 0 (UC_LOAD_SUPERBIT)A 
+; : 154 302 2055 2797 rc 
+918 1006 N M -44 0 - 1 Lw solid 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+874 1006 N M 0 198 - 1 Lw solid 0 0 1.000 sco K ; 
+869 1199 N M 9 9 rr : 0 1.000 1.000 sco O ; 1 Lw 0 Lc 0 Lj solid 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+874 1204 N M 44 0 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+869 1199 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+918 1401 N M -66 0 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+847 1397 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+852 1401 N M 0 -197 - 1 Lc 1 Lj 0 0 1.000 sco K ; : 154 302 2055 2797 rc 
+852 1204 N M 22 0 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+847 1397 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K 
+869 1199 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+918 1599 N M -66 0 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+847 1595 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+852 1599 N M 0 -198 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+847 1595 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K 
+847 1397 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+940 1797 N M -88 0 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+847 1793 N M 9 8 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+852 1797 N M 0 -198 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+847 1793 N M 9 8 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K 
+847 1595 N M 9 9 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 154 302 2055 2797 rc 
+852 1797 N M 0 110 - 1 Lc 1 Lj 0 0 1.000 sco K ; 
+847 1793 N M 9 8 rr : 0 1.000 1.000 sco O ; 0 1.000 1.000 sco K : 826 1860 270 24 rc 0 0 1.000 sco F0_21
+Ji 
+853 1860 M 
+-0.129 0 (LOAD_SSR)A 
+; 
+LH 
+savelevel1 restore 
+pagesave restore
+
+(%%[ Page: 1 ]%%)  =
+%%PageTrailer
+
+%%Trailer
+%%DocumentNeededFonts: 
+%%DocumentSuppliedFonts: 
+/Pscript_Win_Driver /ProcSet findresource dup /terminate get exec
+Pscript_Win_Compat dup /terminate get exec
+%%Pages: 1
+(%%[ LastPage ]%%)  =
+%%EOF
+%-12345X@PJL EOJ
+%-12345X

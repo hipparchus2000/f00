@@ -142,13 +142,13 @@ architecture behavioral of f00_cpu_online is
     -- Instruction memory (hardcoded test program)
     type imem_t is array (0 to 15) of std_logic_vector(15 downto 0);
     signal imem : imem_t := (
-        0  => x"4110",  -- LOADIMM R1, next_word
+        0  => x"4100",  -- LOADIMM R1, next_word (01 010000 00001 00000)
         1  => x"1234",  -- immediate value
-        2  => x"4120",  -- LOADIMM R2, next_word
+        2  => x"4120",  -- LOADIMM R2, next_word (01 010000 00010 00000)
         3  => x"5678",  -- immediate value
-        4  => x"8B04",  -- ADD R1, R2
-        5  => x"8252",  -- MOVE R2, R3
-        6  => x"8594",  -- JUMPABS R20 (loop back to 0)
+        4  => x"8B04",  -- ADD R1, R2 (10 001011 00001 00010)
+        5  => x"8252",  -- MOVE R2, R3 (10 000010 00010 00011)
+        6  => x"8514",  -- JUMPABS R20 (10 000101 10100 00000) - R20 should contain loop address
         others => x"0000"
     );
 

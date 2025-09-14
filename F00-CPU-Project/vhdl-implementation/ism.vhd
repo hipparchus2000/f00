@@ -414,6 +414,42 @@ begin
             when SUB1        => CURRENT_STATE_OUT <= x"60";
             when SUB2        => CURRENT_STATE_OUT <= x"61";
             when SUB3        => CURRENT_STATE_OUT <= x"62";
+            when AND1        => CURRENT_STATE_OUT <= x"70";
+            when AND2        => CURRENT_STATE_OUT <= x"71";
+            when AND3        => CURRENT_STATE_OUT <= x"72";
+            when OR1         => CURRENT_STATE_OUT <= x"80";
+            when OR2         => CURRENT_STATE_OUT <= x"81";
+            when OR3         => CURRENT_STATE_OUT <= x"82";
+            when NOT1        => CURRENT_STATE_OUT <= x"90";
+            when NOT2        => CURRENT_STATE_OUT <= x"91";
+            when NOT3        => CURRENT_STATE_OUT <= x"92";
+            when SHIFTL1     => CURRENT_STATE_OUT <= x"A0";
+            when SHIFTL2     => CURRENT_STATE_OUT <= x"A1";
+            when SHIFTL3     => CURRENT_STATE_OUT <= x"A2";
+            when SHIFTR1     => CURRENT_STATE_OUT <= x"A3";
+            when SHIFTR2     => CURRENT_STATE_OUT <= x"A4";
+            when SHIFTR3     => CURRENT_STATE_OUT <= x"A5";
+            when JUMPABS1    => CURRENT_STATE_OUT <= x"B0";
+            when JUMPABS2    => CURRENT_STATE_OUT <= x"B1";
+            when JUMPREL1    => CURRENT_STATE_OUT <= x"B2";
+            when JUMPREL2    => CURRENT_STATE_OUT <= x"B3";
+            when JUMPRIMM1   => CURRENT_STATE_OUT <= x"B4";
+            when JUMPRIMM2   => CURRENT_STATE_OUT <= x"B5";
+            when JUMPRIMM3   => CURRENT_STATE_OUT <= x"B6";
+            when JUMPRIMMC1  => CURRENT_STATE_OUT <= x"B7";
+            when JUMPRIMMC2  => CURRENT_STATE_OUT <= x"B8";
+            when JUMPRIMMC3  => CURRENT_STATE_OUT <= x"B9";
+            when JUMPRIMMZ1  => CURRENT_STATE_OUT <= x"BA";
+            when JUMPRIMMZ2  => CURRENT_STATE_OUT <= x"BB";
+            when JUMPRIMMZ3  => CURRENT_STATE_OUT <= x"BC";
+            when JUMPRIMMO1  => CURRENT_STATE_OUT <= x"BD";
+            when JUMPRIMMO2  => CURRENT_STATE_OUT <= x"BE";
+            when JUMPRIMMO3  => CURRENT_STATE_OUT <= x"BF";
+            when SYSCALL1    => CURRENT_STATE_OUT <= x"C0";
+            when SYSCALL2    => CURRENT_STATE_OUT <= x"C1";
+            when SUPERSWAP1  => CURRENT_STATE_OUT <= x"C2";
+            when SUPERSWAP2  => CURRENT_STATE_OUT <= x"C3";
+            when SUPERSWAP3  => CURRENT_STATE_OUT <= x"C4";
             when others      => CURRENT_STATE_OUT <= x"FF";
         end case;
     end process;
@@ -521,7 +557,246 @@ begin
                 
             when MOVE5 =>
                 WRITE_TO_REGISTERS          <= '1';
-                
+
+            -- LOAD instruction states
+            when LOAD1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';  -- Enable source register address
+                ENABLE_REGISTERS_TO_BUS     <= '1';  -- Put address on bus
+
+            when LOAD2 =>
+                ENABLE_EXTERNAL_TO_INTERNAL <= '1';  -- Enable memory read
+                MEMREQ                      <= '1';  -- Request memory access
+                MEM_READ_NOT_WRITE          <= '1';  -- Set for read operation
+
+            when LOAD3 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';  -- Enable dest register address
+                WRITE_TO_REGISTERS          <= '1';  -- Write loaded data to register
+
+            -- STORE instruction states
+            when STORE1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';  -- Enable source register (data)
+                ENABLE_REGISTERS_TO_BUS     <= '1';  -- Put data on bus
+
+            when STORE2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';  -- Enable address register
+                ENABLE_INTERNAL_TO_EXTERNAL <= '1';  -- Enable memory write
+                MEMREQ                      <= '1';  -- Request memory access
+                MEM_READ_NOT_WRITE          <= '0';  -- Set for write operation
+
+            when STORE3 =>
+                -- Complete store operation
+                null;
+
+            -- LOADIMM instruction states
+            when LOADIMM1 =>
+                INCREMENT_PC                <= '1';  -- Move to next word (immediate)
+                MEMREQ                      <= '1';  -- Fetch immediate value
+                MEM_READ_NOT_WRITE          <= '1';
+
+            when LOADIMM2 =>
+                ENABLE_EXTERNAL_TO_INTERNAL <= '1';  -- Get immediate from memory
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';  -- Enable destination register
+
+            when LOADIMM3 =>
+                WRITE_TO_REGISTERS          <= '1';  -- Write immediate to register
+
+            -- ADD instruction states
+            when ADD1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';  -- Enable first operand
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_BUS_TO_ALU           <= '1';
+
+            when ADD2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';  -- Enable second operand
+                ENABLE_TEMP_TO_ALU          <= '1';  -- Use temp register
+                ALU_ADD                     <= '1';  -- Set ALU to add mode
+                ENABLE_ADDER_TO_RESULT      <= '1';
+
+            when ADD3 =>
+                ENABLE_RESULT_TO_BUS        <= '1';
+                WRITE_TO_REGISTERS          <= '1';
+                ENABLE_CARRY_FROM_ALU       <= '1';
+                UPDATE_FLAGS                <= '1';
+
+            -- SUB instruction states
+            when SUB1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_BUS_TO_ALU           <= '1';
+
+            when SUB2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';
+                ENABLE_TEMP_TO_ALU          <= '1';
+                ALU_ADD                     <= '0';  -- Set ALU to subtract mode
+                ENABLE_ADDER_TO_RESULT      <= '1';
+
+            when SUB3 =>
+                ENABLE_RESULT_TO_BUS        <= '1';
+                WRITE_TO_REGISTERS          <= '1';
+                ENABLE_CARRY_FROM_ALU       <= '1';
+                UPDATE_FLAGS                <= '1';
+
+            -- AND instruction states
+            when AND1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_CODEBUS_TO_LOGICAL   <= '1';
+
+            when AND2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';
+                ENABLE_DATABUS_TO_LOGICAL   <= '1';
+                ENABLE_AND_TO_RESULT        <= '1';
+
+            when AND3 =>
+                ENABLE_RESULT_TO_BUS        <= '1';
+                WRITE_TO_REGISTERS          <= '1';
+                UPDATE_FLAGS                <= '1';
+
+            -- OR instruction states
+            when OR1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_CODEBUS_TO_LOGICAL   <= '1';
+
+            when OR2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';
+                ENABLE_DATABUS_TO_LOGICAL   <= '1';
+                ENABLE_OR_TO_RESULT         <= '1';
+
+            when OR3 =>
+                ENABLE_RESULT_TO_BUS        <= '1';
+                WRITE_TO_REGISTERS          <= '1';
+                UPDATE_FLAGS                <= '1';
+
+            -- NOT instruction states
+            when NOT1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_CODEBUS_TO_LOGICAL   <= '1';
+
+            when NOT2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';
+                ENABLE_INVERT_TO_RESULT     <= '1';
+
+            when NOT3 =>
+                ENABLE_RESULT_TO_BUS        <= '1';
+                WRITE_TO_REGISTERS          <= '1';
+                UPDATE_FLAGS                <= '1';
+
+            -- SHIFTL instruction states
+            when SHIFTL1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_LOAD_SHIFT           <= '1';
+                SHIFT_LEFT_NOT_RIGHT        <= '1';
+
+            when SHIFTL2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';
+                ENABLE_SHIFTER_TO_RESULT    <= '1';
+                ENABLE_SHIFT_OUT_TO_CARRY_IN <= '1';
+
+            when SHIFTL3 =>
+                ENABLE_RESULT_TO_BUS        <= '1';
+                WRITE_TO_REGISTERS          <= '1';
+                UPDATE_FLAGS                <= '1';
+
+            -- SHIFTR instruction states
+            when SHIFTR1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_LOAD_SHIFT           <= '1';
+                SHIFT_LEFT_NOT_RIGHT        <= '0';
+
+            when SHIFTR2 =>
+                ENABLE_UP_REGADDR_TO_REG    <= '1';
+                ENABLE_SHIFTER_TO_RESULT    <= '1';
+                ENABLE_SHIFT_OUT_TO_CARRY_IN <= '1';
+
+            when SHIFTR3 =>
+                ENABLE_RESULT_TO_BUS        <= '1';
+                WRITE_TO_REGISTERS          <= '1';
+                UPDATE_FLAGS                <= '1';
+
+            -- JUMPABS instruction states
+            when JUMPABS1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';  -- Enable register with jump address
+                ENABLE_REGISTERS_TO_BUS     <= '1';  -- Put address on bus
+
+            when JUMPABS2 =>
+                LOAD_PC                     <= '1';  -- Load new PC value
+                ENABLE_PC_TO_BUS            <= '1';
+
+            -- JUMPREL instruction states
+            when JUMPREL1 =>
+                ENABLE_DOWN_REGADDR_TO_REG  <= '1';  -- Enable register with offset
+                ENABLE_REGISTERS_TO_BUS     <= '1';
+                ENABLE_PC_TO_BUS            <= '1';  -- Add to current PC
+
+            when JUMPREL2 =>
+                ENABLE_ADDER_TO_RESULT      <= '1';  -- PC + offset
+                ALU_ADD                     <= '1';
+                LOAD_PC                     <= '1';
+
+            -- JUMPRIMM instruction states
+            when JUMPRIMM1 =>
+                INCREMENT_PC                <= '1';  -- Skip to next word
+                MEMREQ                      <= '1';  -- Fetch offset
+                MEM_READ_NOT_WRITE          <= '1';
+
+            when JUMPRIMM2 =>
+                ENABLE_EXTERNAL_TO_INTERNAL <= '1';  -- Get offset from memory
+                ENABLE_PC_TO_BUS            <= '1';  -- Current PC
+
+            when JUMPRIMM3 =>
+                ENABLE_ADDER_TO_RESULT      <= '1';  -- PC + offset
+                ALU_ADD                     <= '1';
+                LOAD_PC                     <= '1';
+
+            -- JUMPRIMMC instruction states (jump if carry)
+            when JUMPRIMMC1 =>
+                INCREMENT_PC                <= '1';
+                MEMREQ                      <= '1';
+                MEM_READ_NOT_WRITE          <= '1';
+
+            when JUMPRIMMC2 =>
+                ENABLE_EXTERNAL_TO_INTERNAL <= '1';
+                -- Check carry flag condition here (implementation dependent)
+
+            when JUMPRIMMC3 =>
+                -- Conditional jump based on carry flag
+                ENABLE_ADDER_TO_RESULT      <= '1';
+                ALU_ADD                     <= '1';
+                LOAD_PC                     <= '1';  -- Only if carry set
+
+            -- JUMPRIMMZ instruction states (jump if zero)
+            when JUMPRIMMZ1 =>
+                INCREMENT_PC                <= '1';
+                MEMREQ                      <= '1';
+                MEM_READ_NOT_WRITE          <= '1';
+
+            when JUMPRIMMZ2 =>
+                ENABLE_EXTERNAL_TO_INTERNAL <= '1';
+                -- Check zero flag condition here (implementation dependent)
+
+            when JUMPRIMMZ3 =>
+                -- Conditional jump based on zero flag
+                ENABLE_ADDER_TO_RESULT      <= '1';
+                ALU_ADD                     <= '1';
+                LOAD_PC                     <= '1';  -- Only if zero set
+
+            -- SYSCALL instruction states
+            when SYSCALL1 =>
+                -- Save current state and switch to supervisor mode
+                UC_LOAD_SUPERBIT           <= '1';  -- Enter supervisor mode
+                UC_LOAD_SOFTINT             <= '1';  -- Set software interrupt
+                ENABLE_SUPERREG_WRITE       <= '1';  -- Save PC to supervisor register
+
+            when SYSCALL2 =>
+                -- Jump to system call handler
+                SUPERREG_ADDR_FROM_UCODE    <= "010";  -- SR2 contains handler address
+                ENABLE_SUPERREG_READ        <= '1';
+                LOAD_PC                     <= '1';
+
             when others =>
                 -- Default state - same as RESET_STATE
                 ENABLE_CODEBUS_TO_LOGICAL   <= '1';

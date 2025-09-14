@@ -14,7 +14,7 @@ entity ism is
         RESET_N                         : in  std_logic;  -- Active low reset
         
         -- Input ports
-        IBUS                            : in  std_logic_vector(15 downto 10);
+        IBUS                            : in  std_logic_vector(15 downto 0);  -- Full 16-bit instruction
         INTERRUPT                       : in  std_logic;
         
         -- Output control signals
@@ -76,7 +76,12 @@ entity ism is
         UC_LOAD_SUPERBIT               : out std_logic;
         WRITE_ENABLE_REGISTERS          : out std_logic;
         WRITE_MMU                       : out std_logic;
-        WRITE_TO_REGISTERS              : out std_logic
+        WRITE_TO_REGISTERS              : out std_logic;
+        -- Additional outputs for debugging and integration
+        CURRENT_STATE_OUT               : out std_logic_vector(7 downto 0);
+        INSTRUCTION_OPCODE              : out std_logic_vector(5 downto 0);
+        OPERAND1                        : out std_logic_vector(4 downto 0);
+        OPERAND2                        : out std_logic_vector(4 downto 0)
     );
 end entity ism;
 
@@ -87,29 +92,82 @@ architecture behavioral of ism is
         IFETCH1,
         IFETCH2, 
         IFETCH3,
-        MOVE1,
-        MOVE2,
-        MOVE3,
-        MOVE4,
-        MOVE5
+        -- Data Movement Instructions
+        MOVE1, MOVE2, MOVE3, MOVE4, MOVE5,
+        LOAD1, LOAD2, LOAD3,
+        STORE1, STORE2, STORE3,
+        LOADIMM1, LOADIMM2, LOADIMM3,
+        -- Arithmetic Instructions  
+        ADD1, ADD2, ADD3,
+        SUB1, SUB2, SUB3,
+        -- Logical Instructions
+        AND1, AND2, AND3,
+        OR1, OR2, OR3,
+        NOT1, NOT2, NOT3,
+        -- Shift Instructions
+        SHIFTL1, SHIFTL2, SHIFTL3,
+        SHIFTR1, SHIFTR2, SHIFTR3,
+        -- Jump Instructions
+        JUMPABS1, JUMPABS2,
+        JUMPREL1, JUMPREL2,
+        JUMPRIMM1, JUMPRIMM2, JUMPRIMM3,
+        JUMPRIMMC1, JUMPRIMMC2, JUMPRIMMC3,
+        JUMPRIMMZ1, JUMPRIMMZ2, JUMPRIMMZ3,
+        JUMPRIMMO1, JUMPRIMMO2, JUMPRIMMO3,
+        -- System Instructions
+        SYSCALL1, SYSCALL2,
+        SUPERSWAP1, SUPERSWAP2, SUPERSWAP3
     );
     
     signal current_state, next_state : state_type;
     
     -- Instruction decode signals
     signal instruction_opcode : std_logic_vector(5 downto 0);
+    signal instruction_format : std_logic_vector(1 downto 0);
+    signal operand1 : std_logic_vector(4 downto 0);
+    signal operand2 : std_logic_vector(4 downto 0);
+    signal short_immediate : std_logic_vector(4 downto 0);
     
-    -- Constants for instruction opcodes (from simulator and assembler)
-    -- The original Abel code checks for specific instruction patterns
-    -- IBUS==1 (binary 000001), IBUS==1024 (binary 10000000000), IBUS==2048 (binary 100000000000)
-    -- But these should be 16-bit values, so we need to check the full instruction word
-    constant MOVE_INSTRUCTION_1    : std_logic_vector(5 downto 0) := "000001";  -- 1
-    constant MOVE_INSTRUCTION_1024 : std_logic_vector(5 downto 0) := "000010";  -- Simplified for 6-bit check
-    constant MOVE_INSTRUCTION_2048 : std_logic_vector(5 downto 0) := "000100";  -- Simplified for 6-bit check
+    -- Full 16-bit instruction word input (expanded from 6-bit IBUS)
+    signal INSTRUCTION : std_logic_vector(15 downto 0);
+    
+    -- Constants for instruction opcodes (matching JavaScript simulator)
+    constant OPCODE_LOAD     : std_logic_vector(5 downto 0) := "000000";  -- 0
+    constant OPCODE_STORE    : std_logic_vector(5 downto 0) := "000001";  -- 1  
+    constant OPCODE_MOVE     : std_logic_vector(5 downto 0) := "000010";  -- 2
+    constant OPCODE_SHIFTL   : std_logic_vector(5 downto 0) := "000011";  -- 3
+    constant OPCODE_SHIFTR   : std_logic_vector(5 downto 0) := "000100";  -- 4
+    constant OPCODE_JUMPABS  : std_logic_vector(5 downto 0) := "000101";  -- 5
+    constant OPCODE_JUMPRIMM : std_logic_vector(5 downto 0) := "000110";  -- 6
+    constant OPCODE_JUMPRIMMC: std_logic_vector(5 downto 0) := "000111";  -- 7
+    constant OPCODE_JUMPRIMMZ: std_logic_vector(5 downto 0) := "001000";  -- 8
+    constant OPCODE_JUMPRIMMO: std_logic_vector(5 downto 0) := "001001";  -- 9
+    constant OPCODE_JUMPREL  : std_logic_vector(5 downto 0) := "001010";  -- 10
+    constant OPCODE_ADD      : std_logic_vector(5 downto 0) := "001011";  -- 11
+    constant OPCODE_SUB      : std_logic_vector(5 downto 0) := "001100";  -- 12
+    constant OPCODE_LOADIMM  : std_logic_vector(5 downto 0) := "010000";  -- 16
+    constant OPCODE_SUPERSWAP: std_logic_vector(5 downto 0) := "100000";  -- 32
+    constant OPCODE_AND      : std_logic_vector(5 downto 0) := "100001";  -- 33
+    constant OPCODE_OR       : std_logic_vector(5 downto 0) := "100010";  -- 34
+    constant OPCODE_NOT      : std_logic_vector(5 downto 0) := "100011";  -- 35
+    constant OPCODE_SYSCALL  : std_logic_vector(5 downto 0) := "110000";  -- 48
+    
+    -- Format constants
+    constant FORMAT_LOADIMM  : std_logic_vector(1 downto 0) := "01";  -- Format 1
+    constant FORMAT_REGULAR  : std_logic_vector(1 downto 0) := "10";  -- Format 2
     
 begin
-    -- Convert IBUS to instruction opcode (simplified)
-    instruction_opcode <= IBUS;
+    -- Instruction decode - extract fields from 16-bit instruction word
+    instruction_format <= IBUS(15 downto 14);
+    instruction_opcode <= IBUS(13 downto 8);
+    operand1 <= IBUS(9 downto 5);
+    operand2 <= IBUS(4 downto 0);
+    short_immediate <= IBUS(4 downto 0);  -- For immediate addressing
+
+    -- Connect to output ports for debugging
+    INSTRUCTION_OPCODE <= instruction_opcode;
+    OPERAND1 <= operand1;
+    OPERAND2 <= operand2;
     
     -- State register process
     state_register: process(CLOCK, RESET_N)
@@ -135,16 +193,50 @@ begin
                 next_state <= IFETCH3;
                 
             when IFETCH3 =>
-                -- Instruction decode - check for MOVE instruction
-                -- The original Abel checks: IF (IBUS==1) THEN MOVE1; IF (IBUS==1024) THEN MOVE1; IF (IBUS==2048) THEN MOVE1;
-                -- IBUS is only 6 bits (15 downto 10), so we need to check against these patterns
-                if IBUS = "000001" or IBUS = "000010" or IBUS = "000100" then
-                    next_state <= MOVE1;
-                else
-                    -- For now, go back to IFETCH1 for unsupported instructions
-                    -- TODO: Add other instruction implementations (LOAD, STORE, ADD, etc.)
-                    next_state <= IFETCH1;
-                end if;
+                -- Complete instruction decode based on opcode
+                case instruction_opcode is
+                    when OPCODE_MOVE =>
+                        next_state <= MOVE1;
+                    when OPCODE_LOAD =>
+                        next_state <= LOAD1;
+                    when OPCODE_STORE =>
+                        next_state <= STORE1;
+                    when OPCODE_LOADIMM =>
+                        next_state <= LOADIMM1;
+                    when OPCODE_ADD =>
+                        next_state <= ADD1;
+                    when OPCODE_SUB =>
+                        next_state <= SUB1;
+                    when OPCODE_AND =>
+                        next_state <= AND1;
+                    when OPCODE_OR =>
+                        next_state <= OR1;
+                    when OPCODE_NOT =>
+                        next_state <= NOT1;
+                    when OPCODE_SHIFTL =>
+                        next_state <= SHIFTL1;
+                    when OPCODE_SHIFTR =>
+                        next_state <= SHIFTR1;
+                    when OPCODE_JUMPABS =>
+                        next_state <= JUMPABS1;
+                    when OPCODE_JUMPREL =>
+                        next_state <= JUMPREL1;
+                    when OPCODE_JUMPRIMM =>
+                        next_state <= JUMPRIMM1;
+                    when OPCODE_JUMPRIMMC =>
+                        next_state <= JUMPRIMMC1;
+                    when OPCODE_JUMPRIMMZ =>
+                        next_state <= JUMPRIMMZ1;
+                    when OPCODE_JUMPRIMMO =>
+                        next_state <= JUMPRIMMO1;
+                    when OPCODE_SYSCALL =>
+                        next_state <= SYSCALL1;
+                    when OPCODE_SUPERSWAP =>
+                        next_state <= SUPERSWAP1;
+                    when others =>
+                        -- Illegal instruction - return to IFETCH1
+                        next_state <= IFETCH1;
+                end case;
                 
             when MOVE1 =>
                 next_state <= MOVE2;
@@ -160,12 +252,172 @@ begin
                 
             when MOVE5 =>
                 next_state <= IFETCH1;
-                
+
+            -- LOAD instruction states
+            when LOAD1 =>
+                next_state <= LOAD2;
+            when LOAD2 =>
+                next_state <= LOAD3;
+            when LOAD3 =>
+                next_state <= IFETCH1;
+
+            -- STORE instruction states
+            when STORE1 =>
+                next_state <= STORE2;
+            when STORE2 =>
+                next_state <= STORE3;
+            when STORE3 =>
+                next_state <= IFETCH1;
+
+            -- LOADIMM instruction states
+            when LOADIMM1 =>
+                next_state <= LOADIMM2;
+            when LOADIMM2 =>
+                next_state <= LOADIMM3;
+            when LOADIMM3 =>
+                next_state <= IFETCH1;
+
+            -- Arithmetic instruction states
+            when ADD1 =>
+                next_state <= ADD2;
+            when ADD2 =>
+                next_state <= ADD3;
+            when ADD3 =>
+                next_state <= IFETCH1;
+
+            when SUB1 =>
+                next_state <= SUB2;
+            when SUB2 =>
+                next_state <= SUB3;
+            when SUB3 =>
+                next_state <= IFETCH1;
+
+            -- Logical instruction states
+            when AND1 =>
+                next_state <= AND2;
+            when AND2 =>
+                next_state <= AND3;
+            when AND3 =>
+                next_state <= IFETCH1;
+
+            when OR1 =>
+                next_state <= OR2;
+            when OR2 =>
+                next_state <= OR3;
+            when OR3 =>
+                next_state <= IFETCH1;
+
+            when NOT1 =>
+                next_state <= NOT2;
+            when NOT2 =>
+                next_state <= NOT3;
+            when NOT3 =>
+                next_state <= IFETCH1;
+
+            -- Shift instruction states
+            when SHIFTL1 =>
+                next_state <= SHIFTL2;
+            when SHIFTL2 =>
+                next_state <= SHIFTL3;
+            when SHIFTL3 =>
+                next_state <= IFETCH1;
+
+            when SHIFTR1 =>
+                next_state <= SHIFTR2;
+            when SHIFTR2 =>
+                next_state <= SHIFTR3;
+            when SHIFTR3 =>
+                next_state <= IFETCH1;
+
+            -- Jump instruction states
+            when JUMPABS1 =>
+                next_state <= JUMPABS2;
+            when JUMPABS2 =>
+                next_state <= IFETCH1;
+
+            when JUMPREL1 =>
+                next_state <= JUMPREL2;
+            when JUMPREL2 =>
+                next_state <= IFETCH1;
+
+            when JUMPRIMM1 =>
+                next_state <= JUMPRIMM2;
+            when JUMPRIMM2 =>
+                next_state <= JUMPRIMM3;
+            when JUMPRIMM3 =>
+                next_state <= IFETCH1;
+
+            when JUMPRIMMC1 =>
+                next_state <= JUMPRIMMC2;
+            when JUMPRIMMC2 =>
+                next_state <= JUMPRIMMC3;
+            when JUMPRIMMC3 =>
+                next_state <= IFETCH1;
+
+            when JUMPRIMMZ1 =>
+                next_state <= JUMPRIMMZ2;
+            when JUMPRIMMZ2 =>
+                next_state <= JUMPRIMMZ3;
+            when JUMPRIMMZ3 =>
+                next_state <= IFETCH1;
+
+            when JUMPRIMMO1 =>
+                next_state <= JUMPRIMMO2;
+            when JUMPRIMMO2 =>
+                next_state <= JUMPRIMMO3;
+            when JUMPRIMMO3 =>
+                next_state <= IFETCH1;
+
+            -- System instruction states
+            when SYSCALL1 =>
+                next_state <= SYSCALL2;
+            when SYSCALL2 =>
+                next_state <= IFETCH1;
+
+            when SUPERSWAP1 =>
+                next_state <= SUPERSWAP2;
+            when SUPERSWAP2 =>
+                next_state <= SUPERSWAP3;
+            when SUPERSWAP3 =>
+                next_state <= IFETCH1;
+
             when others =>
                 next_state <= RESET_STATE;
         end case;
     end process;
-    
+
+    -- State encoding for debug output
+    debug_encoding: process(current_state)
+    begin
+        case current_state is
+            when RESET_STATE => CURRENT_STATE_OUT <= x"00";
+            when IFETCH1     => CURRENT_STATE_OUT <= x"01";
+            when IFETCH2     => CURRENT_STATE_OUT <= x"02";
+            when IFETCH3     => CURRENT_STATE_OUT <= x"03";
+            when MOVE1       => CURRENT_STATE_OUT <= x"10";
+            when MOVE2       => CURRENT_STATE_OUT <= x"11";
+            when MOVE3       => CURRENT_STATE_OUT <= x"12";
+            when MOVE4       => CURRENT_STATE_OUT <= x"13";
+            when MOVE5       => CURRENT_STATE_OUT <= x"14";
+            when LOAD1       => CURRENT_STATE_OUT <= x"20";
+            when LOAD2       => CURRENT_STATE_OUT <= x"21";
+            when LOAD3       => CURRENT_STATE_OUT <= x"22";
+            when STORE1      => CURRENT_STATE_OUT <= x"30";
+            when STORE2      => CURRENT_STATE_OUT <= x"31";
+            when STORE3      => CURRENT_STATE_OUT <= x"32";
+            when LOADIMM1    => CURRENT_STATE_OUT <= x"40";
+            when LOADIMM2    => CURRENT_STATE_OUT <= x"41";
+            when LOADIMM3    => CURRENT_STATE_OUT <= x"42";
+            when ADD1        => CURRENT_STATE_OUT <= x"50";
+            when ADD2        => CURRENT_STATE_OUT <= x"51";
+            when ADD3        => CURRENT_STATE_OUT <= x"52";
+            when SUB1        => CURRENT_STATE_OUT <= x"60";
+            when SUB2        => CURRENT_STATE_OUT <= x"61";
+            when SUB3        => CURRENT_STATE_OUT <= x"62";
+            when others      => CURRENT_STATE_OUT <= x"FF";
+        end case;
+    end process;
+
     -- Output logic - combinatorial outputs based on current state
     output_logic: process(current_state)
     begin

@@ -36,13 +36,13 @@ architecture behavioral of f00_cpu_simple is
     type imem_t is array (0 to 15) of std_logic_vector(15 downto 0);
     signal imem : imem_t := (
         -- Test all supported opcodes
-        0  => x"4120",  -- LOADIMM R9, 0x1234
+        0  => x"4120",  -- LOADIMM R9, 0x1234 (01 010000 01001 00000)
         1  => x"1234",  -- immediate value 0x1234
-        2  => x"4140",  -- LOADIMM R10, 0x5678
+        2  => x"4140",  -- LOADIMM R10, 0x5678 (01 010000 01010 00000)
         3  => x"5678",  -- immediate value 0x5678
-        4  => x"4160",  -- LOADIMM R11, 0xAAAA
+        4  => x"4160",  -- LOADIMM R11, 0xAAAA (01 010000 01011 00000)
         5  => x"AAAA",  -- immediate value 0xAAAA
-        6  => x"4180",  -- LOADIMM R12, 0x5555
+        6  => x"4180",  -- LOADIMM R12, 0x5555 (01 010000 01100 00000)
         7  => x"5555",  -- immediate value 0x5555
 
         -- Test arithmetic instructions
@@ -50,15 +50,14 @@ architecture behavioral of f00_cpu_simple is
         9  => x"8C4A",  -- SUB R9,R10 -> R10 = 0x1234 - 0x68AC (opcode=001100)
 
         -- Test logical instructions (corrected encodings)
-        10 => x"A16C",  -- AND R11,R12 -> R12 = 0xAAAA & 0x5555 = 0x0000 (format=10, opcode=010000)
-        11 => x"A56C",  -- OR R11,R12 -> R12 = 0xAAAA | 0x0000 = 0xAAAA (format=10, opcode=010001)
-        12 => x"A96C",  -- XOR R11,R12 -> R12 = 0xAAAA ^ 0xAAAA = 0x0000 (format=10, opcode=010010)
-        13 => x"AD6C",  -- NOT R11,R12 -> R12 = ~0xAAAA = 0x5555 (format=10, opcode=010011)
+        10 => x"C16C",  -- AND R11,R12 -> R12 = 0xAAAA & 0x5555 = 0x0000 (10 100001 01011 01100)
+        11 => x"C56C",  -- OR R11,R12 -> R12 = 0xAAAA | 0x0000 = 0xAAAA (10 100010 01011 01100)
+        12 => x"C96C",  -- NOT R11,R12 -> R12 = ~0xAAAA = 0x5555 (10 100011 01011 01100)
 
         -- Test move instruction
-        14 => x"814D",  -- MOVE R10,R13 -> R13 = R10 (format=10, opcode=000010)
+        13 => x"814D",  -- MOVE R10,R13 -> R13 = R10 (format=10, opcode=000010)
 
-        15 => x"0000",  -- NOP (end of program)
+        14 => x"0000",  -- NOP (end of program)
         others => x"0000"
     );
 
@@ -135,7 +134,7 @@ begin
                     pc <= pc + 1;             -- Default: increment PC
 
                     case opcode is
-                        when "000001" => -- LOADIMM (opcode 1, format should be 01)
+                        when "010000" => -- LOADIMM (opcode 16, format should be 01)
                             if format = "01" then
                                 reg_addr := to_integer(operand1);
                                 if reg_addr < 32 and (pc + 1) < imem'length then
@@ -213,7 +212,7 @@ begin
                                 end if;
                             end if;
 
-                        when "010000" => -- AND (opcode 16)
+                        when "100001" => -- AND (opcode 33)
                             if format = "10" then
                                 reg_addr := to_integer(operand1);
                                 if reg_addr < 32 then
@@ -235,7 +234,7 @@ begin
                                 end if;
                             end if;
 
-                        when "010001" => -- OR (opcode 17)
+                        when "100010" => -- OR (opcode 34)
                             if format = "10" then
                                 reg_addr := to_integer(operand1);
                                 if reg_addr < 32 then
@@ -257,29 +256,7 @@ begin
                                 end if;
                             end if;
 
-                        when "010010" => -- XOR (opcode 18)
-                            if format = "10" then
-                                reg_addr := to_integer(operand1);
-                                if reg_addr < 32 then
-                                    reg_addr := to_integer(operand2);
-                                    if reg_addr < 32 then
-                                        -- Perform bitwise XOR
-                                        reg_write_enable <= '1';
-                                        reg_write_addr <= reg_addr;
-                                        reg_write_data <= registers(to_integer(operand1)) xor registers(reg_addr);
-                                        -- Update zero flag
-                                        if (registers(to_integer(operand1)) xor registers(reg_addr)) = x"0000" then
-                                            zero_flag <= '1';
-                                        else
-                                            zero_flag <= '0';
-                                        end if;
-                                        carry_flag <= '0';  -- Clear carry for logical ops
-                                        report "XOR prepared" severity note;
-                                    end if;
-                                end if;
-                            end if;
-
-                        when "010011" => -- NOT (opcode 19)
+                        when "100011" => -- NOT (opcode 35)
                             if format = "10" then
                                 reg_addr := to_integer(operand1);
                                 if reg_addr < 32 then

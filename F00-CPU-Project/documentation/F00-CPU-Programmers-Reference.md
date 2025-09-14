@@ -254,16 +254,16 @@ Bit  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
 
 #### ADD - Addition
 - **Format**: `ADD Ra, Rb`
-- **Encoding**: `10 101011 AAAAA BBBBB`
+- **Encoding**: `10 001011 AAAAA BBBBB`
 - **Operation**: `Rb ← Ra + Rb`
 - **Flags**: C (carry), Z (zero)
 - **Description**: Adds Ra to Rb, storing result in Rb
 - **Example**: `ADD R1, R2` ; R2 = R1 + R2
 
-#### SUB - Subtraction  
+#### SUB - Subtraction
 - **Format**: `SUB Ra, Rb`
-- **Encoding**: `10 101100 AAAAA BBBBB`
-- **Operation**: `Rb ← Ra - Rb`  
+- **Encoding**: `10 001100 AAAAA BBBBB`
+- **Operation**: `Rb ← Ra - Rb`
 - **Flags**: C (carry/borrow), Z (zero)
 - **Description**: Subtracts Rb from Ra, storing result in Rb
 - **Example**: `SUB R5, R3` ; R3 = R5 - R3
@@ -272,23 +272,23 @@ Bit  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
 
 #### AND - Bitwise AND
 - **Format**: `AND Ra, Rb`
-- **Encoding**: `10 100000 AAAAA BBBBB`
+- **Encoding**: `10 100001 AAAAA BBBBB`
 - **Operation**: `Rb ← Ra & Rb`
 - **Flags**: Z (zero)
 - **Description**: Performs bitwise AND of Ra and Rb, storing result in Rb
 - **Example**: `AND R4, R6` ; R6 = R4 & R6
 
 #### OR - Bitwise OR
-- **Format**: `OR Ra, Rb`  
-- **Encoding**: `10 100001 AAAAA BBBBB`
+- **Format**: `OR Ra, Rb`
+- **Encoding**: `10 100010 AAAAA BBBBB`
 - **Operation**: `Rb ← Ra | Rb`
 - **Flags**: Z (zero)
 - **Description**: Performs bitwise OR of Ra and Rb, storing result in Rb
 - **Example**: `OR R7, R9` ; R9 = R7 | R9
 
-#### NOT - Bitwise NOT  
+#### NOT - Bitwise NOT
 - **Format**: `NOT Ra, Rb`
-- **Encoding**: `10 100010 AAAAA BBBBB`
+- **Encoding**: `10 100011 AAAAA BBBBB`
 - **Operation**: `Rb ← ~Ra`
 - **Flags**: Z (zero)
 - **Description**: Performs bitwise complement of Ra, storing result in Rb
@@ -298,7 +298,7 @@ Bit  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
 
 #### SHIFTL - Shift Left
 - **Format**: `SHIFTL Ra, Rb`
-- **Encoding**: `10 100011 AAAAA BBBBB`
+- **Encoding**: `10 000011 AAAAA BBBBB`
 - **Operation**: `Rb ← Ra << 1`
 - **Flags**: C (bit shifted out), Z (zero)
 - **Description**: Shifts Ra left by one bit, storing result in Rb
@@ -306,7 +306,7 @@ Bit  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
 
 #### SHIFTR - Shift Right
 - **Format**: `SHIFTR Ra, Rb`
-- **Encoding**: `10 100100 AAAAA BBBBB`  
+- **Encoding**: `10 000100 AAAAA BBBBB`
 - **Operation**: `Rb ← Ra >> 1`
 - **Flags**: C (bit shifted out), Z (zero)
 - **Description**: Shifts Ra right by one bit (logical), storing result in Rb
@@ -364,12 +364,12 @@ Bit  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
 - **Description**: Jumps to the address contained in register Ra
 - **Example**: `JUMPABS R15` ; Jump to address in R15
 
-#### JUMPREL - Relative Jump  
+#### JUMPREL - Relative Jump
 - **Format**: `JUMPREL Ra`
-- **Encoding**: `10 000100 AAAAA 00000`
+- **Encoding**: `10 001010 AAAAA 00000`
 - **Operation**: `PC ← PC + Ra`
 - **Flags**: None affected
-- **Description**: Jumps relative by the offset in register Ra  
+- **Description**: Jumps relative by the offset in register Ra
 - **Example**: `JUMPREL R5` ; Jump forward/backward by R5 instructions
 
 #### JUMPRIMM - Jump Relative Immediate
@@ -421,7 +421,7 @@ Bit  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
 
 #### SUPERSWAP - Supervisor Register Swap
 - **Format**: `SUPERSWAP SRn, Rb`
-- **Encoding**: `10 000011 nnnnn BBBBB` (where nnnnn encodes supervisor register)
+- **Encoding**: `10 100000 nnnnn BBBBB` (where nnnnn encodes supervisor register)
 - **Operation**: `temp = SRn; SRn = Rb; Rb = temp`
 - **Flags**: None affected
 - **Description**: Swaps supervisor register with user register (supervisor mode only)
@@ -863,19 +863,19 @@ The F00 architecture allows easy addition of:
 |----------|--------|--------|-------------|-------|
 | **Data Movement** |
 | MOVE | 02 | 10 | Copy register to register | - |
-| LOAD | 00 | 10 | Load from memory | - |  
+| LOAD | 00 | 10 | Load from memory | - |
 | STORE | 01 | 10 | Store to memory | - |
 | LOADIMM | 16 | 01 | Load immediate value | - |
 | **Arithmetic** |
-| ADD | 43 | 10 | Addition | C,Z |
-| SUB | 44 | 10 | Subtraction | C,Z |
+| ADD | 11 | 10 | Addition | C,Z |
+| SUB | 12 | 10 | Subtraction | C,Z |
 | **Logical** |
-| AND | 32 | 10 | Bitwise AND | Z |
-| OR | 33 | 10 | Bitwise OR | Z |
-| NOT | 34 | 10 | Bitwise NOT | Z |
+| AND | 33 | 10 | Bitwise AND | Z |
+| OR | 34 | 10 | Bitwise OR | Z |
+| NOT | 35 | 10 | Bitwise NOT | Z |
 | **Shift/Rotate** |
-| SHIFTL | 35 | 10 | Shift left | C,Z |
-| SHIFTR | 36 | 10 | Shift right | C,Z |
+| SHIFTL | 03 | 10 | Shift left | C,Z |
+| SHIFTR | 04 | 10 | Shift right | C,Z |
 | ROTATEL | 37 | 10 | Rotate left | C,Z |
 | ROTATER | 38 | 10 | Rotate right | C,Z |
 | SHIFTLC | 39 | 10 | Shift left through carry | C,Z |
@@ -884,14 +884,14 @@ The F00 architecture allows easy addition of:
 | ROTATERC | 42 | 10 | Rotate right through carry | C,Z |
 | **Control Flow** |
 | JUMPABS | 05 | 10 | Jump absolute | - |
-| JUMPREL | 04 | 10 | Jump relative | - |
+| JUMPREL | 10 | 10 | Jump relative | - |
 | JUMPRIMM | 06 | 00 | Jump relative immediate | - |
 | JUMPRIMMC | 07 | 00 | Jump relative on carry | - |
 | JUMPRIMMZ | 08 | 00 | Jump relative on zero | - |
 | JUMPRIMMO | 09 | 00 | Jump relative on overflow | - |
 | **System** |
 | SYSCALL | 48 | 11 | System call | All SR |
-| SUPERSWAP | 03 | 10 | Supervisor register swap | - |
+| SUPERSWAP | 32 | 10 | Supervisor register swap | - |
 
 **Legend**:
 - **Format**: 00=Short immediate, 01=Reg+immediate, 10=Register, 11=No operands

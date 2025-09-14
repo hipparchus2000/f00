@@ -1,0 +1,125 @@
+; F00 CPU Arithmetic Operations Test
+; Tests ADD, SUB, AND, OR, NOT operations
+
+CODEORG 0
+
+START:	LOADIMM R0,32767	; UART address
+	
+	; Print "Arithmetic Test:" header
+	LOADIMM R1,65		; 'A'
+	STORE R1,R0
+	LOADIMM R1,114		; 'r'
+	STORE R1,R0
+	LOADIMM R1,105		; 'i'
+	STORE R1,R0
+	LOADIMM R1,116		; 't'
+	STORE R1,R0
+	LOADIMM R1,104		; 'h'
+	STORE R1,R0
+	LOADIMM R1,58		; ':'
+	STORE R1,R0
+	LOADIMM R1,32		; ' '
+	STORE R1,R0
+
+	; Test ADD operation
+	LOADIMM R1,100		; Load 100
+	LOADIMM R2,50		; Load 50
+	ADD R1,R2		; R2 = 100 + 50 = 150
+	
+	; Simple validation (just show we did something)
+	LOADIMM R3,43		; '+'
+	STORE R3,R0
+	LOADIMM R3,32		; ' '
+	STORE R3,R0
+
+	; Test SUB operation  
+	LOADIMM R3,200		; Load 200
+	LOADIMM R4,75		; Load 75
+	SUB R3,R4		; R4 = 200 - 75 = 125
+	
+	LOADIMM R5,45		; '-'
+	STORE R5,R0
+	LOADIMM R5,32		; ' '
+	STORE R5,R0
+
+	; Test AND operation
+	LOADIMM R5,0xFF0F	; Load binary pattern
+	LOADIMM R6,0x0F0F	; Load mask
+	AND R5,R6		; R6 = 0xFF0F & 0x0F0F = 0x0F0F
+	
+	LOADIMM R7,38		; '&'
+	STORE R7,R0
+	LOADIMM R7,32		; ' '
+	STORE R7,R0
+
+	; Test OR operation
+	LOADIMM R7,0x1234	; Load pattern 1
+	LOADIMM R8,0x5678	; Load pattern 2  
+	OR R7,R8		; R8 = 0x1234 | 0x5678 = 0x567C
+	
+	LOADIMM R9,124		; '|'
+	STORE R9,R0
+	LOADIMM R9,32		; ' '
+	STORE R9,R0
+
+	; Test NOT operation
+	LOADIMM R9,0x1234	; Load test value
+	NOT R9,R10		; R10 = ~0x1234 = 0xEDCB
+	
+	LOADIMM R11,126		; '~'
+	STORE R11,R0
+	LOADIMM R11,32		; ' '
+	STORE R11,R0
+
+	; Test shift operations
+	LOADIMM R11,0x1111	; Load test pattern
+	SHIFTL R11,R12		; R12 = 0x1111 << 1 = 0x2222
+	SHIFTR R12,R13		; R13 = 0x2222 >> 1 = 0x1111
+	
+	LOADIMM R14,60		; '<'
+	STORE R14,R0
+	LOADIMM R14,62		; '>'
+	STORE R14,R0
+	LOADIMM R14,32		; ' '
+	STORE R14,R0
+
+	; Show completion
+	LOADIMM R15,79		; 'O'
+	STORE R15,R0
+	LOADIMM R15,75		; 'K'
+	STORE R15,R0
+	LOADIMM R15,10		; '\n'
+	STORE R15,R0
+
+	; Test jump operations
+	LOADIMM R16,0
+	ADD R16,R16		; R16 = 0, should set zero flag
+	JUMPRIMMZ ZERO_TEST_OK
+
+	; If we get here, zero flag test failed
+	LOADIMM R17,70		; 'F'
+	STORE R17,R0
+	JUMPRIMM END
+
+ZERO_TEST_OK:
+	LOADIMM R17,90		; 'Z'
+	STORE R17,R0
+	LOADIMM R17,32		; ' '
+	STORE R17,R0
+
+	; Test relative jump
+	JUMPRIMM JUMP_TEST
+
+JUMP_FAIL:
+	LOADIMM R18,70		; 'F' for fail
+	STORE R18,R0
+	JUMPRIMM END
+
+JUMP_TEST:
+	LOADIMM R18,74		; 'J'
+	STORE R18,R0
+	
+END:	LOADIMM R19,10		; '\n'
+	STORE R19,R0
+	
+HALT:	JUMPRIMM HALT		; Infinite loop

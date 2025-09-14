@@ -1,0 +1,100 @@
+; F00 CPU Memory Test Program
+; Tests LOAD/STORE operations and memory access
+
+CODEORG 0
+
+START:	LOADIMM R0,32767	; UART address for output
+	LOADIMM R1,1000		; Base address for test data
+	LOADIMM R2,0x1234	; Test pattern 1
+	LOADIMM R3,0x5678	; Test pattern 2
+	LOADIMM R4,0xABCD	; Test pattern 3
+	LOADIMM R5,0xEF00	; Test pattern 4
+
+	; Store test patterns to memory
+	STORE R2,R1		; Store 0x1234 to address 1000
+	LOADIMM R6,1
+	ADD R1,R6		; R6 = R1 + R6, increment address
+	MOVE R6,R1		; R1 = R6
+	
+	STORE R3,R1		; Store 0x5678 to address 1001
+	LOADIMM R6,1
+	ADD R1,R6
+	MOVE R6,R1
+	
+	STORE R4,R1		; Store 0xABCD to address 1002
+	LOADIMM R6,1
+	ADD R1,R6
+	MOVE R6,R1
+	
+	STORE R5,R1		; Store 0xEF00 to address 1003
+
+	; Print "Memory Test:" header
+	LOADIMM R7,77		; 'M'
+	STORE R7,R0
+	LOADIMM R7,101		; 'e'
+	STORE R7,R0
+	LOADIMM R7,109		; 'm'
+	STORE R7,R0
+	LOADIMM R7,58		; ':'
+	STORE R7,R0
+	LOADIMM R7,32		; ' '
+	STORE R7,R0
+
+	; Reset address pointer and read back data
+	LOADIMM R1,1000		; Reset to base address
+	
+	LOAD R1,R10		; Load from address 1000 into R10
+	LOADIMM R6,1
+	ADD R1,R6
+	MOVE R6,R1
+	
+	LOAD R1,R11		; Load from address 1001 into R11
+	LOADIMM R6,1
+	ADD R1,R6
+	MOVE R6,R1
+	
+	LOAD R1,R12		; Load from address 1002 into R12
+	LOADIMM R6,1
+	ADD R1,R6
+	MOVE R6,R1
+	
+	LOAD R1,R13		; Load from address 1003 into R13
+
+	; Verify data integrity by comparing
+	SUB R2,R10		; Should be 0 if R2 == R10
+	JUMPRIMMZ TEST2		; If zero (equal), continue to next test
+	
+	; Print error message
+	LOADIMM R7,69		; 'E'
+	STORE R7,R0
+	JUMPRIMM END
+
+TEST2:	SUB R3,R11		; Test second value
+	JUMPRIMMZ TEST3
+	LOADIMM R7,69		; 'E'
+	STORE R7,R0
+	JUMPRIMM END
+
+TEST3:	SUB R4,R12		; Test third value
+	JUMPRIMMZ TEST4
+	LOADIMM R7,69		; 'E'
+	STORE R7,R0
+	JUMPRIMM END
+
+TEST4:	SUB R5,R13		; Test fourth value
+	JUMPRIMMZ SUCCESS
+	LOADIMM R7,69		; 'E'
+	STORE R7,R0
+	JUMPRIMM END
+
+SUCCESS:
+	; Print "OK" 
+	LOADIMM R7,79		; 'O'
+	STORE R7,R0
+	LOADIMM R7,75		; 'K'
+	STORE R7,R0
+
+END:	LOADIMM R7,10		; Newline
+	STORE R7,R0
+	
+HALT:	JUMPRIMM HALT

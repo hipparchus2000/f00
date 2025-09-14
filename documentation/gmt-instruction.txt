@@ -1,7 +1,0 @@
-netcdf-3.4/src/fortran/cfortran.h  -- > remove the #error lines that cause the error (either delete all the text to the
-closing double quote, or /*   */ comment it out!
-
-gmt 3.0 -> edit Makefile and change $$@.o to $(USER_O) on line 164 as told to in the README file.
-
-
-

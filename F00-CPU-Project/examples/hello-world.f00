@@ -1,0 +1,80 @@
+; F00 CPU Hello World Example
+; Demonstrates basic UART output and program structure
+; This is the classic "Hello World" program for the F00 CPU
+
+CODEORG 0
+
+; Program entry point
+HELLO:  LOADIMM R0, 32767     ; Load UART address (0x7FFF)
+        
+        ; Print "Hello World!" character by character
+        LOADIMM R1, 72        ; 'H'
+        STORE R1, R0          ; Write to UART
+        
+        LOADIMM R1, 101       ; 'e'
+        STORE R1, R0
+        
+        LOADIMM R1, 108       ; 'l'
+        STORE R1, R0
+        
+        LOADIMM R1, 108       ; 'l'
+        STORE R1, R0
+        
+        LOADIMM R1, 111       ; 'o'
+        STORE R1, R0
+        
+        LOADIMM R1, 32        ; ' ' (space)
+        STORE R1, R0
+        
+        LOADIMM R1, 87        ; 'W'
+        STORE R1, R0
+        
+        LOADIMM R1, 111       ; 'o'
+        STORE R1, R0
+        
+        LOADIMM R1, 114       ; 'r'
+        STORE R1, R0
+        
+        LOADIMM R1, 108       ; 'l'
+        STORE R1, R0
+        
+        LOADIMM R1, 100       ; 'd'
+        STORE R1, R0
+        
+        LOADIMM R1, 33        ; '!'
+        STORE R1, R0
+        
+        LOADIMM R1, 10        ; '\n' (newline)
+        STORE R1, R0
+        
+        ; Add a small delay loop to make output visible
+        LOADIMM R2, 1000      ; Load delay counter
+DELAY:  LOADIMM R3, 1         ; Decrement value
+        SUB R2, R3            ; R3 = R2 - R3 = R2 - 1
+        MOVE R3, R2           ; R2 = R3 (update counter)
+        JUMPRIMMZ END         ; If zero, exit delay
+        JUMPRIMM DELAY        ; Continue delay loop
+
+END:    ; Print "Done!" message
+        LOADIMM R1, 68        ; 'D'
+        STORE R1, R0
+        LOADIMM R1, 111       ; 'o'
+        STORE R1, R0
+        LOADIMM R1, 110       ; 'n'
+        STORE R1, R0
+        LOADIMM R1, 101       ; 'e'
+        STORE R1, R0
+        LOADIMM R1, 33        ; '!'
+        STORE R1, R0
+        LOADIMM R1, 10        ; '\n'
+        STORE R1, R0
+        
+        ; Infinite loop to halt program
+HALT:   JUMPRIMM HALT
+
+; Program demonstrates:
+; 1. Loading immediate values into registers
+; 2. Memory-mapped I/O using STORE instruction  
+; 3. UART output at address 0x7FFF
+; 4. Simple delay loops using SUB and conditional jumps
+; 5. Program termination with infinite loop

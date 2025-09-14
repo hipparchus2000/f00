@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F00 CPU Web IDE</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #2d2d30;
+            padding: 10px 20px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header h1 {
+            color: #007acc;
+            font-size: 18px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .btn:hover {
+            background: #1177bb;
+        }
+
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .btn.danger {
+            background: #d73a49;
+        }
+
+        .btn.danger:hover {
+            background: #e36d76;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .left-panel {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #3e3e42;
+            min-width: 300px;
+        }
+
+        .right-panel {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+        }
+
+        .resize-handle {
+            width: 4px;
+            background: #3e3e42;
+            cursor: ew-resize;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            z-index: 10;
+        }
+
+        .resize-handle:hover {
+            background: #007acc;
+        }
+
+        .output-container {
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #3e3e42;
+            position: relative;
+        }
+
+        .output-resize-handle {
+            height: 4px;
+            background: #3e3e42;
+            cursor: ns-resize;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .output-resize-handle:hover {
+            background: #007acc;
+        }
+
+        .panel-header {
+            background: #2d2d30;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e42;
+            font-weight: bold;
+            font-size: 12px;
+            color: #cccccc;
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .editor {
+            width: 100%;
+            height: 100%;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+        }
+
+        .output-container {
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #3e3e42;
+        }
+
+        .output {
+            flex: 1;
+            background: #0c0c0c;
+            color: #cccccc;
+            padding: 10px;
+            font-size: 12px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .simulator-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .registers-panel {
+            height: 60%;
+            overflow-y: auto;
+            background: #252526;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .memory-panel {
+            height: 40%;
+            overflow-y: auto;
+            background: #252526;
+        }
+
+        .register-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+
+        .register {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            background: #3c3c3c;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+        .register.changed {
+            background: #1f4e3d;
+            border: 1px solid #4caf50;
+        }
+
+        .register-name {
+            color: #9cdcfe;
+            font-weight: bold;
+        }
+
+        .register-value {
+            color: #b5cea8;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .memory-table {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+        }
+
+        .memory-table th {
+            background: #3c3c3c;
+            padding: 4px 8px;
+            text-align: left;
+            color: #cccccc;
+            position: sticky;
+            top: 0;
+        }
+
+        .memory-table td {
+            padding: 2px 8px;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .memory-table tr:hover {
+            background: #2d2d30;
+        }
+
+        .pc-highlight {
+            background: #1f4e3d !important;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .status-bar {
+            background: #007acc;
+            color: white;
+            padding: 4px 15px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .error {
+            color: #f48771;
+        }
+
+        .success {
+            color: #4caf50;
+        }
+
+        .warning {
+            color: #ffcc02;
+        }
+
+        .tabs {
+            display: flex;
+            background: #2d2d30;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 12px;
+            border-right: 1px solid #3e3e42;
+        }
+
+        .tab.active {
+            background: #1e1e1e;
+        }
+
+        .tab:hover:not(.active) {
+            background: #3e3e42;
+        }
+
+        .memory-view {
+            height: 200px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            border-top: 1px solid #3e3e42;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        .memory-row {
+            display: flex;
+            padding: 2px 5px;
+            border-bottom: 1px solid #333;
+        }
+
+        .memory-address {
+            width: 60px;
+            color: #9cdcfe;
+            flex-shrink: 0;
+        }
+
+        .memory-hex {
+            flex: 1;
+            color: #b5cea8;
+            font-family: monospace;
+        }
+
+        .memory-ascii {
+            width: 100px;
+            color: #ce9178;
+            font-family: monospace;
+        }
+
+        .uart-output {
+            background: #0c0c0c;
+            color: #4ec9b0;
+            padding: 10px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            min-height: 60px;
+            border-bottom: 1px solid #3e3e42;
+            white-space: pre-wrap;
+            overflow-y: auto;
+        }
+
+        .file-operations {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-operations input[type="text"] {
+            background: #3c3c3c;
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            padding: 4px 8px;
+            font-family: inherit;
+            font-size: 11px;
+            width: 120px;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            background: #1e1e1e;
+            color: #858585;
+            font-size: 12px;
+            line-height: 21px;
+            text-align: right;
+            padding: 15px 5px;
+            border-right: 1px solid #3e3e42;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .editor-with-numbers {
+            padding-left: 50px;
+        }
+
+        .console-input {
+            display: flex;
+            background: #2d2d30;
+            border-top: 1px solid #3e3e42;
+            padding: 5px;
+        }
+
+        .console-input input {
+            flex: 1;
+            background: #3c3c3c;
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            padding: 5px 10px;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .console-input button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            background: #0e639c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+        }
+
+        /* Menu Styles */
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hamburger-menu {
+            background: none;
+            border: none;
+            color: #d4d4d4;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 3px;
+        }
+
+        .hamburger-menu:hover {
+            background: #3e3e42;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #2d2d30;
+            border: 1px solid #3e3e42;
+            border-radius: 3px;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: #d4d4d4;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .dropdown-item:hover {
+            background: #3e3e42;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #3e3e42;
+            margin: 4px 0;
+        }
+
+        .memory-hex-editor {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+            height: 100%;
+            overflow-y: auto;
+            background: #1e1e1e;
+            padding: 10px;
+        }
+
+        .memory-hex-row {
+            display: flex;
+            margin-bottom: 2px;
+            line-height: 1.4;
+        }
+
+        .memory-hex-addr {
+            width: 60px;
+            color: #9cdcfe;
+            margin-right: 10px;
+        }
+
+        .memory-hex-data {
+            flex: 1;
+            color: #b5cea8;
+            margin-right: 10px;
+        }
+
+        .memory-hex-ascii {
+            width: 120px;
+            color: #ce9178;
+        }
+
+        .memory-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 5px 10px;
+            background: #2d2d30;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .memory-controls input {
+            background: #3c3c3c;
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            padding: 4px 8px;
+            font-family: inherit;
+            font-size: 11px;
+            width: 80px;
+        }
+
+        .memory-controls label {
+            font-size: 11px;
+            color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>F00 CPU Web IDE</h1>
+        <div class="toolbar">
+            <div class="menu-container">
+                <button class="hamburger-menu" onclick="toggleMenu()" title="File Menu">☰</button>
+                <div class="dropdown-menu" id="fileMenu">
+                    <button class="dropdown-item" onclick="loadFile()">📁 Open File... (Ctrl+O)</button>
+                    <button class="dropdown-item" onclick="saveFile()">💾 Save File (Ctrl+S)</button>
+                    <button class="dropdown-item" onclick="saveAsFile()">💾 Save As...</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="loadHexFile()">📥 Load HEX File...</button>
+                    <button class="dropdown-item" onclick="saveHexFile()">📤 Save HEX File...</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="loadExample()">📋 Load Example</button>
+                    <button class="dropdown-item" onclick="newFile()">📄 New File</button>
+                </div>
+            </div>
+            <input type="text" id="filename" placeholder="program.f00" value="program.f00" style="margin-left: 10px;">
+            <button class="btn" onclick="assembleCode()">Assemble</button>
+            <button class="btn" onclick="runSimulator()">Run</button>
+            <button class="btn" onclick="stepSimulator()">Step</button>
+            <button class="btn danger" onclick="resetSimulator()">Reset</button>
+            <input type="file" id="fileInput" class="file-input" accept=".f00,.asm,.txt" onchange="handleFileLoad(event)">
+            <input type="file" id="hexFileInput" class="file-input" accept=".hex,.bin" onchange="handleHexFileLoad(event)">
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="left-panel" id="leftPanel">
+            <div class="panel-header">Assembly Editor</div>
+            <div class="editor-container">
+                <div class="line-numbers" id="lineNumbers">1</div>
+                <textarea class="editor editor-with-numbers" id="codeEditor" placeholder="Enter F00 assembly code here..."># F00 Assembly Example
+CODEORG 0
+
+RESET:	LOADIMM R0,32767	; Virtual UART address
+	LOADIMM R1,72		; 'H'
+	STORE R1,R0		; Write to UART
+	LOADIMM R1,69		; 'E'
+	STORE R1,R0
+	LOADIMM R1,76		; 'L'
+	STORE R1,R0
+	LOADIMM R1,76		; 'L'
+	STORE R1,R0
+	LOADIMM R1,79		; 'O'
+	STORE R1,R0
+	LOADIMM R1,32		; ' '
+	STORE R1,R0
+	LOADIMM R1,87		; 'W'
+	STORE R1,R0
+	LOADIMM R1,79		; 'O'
+	STORE R1,R0
+	LOADIMM R1,82		; 'R'
+	STORE R1,R0
+	LOADIMM R1,76		; 'L'
+	STORE R1,R0
+	LOADIMM R1,68		; 'D'
+	STORE R1,R0
+	LOADIMM R1,10		; LF
+	STORE R1,R0
+	
+	LOADIMM R2,0
+	JUMPABS R2		; Loop back to start</textarea>
+            </div>
+            <div class="output-container" id="outputContainer">
+                <div class="output-resize-handle" id="outputResizeHandle"></div>
+                <div class="panel-header">UART Output</div>
+                <div class="uart-output" id="uartOutput">F00 CPU Ready - UART Output will appear here...</div>
+                <div class="panel-header">Assembly Output</div>
+                <div class="output" id="output">Ready to assemble...</div>
+                <div class="console-input">
+                    <input type="text" id="consoleInput" placeholder="Input for program..." maxlength="1">
+                    <button onclick="sendInput()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="resize-handle" id="mainResizeHandle"></div>
+        
+        <div class="right-panel" id="rightPanel">
+            <div class="simulator-container">
+                <div class="registers-panel">
+                    <div class="panel-header">CPU State</div>
+                    <div style="padding: 10px;">
+                        <div style="margin-bottom: 10px;">
+                            <strong>PC:</strong> <span id="pc" class="register-value">0000</span>
+                            <strong style="margin-left: 20px;">Status:</strong> 
+                            <span style="color: #9cdcfe;">C:</span><span id="carry" class="register-value">0</span>
+                            <span style="color: #9cdcfe; margin-left: 10px;">Z:</span><span id="zero" class="register-value">0</span>
+                            <span style="color: #9cdcfe; margin-left: 10px;">S:</span><span id="super" class="register-value">1</span>
+                        </div>
+                        <div class="register-grid" id="registers">
+                            <!-- Registers will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="memory-panel">
+                    <div class="tabs">
+                        <div class="tab active" onclick="showMemoryTab('rom')">ROM</div>
+                        <div class="tab" onclick="showMemoryTab('ram')">RAM</div>
+                        <div class="tab" onclick="showMemoryTab('hexedit')">Hex Editor</div>
+                        <div class="tab" onclick="showMemoryTab('symbols')">Symbols</div>
+                    </div>
+                    <div id="memoryContent" style="height: calc(100% - 32px); overflow-y: auto;">
+                        <!-- Memory content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <span id="statusText">Ready</span>
+        <span>Shortcuts: Ctrl+S (Save) | Ctrl+O (Load) | Ctrl+B (Assemble) | Ctrl+R (Run) | Ctrl+Shift+S (Step)</span>
+        <span id="cpuInfo">F00 CPU - 16-bit Harvard Architecture</span>
+    </div>
+
+    <script>
+        // F00 CPU Instruction Set Constants
+        const OPCODES = {
+            LOAD: 0, STORE: 1, MOVE: 2, SUPERSWAP: 3,
+            JUMPREL: 4, JUMPABS: 5, JUMPRIMM: 6, JUMPRIMMC: 7,
+            JUMPRIMMZ: 8, JUMPRIMMO: 9, LOADIMM: 16,
+            AND: 32, OR: 33, NOT: 34, SHIFTL: 35, SHIFTR: 36,
+            ROTATEL: 37, ROTATER: 38, SHIFTLC: 39, SHIFTRC: 40,
+            ROTATELC: 41, ROTATERC: 42, ADD: 43, SUB: 44, SYSCALL: 48
+        };
+
+        // F00 Assembler Class
+        class F00Assembler {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.symbols = new Map();
+                this.xrefs = [];
+                this.codeOrg = 0;
+                this.dataOrg = 0;
+                this.codePointer = 0;
+                this.dataPointer = 0;
+                this.rom = new Array(32768).fill(0);
+                this.errors = [];
+                this.pass = 1;
+            }
+
+            assemble(source) {
+                this.reset();
+                const lines = source.split('\n');
+                
+                // Pass 1: Parse symbols and generate basic code
+                this.pass = 1;
+                this.processLines(lines);
+                
+                // Pass 2: Resolve symbols and generate final code
+                this.pass = 2;
+                this.codePointer = this.codeOrg;
+                this.dataPointer = this.dataOrg;
+                this.processLines(lines);
+                
+                return {
+                    success: this.errors.length === 0,
+                    errors: this.errors,
+                    rom: this.rom,
+                    symbols: Object.fromEntries(this.symbols),
+                    codeSize: this.codePointer - this.codeOrg
+                };
+            }
+
+            processLines(lines) {
+                for (let i = 0; i < lines.length; i++) {
+                    try {
+                        this.processLine(lines[i].trim(), i + 1);
+                    } catch (error) {
+                        this.errors.push(`Line ${i + 1}: ${error.message}`);
+                    }
+                }
+            }
+
+            processLine(line, lineNum) {
+                if (!line || line.startsWith(';') || line.startsWith('#')) return;
+
+                // Remove inline comments (both ; and #)
+                const commentIndex = Math.min(
+                    line.indexOf(';') !== -1 ? line.indexOf(';') : line.length,
+                    line.indexOf('#') !== -1 ? line.indexOf('#') : line.length
+                );
+                if (commentIndex < line.length) {
+                    line = line.substring(0, commentIndex).trim();
+                }
+
+                if (!line) return;
+
+                // Check for label
+                let label = null;
+                if (line.includes(':')) {
+                    const parts = line.split(':');
+                    label = parts[0].trim();
+                    line = parts[1].trim();
+                    
+                    if (this.pass === 1) {
+                        this.symbols.set(label, this.codePointer);
+                    }
+                }
+
+                if (!line) return;
+
+                const tokens = this.tokenize(line);
+                if (tokens.length === 0) return;
+
+                const opcode = tokens[0].toUpperCase();
+
+                // Handle pseudo-ops
+                if (opcode === 'CODEORG') {
+                    this.codeOrg = this.parseNumber(tokens[1]);
+                    this.codePointer = this.codeOrg;
+                    return;
+                }
+
+                if (opcode === 'DATAORG') {
+                    this.dataOrg = this.parseNumber(tokens[1]);
+                    this.dataPointer = this.dataOrg;
+                    return;
+                }
+
+                if (opcode === 'WORD') {
+                    if (this.pass === 2) {
+                        this.rom[this.dataPointer] = this.parseNumber(tokens[1]);
+                    }
+                    this.dataPointer++;
+                    return;
+                }
+
+                // Handle instructions
+                this.assembleInstruction(opcode, tokens.slice(1), lineNum);
+            }
+
+            assembleInstruction(opcode, operands, lineNum) {
+                if (this.pass === 2) {
+                    const instruction = this.encodeInstruction(opcode, operands);
+                    this.rom[this.codePointer] = instruction;
+                    
+                    // Handle instructions that need immediate values
+                    if (opcode === 'LOADIMM') {
+                        this.codePointer++;
+                        const immediate = this.parseOperand(operands[1]);
+                        this.rom[this.codePointer] = immediate;
+                        // Don't increment here - let the common code handle it
+                    }
+                } else {
+                    // Pass 1: just track code pointer for symbol resolution
+                    if (opcode === 'LOADIMM') {
+                        this.codePointer++; // Extra word for immediate
+                    }
+                }
+                
+                // Increment codePointer for next instruction
+                this.codePointer++;
+            }
+
+            encodeInstruction(opcode, operands) {
+                const opcodeNum = OPCODES[opcode];
+                if (opcodeNum === undefined) {
+                    throw new Error(`Unknown opcode: ${opcode}`);
+                }
+
+                let instruction = 0;
+
+                // Determine instruction format based on opcode
+                if (opcode === 'LOADIMM') {
+                    // Format: 01xxxxxx rrrrr xxxxx (reg + immediate in next word)
+                    const reg = this.parseRegister(operands[0]);
+                    instruction = (0x01 << 14) | (opcodeNum << 10) | (reg << 5);
+                } else if (opcode.startsWith('JUMP') && opcode.includes('IMM')) {
+                    // Format: 00xxxxxx iiiiiiiiii (short immediate)
+                    let immediate = this.parseOperand(operands[0]);
+                    if (immediate > 511) immediate = immediate - 1024;
+                    instruction = (0x00 << 14) | (opcodeNum << 10) | (immediate & 0x3FF);
+                } else if (operands.length === 0) {
+                    // Format: 11xxxxxx xxxxxxxxxx (no operands)
+                    instruction = (0x03 << 14) | (opcodeNum << 10);
+                } else if (operands.length === 1) {
+                    // Format: 10xxxxxx rrrrr xxxxx (single register)
+                    const reg = this.parseRegister(operands[0]);
+                    instruction = (0x02 << 14) | (opcodeNum << 10) | (reg << 5);
+                } else if (operands.length === 2) {
+                    // Format: 10xxxxxx rrrrr rrrrr (reg2reg)
+                    const reg1 = this.parseRegister(operands[0]);
+                    const reg2 = this.parseRegister(operands[1]);
+                    instruction = (0x02 << 14) | (opcodeNum << 10) | (reg1 << 5) | reg2;
+                }
+
+                return instruction;
+            }
+
+            parseRegister(operand) {
+                if (!operand.toUpperCase().startsWith('R')) {
+                    throw new Error(`Invalid register: ${operand}`);
+                }
+                const regNum = parseInt(operand.substring(1));
+                if (regNum < 0 || regNum > 31) {
+                    throw new Error(`Register out of range: ${operand}`);
+                }
+                return regNum;
+            }
+
+            parseOperand(operand) {
+                if (operand.startsWith('R')) {
+                    return this.parseRegister(operand);
+                } else if (this.symbols.has(operand)) {
+                    return this.symbols.get(operand);
+                } else {
+                    return this.parseNumber(operand);
+                }
+            }
+
+            parseNumber(str) {
+                if (str.startsWith('0x') || str.startsWith('0X')) {
+                    return parseInt(str, 16);
+                } else if (str.startsWith('0b') || str.startsWith('0B')) {
+                    return parseInt(str.substring(2), 2);
+                } else {
+                    return parseInt(str, 10);
+                }
+            }
+
+            tokenize(line) {
+                return line.split(/[,\s]+/).filter(token => token.length > 0);
+            }
+        }
+
+        // F00 Simulator Class
+        class F00Simulator {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.registers = new Array(32).fill(0);
+                this.rom = new Array(32768).fill(0);
+                this.ram = new Array(32768).fill(0);
+                this.pc = 0;
+                this.usr = 0;  // User status register
+                this.sr = [0x0010, 0, 0, 0, 0];  // Supervisor registers
+                this.running = false;
+                this.halted = false;
+                this.output = '';
+                this.inputBuffer = [];
+                this.cycles = 0;
+                this.lastChangedRegs = new Set();
+            }
+
+            loadRom(romData) {
+                for (let i = 0; i < Math.min(romData.length, this.rom.length); i++) {
+                    this.rom[i] = romData[i] || 0;
+                }
+            }
+
+            step() {
+                if (this.halted) return false;
+
+                this.lastChangedRegs.clear();
+                
+                const instruction = this.readPhysMem(this.pc);
+                this.cycles++;
+                
+                const result = this.decode(instruction);
+                
+                if (!result.jumped) {
+                    this.pc = (this.pc + 1) & 0xFFFF;
+                }
+                
+                return !this.halted;
+            }
+
+            run(maxSteps = 10000) {
+                this.running = true;
+                let steps = 0;
+                
+                while (this.running && !this.halted && steps < maxSteps) {
+                    if (!this.step()) break;
+                    steps++;
+                }
+                
+                this.running = false;
+                return steps;
+            }
+
+            decode(instruction) {
+                // Extract format and opcode separately
+                const format = (instruction & 0xC000) >> 14;  // bits 15-14
+                const opcode = (instruction & 0x3C00) >> 10;   // bits 13-10  
+                const operand1 = (instruction & 0x03E0) >> 5;
+                const operand2 = instruction & 0x001F;
+                const shortImm = this.signExtend(instruction & 0x03FF, 10);
+                
+                console.log(`Execute: PC=${this.pc} instr=0x${instruction.toString(16)} format=${format} opcode=${opcode}`);
+                
+                let jumped = false;
+                
+                // Extract status flags
+                const carryFlag = this.usr & 0x0001;
+                const zeroFlag = (this.usr & 0x0002) >> 1;
+                const superFlag = (this.sr[0] & 0x0010) >> 4;
+                
+                // Handle LOADIMM special case (format=1)
+                if (format === 1) {
+                    // LOADIMM: format 01xxxxxx rrrrr xxxxx
+                    this.pc = (this.pc + 1) & 0xFFFF;
+                    const immediate = this.readPhysMem(this.pc);
+                    console.log(`LOADIMM R${operand1},${immediate}: Loading ${immediate} into R${operand1}`);
+                    this.setRegister(operand1, immediate);
+                } else {
+                    // Regular instruction decoding
+                    switch (opcode) {
+                    case OPCODES.MOVE:
+                        this.setRegister(operand2, this.registers[operand1]);
+                        break;
+                        
+                    case OPCODES.LOAD:
+                        this.setRegister(operand2, this.readPhysMem(this.registers[operand1]));
+                        break;
+                        
+                    case OPCODES.STORE:
+                        // STORE Ra,Rb: Store value from Ra into memory address in Rb  
+                        // operand1=Ra (source), operand2=Rb (address register)
+                        this.writePhysMem(this.registers[operand2], this.registers[operand1]);
+                        break;
+                        
+                    case OPCODES.ADD:
+                        const addResult = this.registers[operand1] + this.registers[operand2];
+                        this.setRegister(operand2, addResult & 0xFFFF);
+                        this.updateFlags(addResult);
+                        break;
+                        
+                    case OPCODES.SUB:
+                        const subResult = this.registers[operand1] - this.registers[operand2];
+                        this.setRegister(operand2, subResult & 0xFFFF);
+                        this.updateFlags(subResult);
+                        break;
+                        
+                    case OPCODES.AND:
+                        const andResult = this.registers[operand1] & this.registers[operand2];
+                        this.setRegister(operand2, andResult);
+                        this.updateFlags(andResult);
+                        break;
+                        
+                    case OPCODES.OR:
+                        const orResult = this.registers[operand1] | this.registers[operand2];
+                        this.setRegister(operand2, orResult);
+                        this.updateFlags(orResult);
+                        break;
+                        
+                    case OPCODES.NOT:
+                        const notResult = (~this.registers[operand1]) & 0xFFFF;
+                        this.setRegister(operand2, notResult);
+                        this.updateFlags(notResult);
+                        break;
+                        
+                    case OPCODES.SHIFTL:
+                        const shiftLResult = this.registers[operand1] << 1;
+                        this.setRegister(operand2, shiftLResult & 0xFFFF);
+                        this.updateFlags(shiftLResult);
+                        break;
+                        
+                    case OPCODES.SHIFTR:
+                        const shiftRResult = this.registers[operand1] >> 1;
+                        this.setRegister(operand2, shiftRResult);
+                        this.updateFlags(shiftRResult);
+                        break;
+                        
+                    case OPCODES.JUMPABS:
+                        this.pc = this.registers[operand1];
+                        jumped = true;
+                        break;
+                        
+                    case OPCODES.JUMPREL:
+                        this.pc = (this.pc + this.registers[operand1]) & 0xFFFF;
+                        jumped = true;
+                        break;
+                        
+                    case OPCODES.JUMPRIMM:
+                        this.pc = (this.pc + shortImm) & 0xFFFF;
+                        jumped = true;
+                        break;
+                        
+                    case OPCODES.JUMPRIMMC:
+                        if (carryFlag) {
+                            this.pc = (this.pc + shortImm) & 0xFFFF;
+                        }
+                        jumped = true;
+                        break;
+                        
+                    case OPCODES.JUMPRIMMZ:
+                        if (zeroFlag) {
+                            this.pc = (this.pc + shortImm) & 0xFFFF;
+                        }
+                        jumped = true;
+                        break;
+                        
+                    case OPCODES.SYSCALL:
+                        this.handleSysCall();
+                        break;
+                        
+                    default:
+                        this.handleIllegalInstruction();
+                        break;
+                    }
+                }
+                
+                return { jumped };
+            }
+
+            setRegister(reg, value) {
+                if (reg >= 0 && reg < 32) {
+                    this.registers[reg] = value & 0xFFFF;
+                    this.lastChangedRegs.add(reg);
+                }
+            }
+
+            updateFlags(result) {
+                // Update zero flag
+                if ((result & 0xFFFF) === 0) {
+                    this.usr |= 0x0002;
+                } else {
+                    this.usr &= 0xFFFD;
+                }
+                
+                // Update carry flag
+                if (result > 0xFFFF || result < 0) {
+                    this.usr |= 0x0001;
+                } else {
+                    this.usr &= 0xFFFE;
+                }
+            }
+
+            readPhysMem(address) {
+                address &= 0xFFFF;
+                
+                if (address === 32767) {
+                    // Virtual UART input
+                    if (this.inputBuffer.length > 0) {
+                        return this.inputBuffer.shift();
+                    }
+                    return 0;
+                } else if (address < 32767) {
+                    return this.rom[address];
+                } else {
+                    return this.ram[address - 32768] || 0;
+                }
+            }
+
+            writePhysMem(address, data) {
+                address &= 0xFFFF;
+                data &= 0xFFFF;
+                
+                console.log(`writePhysMem: address=${address} (0x${address.toString(16)}), data=${data} (0x${data.toString(16)})`);
+                
+                if (address === 32767) {
+                    // Virtual UART output
+                    const char = String.fromCharCode(data & 0xFF);
+                    console.log(`UART OUTPUT: Writing '${char}' (ASCII ${data & 0xFF}) to UART`);
+                    this.output += char;
+                    console.log(`UART buffer now: "${this.output}"`);
+                    this.updateUartOutput();
+                } else if (address >= 32768) {
+                    this.ram[address - 32768] = data;
+                }
+            }
+
+            signExtend(value, bits) {
+                const sign = 1 << (bits - 1);
+                return (value & (sign - 1)) - (value & sign);
+            }
+
+            handleSysCall() {
+                // Set supervisor mode and interrupt flags
+                this.sr[0] |= 0x0018;  // Set super and soft-int
+                this.sr[0] &= 0xFFF8;  // Reset int enable, freeze, illegal
+                // Jump to interrupt vector
+                this.pc = this.sr[2];
+            }
+
+            handleIllegalInstruction() {
+                this.output += `\nIllegal Instruction at PC: ${this.pc.toString(16)}\n`;
+                this.updateUartOutput();
+                this.halted = true;
+            }
+
+            addInput(char) {
+                this.inputBuffer.push(char.charCodeAt(0));
+            }
+
+            updateUartOutput() {
+                const uartElement = document.getElementById('uartOutput');
+                console.log(`updateUartOutput: element=${uartElement ? 'found' : 'NOT FOUND'}, output="${this.output}"`);
+                if (uartElement) {
+                    uartElement.textContent = this.output;
+                    uartElement.scrollTop = uartElement.scrollHeight;
+                    console.log(`UART element updated with: "${uartElement.textContent}"`);
+                } else {
+                    console.error('UART output element not found!');
+                }
+            }
+        }
+
+        // Global instances
+        let assembler = new F00Assembler();
+        let simulator = new F00Simulator();
+        let currentMemoryTab = 'rom';
+        let assemblyResult = null;
+        let isResizing = false;
+        let currentMemoryView = 'rom'; // rom, ram, or external hex data
+        let externalMemoryData = new Array(65536).fill(0);
+
+        // Initialize the IDE
+        function initIDE() {
+            updateLineNumbers();
+            initializeRegisters();
+            updateSimulatorDisplay();
+            setupResizing();
+            
+            // Setup editor events
+            const editor = document.getElementById('codeEditor');
+            editor.addEventListener('input', updateLineNumbers);
+            editor.addEventListener('scroll', syncLineNumbers);
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const menu = document.getElementById('fileMenu');
+                const button = event.target.closest('.hamburger-menu');
+                if (!button && !menu.contains(event.target)) {
+                    menu.classList.remove('show');
+                }
+            });
+        }
+
+        // Setup resizing functionality
+        function setupResizing() {
+            const mainHandle = document.getElementById('mainResizeHandle');
+            const outputHandle = document.getElementById('outputResizeHandle');
+            const leftPanel = document.getElementById('leftPanel');
+            const rightPanel = document.getElementById('rightPanel');
+            const outputContainer = document.getElementById('outputContainer');
+            
+            // Main vertical resize (left/right panels)
+            mainHandle.addEventListener('mousedown', function(e) {
+                isResizing = true;
+                document.body.style.userSelect = 'none';
+                
+                function handleMouseMove(e) {
+                    if (!isResizing) return;
+                    
+                    const containerRect = document.querySelector('.main-container').getBoundingClientRect();
+                    const newLeftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+                    
+                    if (newLeftWidth > 20 && newLeftWidth < 80) {
+                        leftPanel.style.width = newLeftWidth + '%';
+                        rightPanel.style.width = (100 - newLeftWidth) + '%';
+                        mainHandle.style.left = newLeftWidth + '%';
+                    }
+                }
+                
+                function handleMouseUp() {
+                    isResizing = false;
+                    document.body.style.userSelect = '';
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                }
+                
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            });
+            
+            // Output container resize (horizontal)
+            outputHandle.addEventListener('mousedown', function(e) {
+                isResizing = true;
+                document.body.style.userSelect = 'none';
+                
+                function handleMouseMove(e) {
+                    if (!isResizing) return;
+                    
+                    const leftPanelRect = leftPanel.getBoundingClientRect();
+                    const relativeY = e.clientY - leftPanelRect.top;
+                    const newHeight = ((leftPanelRect.height - relativeY) / leftPanelRect.height) * 100;
+                    
+                    if (newHeight > 20 && newHeight < 80) {
+                        outputContainer.style.height = newHeight + '%';
+                    }
+                }
+                
+                function handleMouseUp() {
+                    isResizing = false;
+                    document.body.style.userSelect = '';
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                }
+                
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            });
+        }
+
+        // Menu functions
+        function toggleMenu() {
+            const menu = document.getElementById('fileMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function newFile() {
+            if (confirm('Create new file? Current changes will be lost.')) {
+                document.getElementById('codeEditor').value = '';
+                currentFileName = '';
+                updateLineNumbers();
+            }
+            document.getElementById('fileMenu').style.display = 'none';
+        }
+
+        function saveAsFile() {
+            const content = document.getElementById('codeEditor').value;
+            const filename = prompt('Enter filename:', currentFileName || 'program.f00');
+            if (filename) {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                currentFileName = filename;
+            }
+            document.getElementById('fileMenu').style.display = 'none';
+        }
+
+        function loadHexFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.hex';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        parseIntelHex(e.target.result);
+                        showHexEditor();
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+            document.getElementById('fileMenu').style.display = 'none';
+        }
+
+        function saveHexFile() {
+            const hexData = generateIntelHex();
+            const blob = new Blob([hexData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'memory.hex';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            document.getElementById('fileMenu').style.display = 'none';
+        }
+
+        // Intel HEX format parser
+        function parseIntelHex(hexContent) {
+            const lines = hexContent.split('\n');
+            
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed || trimmed[0] !== ':') continue;
+                
+                const byteCount = parseInt(trimmed.substr(1, 2), 16);
+                const addr = parseInt(trimmed.substr(3, 4), 16);
+                const recordType = parseInt(trimmed.substr(7, 2), 16);
+                
+                if (recordType === 0) { // Data record
+                    for (let i = 0; i < byteCount; i++) {
+                        const byte = parseInt(trimmed.substr(9 + i * 2, 2), 16);
+                        memory[addr + i] = byte;
+                    }
+                }
+            }
+            updateMemoryView();
+        }
+
+        // Intel HEX format generator
+        function generateIntelHex() {
+            let hexData = '';
+            let addr = 0;
+            
+            while (addr < 0x8000) {
+                let lineData = [];
+                let hasData = false;
+                
+                // Collect up to 16 bytes
+                for (let i = 0; i < 16 && addr + i < 0x8000; i++) {
+                    const byte = memory[addr + i] || 0;
+                    lineData.push(byte);
+                    if (byte !== 0) hasData = true;
+                }
+                
+                if (hasData) {
+                    const byteCount = lineData.length;
+                    let line = ':' + 
+                              byteCount.toString(16).padStart(2, '0').toUpperCase() +
+                              addr.toString(16).padStart(4, '0').toUpperCase() +
+                              '00';
+                    
+                    let checksum = byteCount + (addr >> 8) + (addr & 0xFF);
+                    for (const byte of lineData) {
+                        line += byte.toString(16).padStart(2, '0').toUpperCase();
+                        checksum += byte;
+                    }
+                    
+                    checksum = (256 - (checksum & 0xFF)) & 0xFF;
+                    line += checksum.toString(16).padStart(2, '0').toUpperCase();
+                    hexData += line + '\n';
+                }
+                
+                addr += 16;
+            }
+            
+            // End of file record
+            hexData += ':00000001FF\n';
+            return hexData;
+        }
+
+        function showHexEditor() {
+            // Switch to hexedit tab and update view
+            currentMemoryTab = 'hexedit';
+            
+            // Update tab appearance 
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab')[2].classList.add('active'); // Hex Editor is 3rd tab
+            
+            updateMemoryDisplay();
+        }
+
+        // Alias for compatibility
+        function updateMemoryView() {
+            updateMemoryDisplay();
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('fileMenu');
+            const hamburger = document.querySelector('.hamburger-menu');
+            
+            if (menu && hamburger && !hamburger.contains(e.target) && !menu.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        function updateLineNumbers() {
+            const editor = document.getElementById('codeEditor');
+            const lineNumbers = document.getElementById('lineNumbers');
+            const lines = editor.value.split('\n');
+            
+            let numbers = '';
+            for (let i = 1; i <= lines.length; i++) {
+                numbers += i + '\n';
+            }
+            lineNumbers.textContent = numbers;
+        }
+
+        function syncLineNumbers() {
+            const editor = document.getElementById('codeEditor');
+            const lineNumbers = document.getElementById('lineNumbers');
+            lineNumbers.scrollTop = editor.scrollTop;
+        }
+
+        function initializeRegisters() {
+            const container = document.getElementById('registers');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 32; i++) {
+                const regDiv = document.createElement('div');
+                regDiv.className = 'register';
+                regDiv.innerHTML = `
+                    <span class="register-name">R${i}</span>
+                    <span class="register-value" id="reg${i}">0000</span>
+                `;
+                container.appendChild(regDiv);
+            }
+        }
+
+        function assembleCode() {
+            const code = document.getElementById('codeEditor').value;
+            const output = document.getElementById('output');
+            
+            setStatus('Assembling...', 'warning');
+            
+            assemblyResult = assembler.assemble(code);
+            
+            if (assemblyResult.success) {
+                simulator.loadRom(assemblyResult.rom);
+                output.textContent = `Assembly successful!\nCode size: ${assemblyResult.codeSize} words\nSymbols: ${Object.keys(assemblyResult.symbols).length}`;
+                setStatus('Assembly completed successfully', 'success');
+                
+                // Debug: show first few words of assembled program
+                console.log('Assembled ROM:');
+                for (let i = 0; i < Math.min(10, assemblyResult.rom.length); i++) {
+                    if (assemblyResult.rom[i] !== 0) {
+                        console.log(`ROM[${i}] = 0x${assemblyResult.rom[i].toString(16)} (${assemblyResult.rom[i]})`);
+                    }
+                }
+                
+                updateMemoryDisplay();
+            } else {
+                output.textContent = 'Assembly errors:\n' + assemblyResult.errors.join('\n');
+                setStatus('Assembly failed', 'error');
+            }
+        }
+
+        function runSimulator() {
+            console.log('runSimulator called');
+            if (!assemblyResult || !assemblyResult.success) {
+                setStatus('Please assemble code first', 'error');
+                return;
+            }
+            
+            console.log('Starting simulator...');
+            setStatus('Running...', 'warning');
+            simulator.running = true;
+            
+            // Run with animation
+            const runStep = () => {
+                if (simulator.running && !simulator.halted) {
+                    const canContinue = simulator.step();
+                    updateSimulatorDisplay();
+                    
+                    if (canContinue) {
+                        setTimeout(runStep, 10); // 10ms delay for animation
+                    } else {
+                        simulator.running = false;
+                        setStatus('Program halted', 'warning');
+                    }
+                } else {
+                    simulator.running = false;
+                    setStatus('Program stopped', 'success');
+                }
+            };
+            
+            setTimeout(runStep, 10);
+        }
+
+        function stepSimulator() {
+            if (!assemblyResult || !assemblyResult.success) {
+                setStatus('Please assemble code first', 'error');
+                return;
+            }
+            
+            if (simulator.step()) {
+                updateSimulatorDisplay();
+                setStatus(`Stepped - Cycle: ${simulator.cycles}`, 'success');
+            } else {
+                setStatus('Program halted', 'warning');
+            }
+        }
+
+        function resetSimulator() {
+            simulator.reset();
+            if (assemblyResult && assemblyResult.success) {
+                simulator.loadRom(assemblyResult.rom);
+            }
+            
+            // Clear UART output
+            const uartElement = document.getElementById('uartOutput');
+            if (uartElement) {
+                uartElement.textContent = 'F00 CPU Reset - UART Output will appear here...';
+            }
+            
+            updateSimulatorDisplay();
+            setStatus('Simulator reset', 'success');
+        }
+
+        function updateSimulatorDisplay() {
+            // Update PC
+            document.getElementById('pc').textContent = simulator.pc.toString(16).padStart(4, '0').toUpperCase();
+            
+            // Update flags
+            document.getElementById('carry').textContent = (simulator.usr & 0x0001) ? '1' : '0';
+            document.getElementById('zero').textContent = (simulator.usr & 0x0002) ? '1' : '0';
+            document.getElementById('super').textContent = (simulator.sr[0] & 0x0010) ? '1' : '0';
+            
+            // Update registers
+            for (let i = 0; i < 32; i++) {
+                const element = document.getElementById(`reg${i}`);
+                element.textContent = simulator.registers[i].toString(16).padStart(4, '0').toUpperCase();
+                
+                const regDiv = element.parentElement;
+                if (simulator.lastChangedRegs.has(i)) {
+                    regDiv.classList.add('changed');
+                } else {
+                    regDiv.classList.remove('changed');
+                }
+            }
+            
+            updateMemoryDisplay();
+        }
+
+        function showMemoryTab(tab) {
+            currentMemoryTab = tab;
+            
+            // Update tab appearance
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateMemoryDisplay();
+        }
+
+        function updateMemoryDisplay() {
+            const container = document.getElementById('memoryContent');
+            
+            if (currentMemoryTab === 'rom') {
+                showMemoryTable(container, simulator.rom, 'ROM');
+            } else if (currentMemoryTab === 'ram') {
+                showMemoryTable(container, simulator.ram, 'RAM');
+            } else if (currentMemoryTab === 'hexedit') {
+                showHexEditor(container);
+            } else if (currentMemoryTab === 'symbols') {
+                showSymbolsTable(container);
+            }
+        }
+
+        function showMemoryTable(container, memory, title) {
+            let html = `<table class="memory-table">
+                <thead>
+                    <tr>
+                        <th>Address</th>
+                        <th>Hex</th>
+                        <th>Dec</th>
+                        <th>Instruction</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            
+            for (let i = 0; i < Math.min(memory.length, 256); i++) {
+                if (memory[i] !== 0 || i < 32) {
+                    const isPc = (title === 'ROM' && i === simulator.pc);
+                    const rowClass = isPc ? 'pc-highlight' : '';
+                    
+                    html += `<tr class="${rowClass}">
+                        <td>${i.toString(16).padStart(4, '0').toUpperCase()}</td>
+                        <td>${memory[i].toString(16).padStart(4, '0').toUpperCase()}</td>
+                        <td>${memory[i]}</td>
+                        <td>${disassemble(memory[i])}</td>
+                    </tr>`;
+                }
+            }
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function showSymbolsTable(container) {
+            if (!assemblyResult || !assemblyResult.symbols) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center;">No symbols available</div>';
+                return;
+            }
+            
+            let html = `<table class="memory-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Address</th>
+                        <th>Hex</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            
+            Object.entries(assemblyResult.symbols).forEach(([name, addr]) => {
+                html += `<tr>
+                    <td>${name}</td>
+                    <td>${addr}</td>
+                    <td>${addr.toString(16).padStart(4, '0').toUpperCase()}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function showHexEditor(container) {
+            let html = `
+                <div style="padding: 10px;">
+                    <div style="margin-bottom: 10px;">
+                        <strong>Hex Editor</strong> - Click hex values to edit
+                    </div>
+                    <div class="hex-editor" style="font-family: monospace; font-size: 14px;">
+            `;
+            
+            for (let addr = 0; addr < 0x200; addr += 16) {
+                html += '<div class="hex-row" style="display: flex; margin-bottom: 2px;">';
+                html += `<div class="hex-addr" style="width: 60px; color: #888;">${addr.toString(16).padStart(4, '0').toUpperCase()}:</div>`;
+                
+                // Hex values (editable)
+                html += '<div class="hex-bytes" style="flex: 1;">';
+                for (let i = 0; i < 16; i++) {
+                    const currentAddr = addr + i;
+                    const value = memory[currentAddr] || 0;
+                    html += `<span class="hex-byte" 
+                                  contenteditable="true" 
+                                  data-addr="${currentAddr}"
+                                  style="display: inline-block; width: 24px; margin-right: 4px; color: #4FC3F7; cursor: pointer; border: 1px solid transparent; padding: 1px;"
+                                  onclick="selectHexByte(this)"
+                                  onblur="updateMemoryByte(this)"
+                                  onkeydown="handleHexInput(event, this)"
+                                >${value.toString(16).padStart(2, '0').toUpperCase()}</span>`;
+                    if ((i + 1) % 8 === 0) html += '<span style="margin-right: 8px;"></span>';
+                }
+                html += '</div>';
+                
+                // ASCII representation
+                html += '<div class="hex-ascii" style="width: 200px; color: #888; margin-left: 20px;">';
+                for (let i = 0; i < 16; i++) {
+                    const value = memory[addr + i] || 0;
+                    const char = (value >= 32 && value <= 126) ? String.fromCharCode(value) : '.';
+                    html += char;
+                }
+                html += '</div>';
+                
+                html += '</div>';
+            }
+            
+            html += `
+                    </div>
+                    <div style="margin-top: 15px; font-size: 12px; color: #888;">
+                        Memory range: 0000-01FF (512 bytes) | Format: 8-bit bytes
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function selectHexByte(element) {
+            element.style.border = '1px solid #4FC3F7';
+            element.style.background = '#2d2d30';
+            element.focus();
+            
+            // Select all text
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+
+        function updateMemoryByte(element) {
+            element.style.border = '1px solid transparent';
+            element.style.background = 'transparent';
+            
+            const addr = parseInt(element.dataset.addr);
+            const hexValue = element.textContent.trim().toUpperCase();
+            
+            if (/^[0-9A-F]{1,2}$/.test(hexValue)) {
+                const value = parseInt(hexValue, 16);
+                memory[addr] = value;
+                element.textContent = value.toString(16).padStart(2, '0').toUpperCase();
+                
+                // Update ASCII display
+                updateAsciiDisplay();
+            } else {
+                // Invalid input, restore original value
+                element.textContent = (memory[addr] || 0).toString(16).padStart(2, '0').toUpperCase();
+            }
+        }
+
+        function handleHexInput(event, element) {
+            // Allow navigation keys
+            if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Enter'].includes(event.key)) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    element.blur();
+                }
+                return;
+            }
+            
+            // Only allow hex characters and backspace/delete
+            if (!/^[0-9A-Fa-f]$/.test(event.key) && !['Backspace', 'Delete'].includes(event.key)) {
+                event.preventDefault();
+            }
+            
+            // Limit to 2 characters
+            if (element.textContent.length >= 2 && !['Backspace', 'Delete'].includes(event.key)) {
+                event.preventDefault();
+            }
+        }
+
+        function updateAsciiDisplay() {
+            // Refresh the hex editor to update ASCII columns
+            if (currentMemoryTab === 'hexedit') {
+                const container = document.getElementById('memoryContent');
+                showHexEditor(container);
+            }
+        }
+
+        function showHexMemoryView(container) {
+            let html = '<div class="memory-view">';
+            
+            // Show ROM memory in hex view format
+            for (let addr = 0; addr < 512; addr += 16) {
+                if (hasDataInRange(simulator.rom, addr, 16) || addr < 64) {
+                    html += '<div class="memory-row">';
+                    html += `<div class="memory-address">${addr.toString(16).padStart(4, '0').toUpperCase()}:</div>`;
+                    
+                    let hexString = '';
+                    let asciiString = '';
+                    
+                    for (let i = 0; i < 16; i++) {
+                        const value = simulator.rom[addr + i] || 0;
+                        hexString += value.toString(16).padStart(4, '0').toUpperCase() + ' ';
+                        
+                        // Convert to ASCII for display
+                        const lowByte = value & 0xFF;
+                        const highByte = (value >> 8) & 0xFF;
+                        asciiString += isPrintableAscii(highByte) ? String.fromCharCode(highByte) : '.';
+                        asciiString += isPrintableAscii(lowByte) ? String.fromCharCode(lowByte) : '.';
+                    }
+                    
+                    html += `<div class="memory-hex">${hexString}</div>`;
+                    html += `<div class="memory-ascii">${asciiString}</div>`;
+                    html += '</div>';
+                }
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function hasDataInRange(memory, start, count) {
+            for (let i = 0; i < count; i++) {
+                if (memory[start + i] !== 0) return true;
+            }
+            return false;
+        }
+
+        function isPrintableAscii(value) {
+            return value >= 32 && value <= 126;
+        }
+
+        function disassemble(instruction) {
+            const opcode = (instruction & 0xFC00) >> 10;
+            const operand1 = (instruction & 0x03E0) >> 5;
+            const operand2 = instruction & 0x001F;
+            const shortImm = instruction & 0x03FF;
+            
+            for (const [name, code] of Object.entries(OPCODES)) {
+                if (code === opcode) {
+                    switch (name) {
+                        case 'LOADIMM':
+                            return `LOADIMM R${operand1}, <next>`;
+                        case 'MOVE':
+                        case 'LOAD':
+                        case 'STORE':
+                        case 'ADD':
+                        case 'SUB':
+                        case 'AND':
+                        case 'OR':
+                        case 'NOT':
+                        case 'SHIFTL':
+                        case 'SHIFTR':
+                            return `${name} R${operand1}, R${operand2}`;
+                        case 'JUMPABS':
+                        case 'JUMPREL':
+                            return `${name} R${operand1}`;
+                        case 'JUMPRIMM':
+                        case 'JUMPRIMMC':
+                        case 'JUMPRIMMZ':
+                            return `${name} ${shortImm}`;
+                        case 'SYSCALL':
+                            return 'SYSCALL';
+                        default:
+                            return name;
+                    }
+                }
+            }
+            return `DATA ${instruction}`;
+        }
+
+        function sendInput() {
+            const input = document.getElementById('consoleInput');
+            if (input.value.length > 0) {
+                simulator.addInput(input.value.charAt(0));
+                input.value = '';
+            }
+        }
+
+        function loadExample() {
+            document.getElementById('codeEditor').value = `; F00 CPU Example Program
+; Prints "HELLO WORLD" and loops
+
+CODEORG 0
+
+RESET:	LOADIMM R0,32767	; Virtual UART address
+	LOADIMM R1,72		; 'H'
+	STORE R1,R0
+	LOADIMM R1,69		; 'E'
+	STORE R1,R0
+	LOADIMM R1,76		; 'L'
+	STORE R1,R0
+	LOADIMM R1,76		; 'L'
+	STORE R1,R0
+	LOADIMM R1,79		; 'O'
+	STORE R1,R0
+	LOADIMM R1,32		; ' '
+	STORE R1,R0
+	LOADIMM R1,87		; 'W'
+	STORE R1,R0
+	LOADIMM R1,79		; 'O'
+	STORE R1,R0
+	LOADIMM R1,82		; 'R'
+	STORE R1,R0
+	LOADIMM R1,76		; 'L'
+	STORE R1,R0
+	LOADIMM R1,68		; 'D'
+	STORE R1,R0
+	LOADIMM R1,10		; LF
+	STORE R1,R0
+	
+	; Simple counter loop
+	LOADIMM R2,0
+	LOADIMM R3,1
+LOOP:	ADD R2,R3		; R3 = R2 + R3 (increment counter)
+	JUMPRIMM LOOP		; Loop forever
+
+; Test various instructions
+TEST:	LOADIMM R10,0x1234
+	LOADIMM R11,0x5678
+	ADD R10,R11		; R11 = 0x68AC
+	AND R10,R11		; R11 = 0x1234 & 0x68AC = 0x1020
+	OR R10,R11		; R11 = 0x1234 | 0x1020 = 0x1234
+	NOT R10,R12		; R12 = ~0x1234 = 0xEDCB
+	JUMPABS R0		; Jump back to start`;
+            
+            updateLineNumbers();
+            setStatus('Example loaded', 'success');
+        }
+
+        function saveFile() {
+            const code = document.getElementById('codeEditor').value;
+            const filename = document.getElementById('filename').value || 'program.f00';
+            
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            setStatus(`File saved as ${filename}`, 'success');
+        }
+
+        function loadFile() {
+            const fileInput = document.getElementById('fileInput');
+            fileInput.click();
+        }
+
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                document.getElementById('codeEditor').value = content;
+                document.getElementById('filename').value = file.name;
+                updateLineNumbers();
+                setStatus(`Loaded ${file.name}`, 'success');
+            };
+            reader.readAsText(file);
+        }
+
+        function setStatus(text, type = '') {
+            const statusElement = document.getElementById('statusText');
+            statusElement.textContent = text;
+            statusElement.className = type;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey) {
+                switch (e.key) {
+                    case 'b':
+                        e.preventDefault();
+                        assembleCode();
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        runSimulator();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            stepSimulator();
+                        } else {
+                            saveFile();
+                        }
+                        break;
+                    case 'o':
+                        e.preventDefault();
+                        loadFile();
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        loadExample();
+                        break;
+                }
+            }
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initIDE);
+    </script>
+</body>
+</html>

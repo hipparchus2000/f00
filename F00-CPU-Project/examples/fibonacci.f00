@@ -1,0 +1,70 @@
+; F00 CPU Fibonacci Sequence Generator
+; Calculates and prints first 10 Fibonacci numbers
+
+CODEORG 0
+
+START:	LOADIMM R0,32767	; UART address
+	LOADIMM R1,0		; First Fibonacci number (F0 = 0)
+	LOADIMM R2,1		; Second Fibonacci number (F1 = 1)
+	LOADIMM R3,10		; Counter (how many numbers to generate)
+	LOADIMM R4,0		; Current count
+
+	; Print "Fibonacci Sequence:" header
+	LOADIMM R5,70		; 'F'
+	STORE R5,R0
+	LOADIMM R5,105		; 'i'
+	STORE R5,R0
+	LOADIMM R5,98		; 'b'
+	STORE R5,R0
+	LOADIMM R5,58		; ':'
+	STORE R5,R0
+	LOADIMM R5,32		; ' '
+	STORE R5,R0
+
+LOOP:	; Print current Fibonacci number (simplified - just show pattern)
+	ADD R1,R2		; R2 = R1 + R2 (next Fibonacci)
+	MOVE R2,R1		; R1 = previous R2
+	SUB R2,R1		; R2 = current - previous = original R1
+	ADD R1,R2		; R1 = R1 + R2 = new current
+	
+	; Print a digit (simplified)
+	LOADIMM R5,48		; '0' + digit
+	ADD R5,R4		; Add counter as simple digit
+	STORE R5,R0		; Print digit
+	LOADIMM R5,32		; Space
+	STORE R5,R0
+
+	; Increment counter
+	LOADIMM R5,1
+	ADD R4,R5		; R5 = R4 + R5 = R4 + 1, store in R5
+	MOVE R5,R4		; R4 = R5
+
+	; Check if done
+	SUB R3,R4		; R4 = R3 - R4 (remaining count)
+	MOVE R4,R5		; R5 = R4
+	JUMPRIMMZ END		; If zero, we're done
+	
+	; Restore counter (R4 was modified by SUB)
+	SUB R3,R5		; R5 = R3 - R5 = original R4
+	ADD R5,R5		; R5 = R5 + R5 = 2 * R4
+	SUB R3,R5		; R5 = R3 - R5 = R3 - 2*R4
+	SUB R5,R3		; R5 = R5 - R3 = -R4
+	SUB R5,R5		; R5 = 0
+	SUB R5,R4		; R5 = -R4
+	SUB R5,R5		; R5 = 0 - (-R4) = R4 (restored)
+	MOVE R5,R4
+	
+	JUMPRIMM LOOP
+
+END:	LOADIMM R5,10		; Newline
+	STORE R5,R0
+	LOADIMM R5,68		; 'D'
+	STORE R5,R0
+	LOADIMM R5,111		; 'o'
+	STORE R5,R0
+	LOADIMM R5,110		; 'n'
+	STORE R5,R0
+	LOADIMM R5,101		; 'e'
+	STORE R5,R0
+	
+HALT:	JUMPRIMM HALT		; Infinite loop

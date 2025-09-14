@@ -1,6 +1,0 @@
-CONV_ACS, 2.5.5.51, Mon Oct 18 15:00:05 1999
-
-  Macro 'ISM' not exported. File 'C:\FNDTN\ACTIVE\PROJECTS\F0016\ISM.edn' exists
-  Total number of instances: 1519
-  Total number of nets: 3836
-EDIF netlist exported to file - C:\FNDTN\ACTIVE\PROJECTS\F0016\f0016.edn

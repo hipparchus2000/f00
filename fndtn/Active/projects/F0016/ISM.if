@@ -1,5 +1,0 @@
-SAVE Sreg0_0 * *
-SAVE Sreg0_1 * *
-SAVE Sreg0_2 * *
-SAVE Sreg0_3 * *
-OPTIMIZE * balance *

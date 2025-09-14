@@ -143,12 +143,18 @@ architecture behavioral of f00_cpu_online is
     type imem_t is array (0 to 15) of std_logic_vector(15 downto 0);
     signal imem : imem_t := (
         0  => x"4100",  -- LOADIMM R1, next_word (01 010000 00001 00000)
-        1  => x"1234",  -- immediate value
+        1  => x"1234",  -- immediate value 0x1234
         2  => x"4120",  -- LOADIMM R2, next_word (01 010000 00010 00000)
-        3  => x"5678",  -- immediate value
-        4  => x"8B04",  -- ADD R1, R2 (10 001011 00001 00010)
-        5  => x"8252",  -- MOVE R2, R3 (10 000010 00010 00011)
-        6  => x"8514",  -- JUMPABS R20 (10 000101 10100 00000) - R20 should contain loop address
+        3  => x"5678",  -- immediate value 0x5678
+        4  => x"8B04",  -- ADD R1, R2 -> R2 (10 001011 00001 00010) = 0x68AC
+        5  => x"8C22",  -- SUB R1, R2 -> R2 (10 001100 00001 00010) = 0x1234 - 0x68AC
+        6  => x"8252",  -- MOVE R2, R3 (10 000010 00010 00011)
+        7  => x"C143",  -- AND R1, R3 -> R3 (10 100001 00001 00011)
+        8  => x"C244",  -- OR R2, R4 -> R4 (10 100010 00010 00100)
+        9  => x"C345",  -- NOT R3, R5 -> R5 (10 100011 00011 00101)
+        10 => x"8346",  -- SHIFTL R3, R6 -> R6 (10 000011 00011 00110)
+        11 => x"8447",  -- SHIFTR R4, R7 -> R7 (10 000100 00100 00111)
+        12 => x"0000", -- NOP (end of program)
         others => x"0000"
     );
 
@@ -282,6 +288,63 @@ begin
                             reg_addr_a <= std_logic_vector(operand1);
                             reg_addr_b <= std_logic_vector(operand2);
                             alu_op <= "000";  -- ADD
+                            reg_data_in <= alu_result;
+                            reg_we <= '1';
+                            carry_flag <= alu_carry;
+                            zero_flag <= alu_zero;
+                            pc <= pc + 1;
+
+                        when "001100" => -- SUB (opcode 12)
+                            reg_addr_a <= std_logic_vector(operand1);
+                            reg_addr_b <= std_logic_vector(operand2);
+                            alu_op <= "001";  -- SUB
+                            reg_data_in <= alu_result;
+                            reg_we <= '1';
+                            carry_flag <= alu_carry;
+                            zero_flag <= alu_zero;
+                            pc <= pc + 1;
+
+                        when "100001" => -- AND (opcode 33)
+                            reg_addr_a <= std_logic_vector(operand1);
+                            reg_addr_b <= std_logic_vector(operand2);
+                            alu_op <= "010";  -- AND
+                            reg_data_in <= alu_result;
+                            reg_we <= '1';
+                            zero_flag <= alu_zero;
+                            pc <= pc + 1;
+
+                        when "100010" => -- OR (opcode 34)
+                            reg_addr_a <= std_logic_vector(operand1);
+                            reg_addr_b <= std_logic_vector(operand2);
+                            alu_op <= "011";  -- OR
+                            reg_data_in <= alu_result;
+                            reg_we <= '1';
+                            zero_flag <= alu_zero;
+                            pc <= pc + 1;
+
+                        when "100011" => -- NOT (opcode 35)
+                            reg_addr_a <= std_logic_vector(operand1);
+                            reg_addr_b <= std_logic_vector(operand2);
+                            alu_op <= "100";  -- NOT
+                            reg_data_in <= alu_result;
+                            reg_we <= '1';
+                            zero_flag <= alu_zero;
+                            pc <= pc + 1;
+
+                        when "000011" => -- SHIFTL (opcode 3)
+                            reg_addr_a <= std_logic_vector(operand1);
+                            reg_addr_b <= std_logic_vector(operand2);
+                            alu_op <= "101";  -- SHIFT LEFT
+                            reg_data_in <= alu_result;
+                            reg_we <= '1';
+                            carry_flag <= alu_carry;
+                            zero_flag <= alu_zero;
+                            pc <= pc + 1;
+
+                        when "000100" => -- SHIFTR (opcode 4)
+                            reg_addr_a <= std_logic_vector(operand1);
+                            reg_addr_b <= std_logic_vector(operand2);
+                            alu_op <= "110";  -- SHIFT RIGHT
                             reg_data_in <= alu_result;
                             reg_we <= '1';
                             carry_flag <= alu_carry;

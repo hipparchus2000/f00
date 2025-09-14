@@ -147,6 +147,21 @@ architecture structural of f00_cpu_top is
     signal pc_ce            : std_logic;
     signal pc_sclr          : std_logic;
     signal pc_load_value    : std_logic_vector(15 downto 0);
+
+    -- Internal bus system
+    signal internal_bus     : std_logic_vector(15 downto 0);
+    signal external_bus     : std_logic_vector(15 downto 0);
+
+    -- Temporary registers and latches
+    signal temp_register    : std_logic_vector(15 downto 0);
+    signal result_register  : std_logic_vector(15 downto 0);
+    signal data_addr_latch  : std_logic_vector(15 downto 0);
+    signal operand_latch    : std_logic_vector(15 downto 0);
+
+    -- Shifter signals
+    signal shifter_input    : std_logic_vector(15 downto 0);
+    signal shifter_output   : std_logic_vector(15 downto 0);
+    signal shifter_carry    : std_logic;
     
     signal reg_file_addra   : std_logic_vector(4 downto 0);
     signal reg_file_addrb   : std_logic_vector(4 downto 0);
@@ -216,6 +231,16 @@ architecture structural of f00_cpu_top is
     signal ism_update_flags                    : std_logic;
     signal ism_write_registers                 : std_logic;
     signal ism_current_state                   : std_logic_vector(7 downto 0);
+
+    -- Additional ISM signals needed for datapath
+    signal ism_shift_left_not_right            : std_logic;
+    signal ism_mem_read_not_write              : std_logic;
+    signal ism_load_carry_bit                  : std_logic;
+    signal ism_load_zero_bit                   : std_logic;
+    signal ism_load_overflow_bit               : std_logic;
+    signal ism_load_data_address_latch         : std_logic;
+    signal ism_load_operand                    : std_logic;
+    signal ism_write_to_registers              : std_logic;
     
     -- Status flags
     signal carry_flag       : std_logic;
@@ -257,17 +282,109 @@ begin
             doutb => reg_file_doutb
         );
     
-    -- ALU (using Xilinx Adder/Subtracter IP)
-    alu_inst : alu_addsub
-        port map (
-            A      => alu_a,
-            B      => alu_b,
-            ADD    => alu_add_mode,
-            CLK    => CLK,
-            C_OUT  => alu_carry_out,
-            S      => alu_result
-        );
-    
+    -- Enhanced ALU with logical operations
+    enhanced_alu_inst : process(alu_a, alu_b, alu_add_mode, ism_enable_and_to_result, ism_enable_or_to_result, ism_enable_invert_to_result)
+        variable temp_result : std_logic_vector(16 downto 0);
+    begin
+        -- Default to arithmetic operations
+        if ism_enable_and_to_result = '1' then
+            -- Logical AND operation
+            temp_result := '0' & (alu_a and alu_b);
+        elsif ism_enable_or_to_result = '1' then
+            -- Logical OR operation
+            temp_result := '0' & (alu_a or alu_b);
+        elsif ism_enable_invert_to_result = '1' then
+            -- Logical NOT operation
+            temp_result := '0' & (not alu_a);
+        elsif alu_add_mode = '1' then
+            -- Addition
+            temp_result := std_logic_vector(unsigned('0' & alu_a) + unsigned('0' & alu_b));
+        else
+            -- Subtraction
+            temp_result := std_logic_vector(unsigned('0' & alu_a) - unsigned('0' & alu_b));
+        end if;
+
+        alu_result <= temp_result(15 downto 0);
+        alu_carry_out <= temp_result(16);
+    end process;
+
+    -- Shifter Unit
+    shifter_unit: process(shifter_input, ism_shift_left_not_right, carry_flag)
+    begin
+        if ism_shift_left_not_right = '1' then
+            -- Shift left
+            shifter_output <= shifter_input(14 downto 0) & '0';
+            shifter_carry <= shifter_input(15);
+        else
+            -- Shift right
+            shifter_output <= '0' & shifter_input(15 downto 1);
+            shifter_carry <= shifter_input(0);
+        end if;
+    end process;
+
+    -- Internal Bus Routing
+    internal_bus_routing: process(
+        ism_enable_registers_to_bus, ism_enable_pc_to_bus, ism_enable_result_to_bus,
+        ism_enable_temp_to_bus, ism_enable_ground_to_bus,
+        reg_file_douta, pc_out, result_register, temp_register, external_bus,
+        ism_enable_external_to_internal
+    )
+    begin
+        internal_bus <= (others => '0');  -- Default
+
+        if ism_enable_registers_to_bus = '1' then
+            internal_bus <= reg_file_douta;
+        elsif ism_enable_pc_to_bus = '1' then
+            internal_bus <= pc_out;
+        elsif ism_enable_result_to_bus = '1' then
+            internal_bus <= result_register;
+        elsif ism_enable_temp_to_bus = '1' then
+            internal_bus <= temp_register;
+        elsif ism_enable_external_to_internal = '1' then
+            internal_bus <= external_bus;
+        elsif ism_enable_ground_to_bus = '1' then
+            internal_bus <= (others => '0');
+        end if;
+    end process;
+
+    -- External Bus (Memory Interface)
+    external_bus <= IMEM_DATA when ism_memreq = '1' else DMEM_DATA_IN;
+
+    -- Temporary Registers and Latches
+    temp_regs: process(CLK, RESET_N)
+    begin
+        if RESET_N = '0' then
+            temp_register <= (others => '0');
+            result_register <= (others => '0');
+            data_addr_latch <= (others => '0');
+            operand_latch <= (others => '0');
+        elsif rising_edge(CLK) then
+            -- Load temporary register
+            if ism_enable_bus_to_alu = '1' then
+                temp_register <= internal_bus;
+            end if;
+
+            -- Load result register
+            if ism_enable_adder_to_result = '1' then
+                result_register <= alu_result;
+            elsif ism_enable_and_to_result = '1' or ism_enable_or_to_result = '1' or ism_enable_invert_to_result = '1' then
+                result_register <= alu_result;
+            elsif ism_enable_shifter_to_result = '1' then
+                result_register <= shifter_output;
+            end if;
+
+            -- Load data address latch
+            if ism_load_data_address_latch = '1' then
+                data_addr_latch <= internal_bus;
+            end if;
+
+            -- Load operand latch
+            if ism_load_operand = '1' then
+                operand_latch <= internal_bus;
+            end if;
+        end if;
+    end process;
+
     -- Instruction State Machine
     ism_inst : ism
         port map (
@@ -321,40 +438,66 @@ begin
             SUPERUSER_MODE                  => ism_superuser_mode,
             UPDATE_FLAGS                    => ism_update_flags,
             WRITE_REGISTERS                 => ism_write_registers,
-            CURRENT_STATE_OUT               => ism_current_state
+            CURRENT_STATE_OUT               => ism_current_state,
+            -- Additional signals for complete datapath
+            MEM_READ_NOT_WRITE              => ism_mem_read_not_write,
+            SHIFT_LEFT_NOT_RIGHT            => ism_shift_left_not_right,
+            LOAD_CARRY_BIT                  => ism_load_carry_bit,
+            LOAD_ZERO_BIT                   => ism_load_zero_bit,
+            LOAD_OVERFLOW_BIT               => ism_load_overflow_bit,
+            LOAD_DATA_ADDRESS_LATCH         => ism_load_data_address_latch,
+            LOAD_OPERAND                    => ism_load_operand,
+            WRITE_TO_REGISTERS              => ism_write_to_registers
         );
 
-    -- Control Logic (connects ISM outputs to IP cores)
-    
+    -- Control Logic (connects ISM outputs to datapath components)
+
     -- Program Counter Control
     pc_ce <= ism_increment_pc or ism_clock_pc;
-    pc_load <= ism_load_pc;
     pc_sclr <= not RESET_N;
-    
-    -- Register File Control
-    reg_file_addra <= operand1;
+    pc_load_value <= internal_bus when ism_load_pc = '1' else (others => '0');
+
+    -- Register File Control (Dynamic Addressing)
+    reg_file_addra <= operand1 when ism_enable_down_regaddr_to_reg = '1' else
+                      operand2 when ism_enable_up_regaddr_to_reg = '1' else
+                      (others => '0');
     reg_file_addrb <= operand2;
-    reg_file_wea(0) <= ism_write_registers;
-    reg_file_web(0) <= '0';  -- Port B used for read only typically
-    
-    -- ALU Control
+    reg_file_dina <= internal_bus;
+    reg_file_wea(0) <= ism_write_to_registers;
+    reg_file_web(0) <= '0';  -- Port B used for read only
+
+    -- ALU Control and Input Routing
     alu_add_mode <= ism_alu_add;  -- 1 for ADD, 0 for SUB
+    alu_a <= temp_register when ism_enable_temp_to_alu = '1' else
+             reg_file_douta when ism_enable_bus_to_alu = '1' else
+             (others => '0');
+    alu_b <= reg_file_doutb when ism_enable_temp_to_alu = '1' else
+             internal_bus;
+
+    -- Shifter Input Control
+    shifter_input <= reg_file_douta when ism_enable_load_shift = '1' else
+                     internal_bus;
     
     -- Memory Interface
     IMEM_ADDR <= pc_out;
     IMEM_EN <= ism_memreq;
-    
+
+    -- Data Memory Interface
+    DMEM_ADDR <= data_addr_latch when ism_en_dataaddr_to_internalbus = '1' else
+                 internal_bus;
+    DMEM_DATA_OUT <= internal_bus when ism_enable_internal_to_external = '1' else
+                     reg_file_douta;
     DMEM_EN <= ism_memreqdata;
-    DMEM_WE <= ism_enable_internal_to_external;
-    
-    -- I/O Interface (memory-mapped)
-    IO_EN <= ism_memreqdata when unsigned(DMEM_ADDR) = 32767 else '0';  -- UART at 0x7FFF
-    IO_WE <= DMEM_WE;
+    DMEM_WE <= ism_enable_internal_to_external and (not ism_mem_read_not_write);
+
+    -- I/O Interface (memory-mapped at 0x7FFF)
+    IO_EN <= '1' when (unsigned(DMEM_ADDR) = 32767 and ism_memreqdata = '1') else '0';
+    IO_WE <= DMEM_WE when (unsigned(DMEM_ADDR) = 32767) else '0';
     IO_ADDR <= DMEM_ADDR;
     IO_DATA_OUT <= DMEM_DATA_OUT;
     
-    -- Status Flag Updates
-    process(CLK, RESET_N)
+    -- Enhanced Status Flag Updates
+    flag_control: process(CLK, RESET_N)
     begin
         if RESET_N = '0' then
             carry_flag <= '0';
@@ -363,15 +506,62 @@ begin
             negative_flag <= '0';
         elsif rising_edge(CLK) then
             if ism_update_flags = '1' then
-                carry_flag <= alu_carry_out;
-                zero_flag <= '1' when alu_result = x"0000" else '0';
-                negative_flag <= alu_result(15);
+                -- Update carry flag from ALU or shifter
+                if ism_enable_carry_from_alu = '1' then
+                    carry_flag <= alu_carry_out;
+                elsif ism_enable_shift_out_to_carry_in = '1' then
+                    carry_flag <= shifter_carry;
+                end if;
+
+                -- Update zero flag based on result
+                if ism_enable_adder_to_result = '1' or ism_enable_and_to_result = '1' or
+                   ism_enable_or_to_result = '1' or ism_enable_invert_to_result = '1' or
+                   ism_enable_shifter_to_result = '1' then
+                    zero_flag <= '1' when result_register = x"0000" else '0';
+                end if;
+
+                -- Update negative flag (MSB of result)
+                negative_flag <= result_register(15);
+
                 -- Overflow detection for signed arithmetic
-                overflow_flag <= (alu_a(15) xor alu_result(15)) and 
-                                (alu_b(15) xor alu_result(15)) when alu_add_mode = '1' else
-                                (alu_a(15) xor alu_result(15)) and 
-                                (not alu_b(15) xor alu_result(15));
+                if alu_add_mode = '1' then
+                    overflow_flag <= (alu_a(15) xor result_register(15)) and
+                                   (alu_b(15) xor result_register(15));
+                else
+                    overflow_flag <= (alu_a(15) xor result_register(15)) and
+                                   (not alu_b(15) xor result_register(15));
+                end if;
             end if;
+
+            -- Individual flag control signals
+            if ism_load_carry_bit = '1' then
+                carry_flag <= shifter_carry;
+            end if;
+            if ism_load_zero_bit = '1' then
+                zero_flag <= '1' when internal_bus = x"0000" else '0';
+            end if;
+            if ism_load_overflow_bit = '1' then
+                overflow_flag <= internal_bus(0);
+            end if;
+        end if;
+    end process;
+
+    -- Conditional Jump Logic
+    conditional_jump_control: process(
+        ism_load_pc, carry_flag, zero_flag, overflow_flag,
+        current_instruction, instruction_opcode
+    )
+    begin
+        -- Default PC load behavior
+        pc_load <= ism_load_pc;
+
+        -- Override for conditional jumps
+        if instruction_opcode = "000111" then  -- JUMPRIMMC (7)
+            pc_load <= ism_load_pc and carry_flag;
+        elsif instruction_opcode = "001000" then  -- JUMPRIMMZ (8)
+            pc_load <= ism_load_pc and zero_flag;
+        elsif instruction_opcode = "001001" then  -- JUMPRIMMO (9)
+            pc_load <= ism_load_pc and overflow_flag;
         end if;
     end process;
     

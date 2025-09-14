@@ -181,16 +181,25 @@
         }
 
         .registers-panel {
-            height: 60%;
+            height: 40%;
             overflow-y: auto;
             background: #252526;
             border-bottom: 1px solid #3e3e42;
         }
 
-        .memory-panel {
-            height: 40%;
+        .assembly-output-panel {
+            height: 25%;
             overflow-y: auto;
             background: #252526;
+            border-bottom: 1px solid #3e3e42;
+            position: relative;
+        }
+
+        .memory-panel {
+            height: 35%;
+            overflow-y: auto;
+            background: #252526;
+            position: relative;
         }
 
         .register-grid {
@@ -534,6 +543,159 @@
             font-size: 11px;
             color: #cccccc;
         }
+
+        /* Modal Dialog Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-dialog {
+            background: #2d2d30;
+            border: 1px solid #3e3e42;
+            border-radius: 5px;
+            min-width: 400px;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            background: #383838;
+            padding: 12px 20px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            color: #d4d4d4;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #d4d4d4;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-close:hover {
+            color: #f48771;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #d4d4d4;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"] {
+            width: 100%;
+            background: #3c3c3c;
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007acc;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #d4d4d4;
+            font-size: 12px;
+        }
+
+        .radio-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .address-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .address-range input {
+            flex: 1;
+        }
+
+        .address-range span {
+            color: #d4d4d4;
+            font-size: 12px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #3e3e42;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .modal-btn-primary {
+            background: #0e639c;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #1177bb;
+        }
+
+        .modal-btn-secondary {
+            background: #3c3c3c;
+            color: #d4d4d4;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #4a4a4a;
+        }
     </style>
 </head>
 <body>
@@ -552,6 +714,8 @@
                     <div class="dropdown-divider"></div>
                     <button class="dropdown-item" onclick="loadExample()">📋 Load Example</button>
                     <button class="dropdown-item" onclick="newFile()">📄 New File</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="runSelfTest()">🧪 Run Self Test</button>
                 </div>
             </div>
             <input type="text" id="filename" placeholder="program.f00" value="program.f00" style="margin-left: 10px;">
@@ -605,8 +769,6 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
                 <div class="output-resize-handle" id="outputResizeHandle"></div>
                 <div class="panel-header">UART Output</div>
                 <div class="uart-output" id="uartOutput">F00 CPU Ready - UART Output will appear here...</div>
-                <div class="panel-header">Assembly Output</div>
-                <div class="output" id="output">Ready to assemble...</div>
                 <div class="console-input">
                     <input type="text" id="consoleInput" placeholder="Input for program..." maxlength="1">
                     <button onclick="sendInput()">Send</button>
@@ -633,12 +795,18 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
                         </div>
                     </div>
                 </div>
-                <div class="memory-panel">
+                <div class="assembly-output-panel" id="assemblyOutputPanel">
+                    <div class="output-resize-handle" id="assemblyResizeHandle"></div>
+                    <div class="panel-header">Assembly Output</div>
+                    <div class="output" id="output">Ready to assemble...</div>
+                </div>
+                <div class="memory-panel" id="memoryPanel">
+                    <div class="output-resize-handle" id="memoryResizeHandle"></div>
                     <div class="tabs">
-                        <div class="tab active" onclick="showMemoryTab('rom')">ROM</div>
-                        <div class="tab" onclick="showMemoryTab('ram')">RAM</div>
-                        <div class="tab" onclick="showMemoryTab('hexedit')">Hex Editor</div>
-                        <div class="tab" onclick="showMemoryTab('symbols')">Symbols</div>
+                        <div class="tab active" onclick="showMemoryTab('rom', event)">ROM</div>
+                        <div class="tab" onclick="showMemoryTab('ram', event)">RAM</div>
+                        <div class="tab" onclick="showMemoryTab('hexedit', event)">Hex Editor</div>
+                        <div class="tab" onclick="showMemoryTab('symbols', event)">Symbols</div>
                     </div>
                     <div id="memoryContent" style="height: calc(100% - 32px); overflow-y: auto;">
                         <!-- Memory content will be populated by JavaScript -->
@@ -657,12 +825,13 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
     <script>
         // F00 CPU Instruction Set Constants
         const OPCODES = {
-            LOAD: 0, STORE: 1, MOVE: 2, SUPERSWAP: 3,
-            JUMPREL: 4, JUMPABS: 5, JUMPRIMM: 6, JUMPRIMMC: 7,
-            JUMPRIMMZ: 8, JUMPRIMMO: 9, LOADIMM: 16,
-            AND: 32, OR: 33, NOT: 34, SHIFTL: 35, SHIFTR: 36,
+            LOAD: 0, STORE: 1, MOVE: 2, SHIFTL: 3, SHIFTR: 4,
+            JUMPABS: 5, JUMPRIMM: 6, JUMPRIMMC: 7,
+            JUMPRIMMZ: 8, JUMPRIMMO: 9, JUMPREL: 10, ADD: 11, SUB: 12,
+            LOADIMM: 16, SUPERSWAP: 32,
+            AND: 33, OR: 34, NOT: 35,
             ROTATEL: 37, ROTATER: 38, SHIFTLC: 39, SHIFTRC: 40,
-            ROTATELC: 41, ROTATERC: 42, ADD: 43, SUB: 44, SYSCALL: 48
+            ROTATELC: 41, ROTATERC: 42, SYSCALL: 48
         };
 
         // F00 Assembler Class
@@ -947,8 +1116,11 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
                     // LOADIMM: format 01xxxxxx rrrrr xxxxx
                     this.pc = (this.pc + 1) & 0xFFFF;
                     const immediate = this.readPhysMem(this.pc);
-                    console.log(`LOADIMM R${operand1},${immediate}: Loading ${immediate} into R${operand1}`);
+                    // console.log(`LOADIMM R${operand1},${immediate}: Loading ${immediate} into R${operand1}`);
                     this.setRegister(operand1, immediate);
+                    // LOADIMM uses 2 words, advance PC to next instruction
+                    this.pc = (this.pc + 1) & 0xFFFF;
+                    jumped = true; // Prevent automatic PC increment
                 } else {
                     // Regular instruction decoding
                     switch (opcode) {
@@ -1042,6 +1214,7 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
                         break;
                         
                     default:
+                        console.log(`ILLEGAL INSTRUCTION: PC=${this.pc} instr=0x${instruction.toString(16)} format=${format} opcode=${opcode} operand1=${operand1} operand2=${operand2}`);
                         this.handleIllegalInstruction();
                         break;
                     }
@@ -1093,14 +1266,14 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
                 address &= 0xFFFF;
                 data &= 0xFFFF;
                 
-                console.log(`writePhysMem: address=${address} (0x${address.toString(16)}), data=${data} (0x${data.toString(16)})`);
+                // console.log(`writePhysMem: address=${address} (0x${address.toString(16)}), data=${data} (0x${data.toString(16)})`);
                 
                 if (address === 32767) {
                     // Virtual UART output
                     const char = String.fromCharCode(data & 0xFF);
-                    console.log(`UART OUTPUT: Writing '${char}' (ASCII ${data & 0xFF}) to UART`);
+                    // console.log(`UART OUTPUT: Writing '${char}' (ASCII ${data & 0xFF}) to UART`);
                     this.output += char;
-                    console.log(`UART buffer now: "${this.output}"`);
+                    // console.log(`UART buffer now: "${this.output}"`);
                     this.updateUartOutput();
                 } else if (address >= 32768) {
                     this.ram[address - 32768] = data;
@@ -1132,11 +1305,11 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
 
             updateUartOutput() {
                 const uartElement = document.getElementById('uartOutput');
-                console.log(`updateUartOutput: element=${uartElement ? 'found' : 'NOT FOUND'}, output="${this.output}"`);
+                // console.log(`updateUartOutput: element=${uartElement ? 'found' : 'NOT FOUND'}, output="${this.output}"`);
                 if (uartElement) {
                     uartElement.textContent = this.output;
                     uartElement.scrollTop = uartElement.scrollHeight;
-                    console.log(`UART element updated with: "${uartElement.textContent}"`);
+                    // console.log(`UART element updated with: "${uartElement.textContent}"`);
                 } else {
                     console.error('UART output element not found!');
                 }
@@ -1178,9 +1351,13 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
         function setupResizing() {
             const mainHandle = document.getElementById('mainResizeHandle');
             const outputHandle = document.getElementById('outputResizeHandle');
+            const assemblyHandle = document.getElementById('assemblyResizeHandle');
+            const memoryHandle = document.getElementById('memoryResizeHandle');
             const leftPanel = document.getElementById('leftPanel');
             const rightPanel = document.getElementById('rightPanel');
             const outputContainer = document.getElementById('outputContainer');
+            const assemblyOutputPanel = document.getElementById('assemblyOutputPanel');
+            const memoryPanel = document.getElementById('memoryPanel');
             
             // Main vertical resize (left/right panels)
             mainHandle.addEventListener('mousedown', function(e) {
@@ -1238,6 +1415,76 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
                 document.addEventListener('mousemove', handleMouseMove);
                 document.addEventListener('mouseup', handleMouseUp);
             });
+
+            // Assembly output resize (horizontal)
+            assemblyHandle.addEventListener('mousedown', function(e) {
+                isResizing = true;
+                document.body.style.userSelect = 'none';
+                
+                function handleMouseMove(e) {
+                    if (!isResizing) return;
+                    
+                    const rightPanelRect = rightPanel.getBoundingClientRect();
+                    const relativeY = e.clientY - rightPanelRect.top;
+                    
+                    // Calculate new height for assembly output panel
+                    const totalHeight = rightPanelRect.height;
+                    const currentRegistersHeight = rightPanel.querySelector('.registers-panel').offsetHeight;
+                    const availableSpace = totalHeight - currentRegistersHeight;
+                    const newAssemblyHeight = Math.max(60, Math.min(availableSpace - 100, relativeY - currentRegistersHeight));
+                    const newMemoryHeight = availableSpace - newAssemblyHeight;
+                    
+                    if (newAssemblyHeight > 60 && newMemoryHeight > 60) {
+                        assemblyOutputPanel.style.height = newAssemblyHeight + 'px';
+                        memoryPanel.style.height = newMemoryHeight + 'px';
+                    }
+                }
+                
+                function handleMouseUp() {
+                    isResizing = false;
+                    document.body.style.userSelect = '';
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                }
+                
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            });
+
+            // Memory panel resize (horizontal)
+            memoryHandle.addEventListener('mousedown', function(e) {
+                isResizing = true;
+                document.body.style.userSelect = 'none';
+                
+                function handleMouseMove(e) {
+                    if (!isResizing) return;
+                    
+                    const rightPanelRect = rightPanel.getBoundingClientRect();
+                    const relativeY = e.clientY - rightPanelRect.top;
+                    
+                    // Calculate new heights for assembly and memory panels
+                    const totalHeight = rightPanelRect.height;
+                    const currentRegistersHeight = rightPanel.querySelector('.registers-panel').offsetHeight;
+                    const availableSpace = totalHeight - currentRegistersHeight;
+                    const newMemoryHeight = Math.max(60, totalHeight - relativeY);
+                    const newAssemblyHeight = availableSpace - newMemoryHeight;
+                    
+                    if (newAssemblyHeight > 60 && newMemoryHeight > 60) {
+                        assemblyOutputPanel.style.height = newAssemblyHeight + 'px';
+                        memoryPanel.style.height = newMemoryHeight + 'px';
+                    }
+                }
+                
+                function handleMouseUp() {
+                    isResizing = false;
+                    document.body.style.userSelect = '';
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                }
+                
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            });
         }
 
         // Menu functions
@@ -1274,42 +1521,150 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
         }
 
         function loadHexFile() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.hex';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        parseIntelHex(e.target.result);
-                        showHexEditor();
-                    };
-                    reader.readAsText(file);
+            // Show the load HEX modal
+            document.getElementById('loadHexModal').style.display = 'flex';
+            document.getElementById('fileMenu').style.display = 'none';
+        }
+        
+        function closeLoadHexModal() {
+            document.getElementById('loadHexModal').style.display = 'none';
+        }
+        
+        function doLoadHexFile() {
+            const fileInput = document.getElementById('loadHexFileInput');
+            const memoryType = document.querySelector('input[name="loadMemoryType"]:checked').value;
+            const clearBefore = document.getElementById('clearBeforeLoad').checked;
+            
+            if (!fileInput.files.length) {
+                alert('Please select a HEX file to load');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    parseIntelHexWithTarget(e.target.result, memoryType, clearBefore);
+                    updateMemoryDisplay();
+                    
+                    // Show success message
+                    alert(`Intel HEX file loaded successfully into ${memoryType.toUpperCase()}!`);
+                    
+                    // Clear file input and close modal
+                    document.getElementById('loadHexFileInput').value = '';
+                    closeLoadHexModal();
+                    
+                    // Switch to appropriate memory view
+                    if (memoryType === 'rom') {
+                        showMemoryTab('rom');
+                    } else {
+                        showMemoryTab('ram');
+                    }
+                } catch (error) {
+                    alert(`Error loading HEX file: ${error.message}`);
                 }
             };
-            input.click();
-            document.getElementById('fileMenu').style.display = 'none';
+            
+            reader.onerror = function() {
+                alert('Error reading file');
+            };
+            
+            reader.readAsText(file);
         }
 
         function saveHexFile() {
-            const hexData = generateIntelHex();
+            // Set default values based on current memory state
+            const romSize = simulator.rom.length;
+            const ramSize = simulator.ram.length;
+            
+            // Set ROM as default selection
+            document.getElementById('saveRom').checked = true;
+            document.getElementById('saveRam').checked = false;
+            
+            // Update address ranges based on memory type selection
+            updateSaveHexAddressRanges();
+            
+            // Show the modal
+            document.getElementById('saveHexModal').style.display = 'flex';
+            document.getElementById('fileMenu').style.display = 'none';
+        }
+        
+        function updateSaveHexAddressRanges() {
+            const isRom = document.getElementById('saveRom').checked;
+            const fromAddr = document.getElementById('fromAddress');
+            const toAddr = document.getElementById('toAddress');
+            
+            if (isRom) {
+                fromAddr.value = '0000';
+                toAddr.value = (Math.max(simulator.rom.length * 2, 0x100) - 1).toString(16).padStart(4, '0').toUpperCase();
+            } else {
+                fromAddr.value = '8000';
+                toAddr.value = (0x8000 + Math.max(simulator.ram.length * 2, 0x100) - 1).toString(16).padStart(4, '0').toUpperCase();
+            }
+        }
+        
+        function closeSaveHexModal() {
+            document.getElementById('saveHexModal').style.display = 'none';
+        }
+        
+        function doSaveHexFile() {
+            const memoryType = document.querySelector('input[name="memoryType"]:checked').value;
+            const fromAddress = parseInt(document.getElementById('fromAddress').value, 16);
+            const toAddress = parseInt(document.getElementById('toAddress').value, 16);
+            const filename = document.getElementById('hexFilename').value || 'program.hex';
+            
+            // Validate inputs
+            if (isNaN(fromAddress) || isNaN(toAddress)) {
+                alert('Invalid address format. Please use hexadecimal (e.g., 0000, 8000)');
+                return;
+            }
+            
+            if (fromAddress > toAddress) {
+                alert('From address must be less than or equal to To address');
+                return;
+            }
+            
+            if (!filename.trim()) {
+                alert('Please enter a filename');
+                return;
+            }
+            
+            // Generate Intel HEX data with specified parameters
+            const hexData = generateIntelHexWithRange(memoryType, fromAddress, toAddress);
+            
+            // Download the file
             const blob = new Blob([hexData], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'memory.hex';
+            a.download = filename.endsWith('.hex') ? filename : filename + '.hex';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            document.getElementById('fileMenu').style.display = 'none';
+            
+            // Close modal
+            closeSaveHexModal();
         }
 
-        // Intel HEX format parser
-        function parseIntelHex(hexContent) {
+        // Intel HEX format parser with target memory selection
+        function parseIntelHexWithTarget(hexContent, targetMemory, clearBefore) {
             const lines = hexContent.split('\n');
+            let dataLoaded = false;
+            let minAddr = 0xFFFF;
+            let maxAddr = 0x0000;
             
+            // Clear target memory if requested
+            if (clearBefore) {
+                if (targetMemory === 'rom') {
+                    simulator.rom.fill(0);
+                } else {
+                    simulator.ram.fill(0);
+                }
+            }
+            
+            // Parse Intel HEX lines
             for (const line of lines) {
                 const trimmed = line.trim();
                 if (!trimmed || trimmed[0] !== ':') continue;
@@ -1318,28 +1673,202 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
                 const addr = parseInt(trimmed.substr(3, 4), 16);
                 const recordType = parseInt(trimmed.substr(7, 2), 16);
                 
-                if (recordType === 0) { // Data record
+                if (recordType === 0 && byteCount > 0) { // Data record
+                    minAddr = Math.min(minAddr, addr);
+                    maxAddr = Math.max(maxAddr, addr + byteCount - 1);
+                    
+                    // Process data bytes
                     for (let i = 0; i < byteCount; i++) {
                         const byte = parseInt(trimmed.substr(9 + i * 2, 2), 16);
-                        memory[addr + i] = byte;
+                        const address = addr + i;
+                        
+                        if (targetMemory === 'rom') {
+                            // ROM: Convert bytes back to 16-bit words
+                            const wordIndex = Math.floor(address / 2);
+                            if (wordIndex < simulator.rom.length) {
+                                if (address % 2 === 0) {
+                                    // High byte
+                                    simulator.rom[wordIndex] = (simulator.rom[wordIndex] & 0x00FF) | (byte << 8);
+                                } else {
+                                    // Low byte
+                                    simulator.rom[wordIndex] = (simulator.rom[wordIndex] & 0xFF00) | byte;
+                                }
+                            }
+                        } else {
+                            // RAM: Convert bytes back to 16-bit words (address relative to 0x8000)
+                            const ramAddress = address - 0x8000;
+                            const wordIndex = Math.floor(ramAddress / 2);
+                            if (wordIndex >= 0 && wordIndex < simulator.ram.length) {
+                                if (ramAddress % 2 === 0) {
+                                    // High byte
+                                    simulator.ram[wordIndex] = (simulator.ram[wordIndex] & 0x00FF) | (byte << 8);
+                                } else {
+                                    // Low byte
+                                    simulator.ram[wordIndex] = (simulator.ram[wordIndex] & 0xFF00) | byte;
+                                }
+                            }
+                        }
+                        dataLoaded = true;
                     }
                 }
             }
+            
+            if (!dataLoaded) {
+                throw new Error('No valid data records found in HEX file');
+            }
+            
+            console.log(`Intel HEX loaded to ${targetMemory.toUpperCase()}: addresses 0x${minAddr.toString(16).padStart(4, '0').toUpperCase()} - 0x${maxAddr.toString(16).padStart(4, '0').toUpperCase()}`);
+        }
+
+        // Intel HEX format parser (legacy - for compatibility)
+        function parseIntelHex(hexContent) {
+            // Default to loading into ROM with clear
+            parseIntelHexWithTarget(hexContent, 'rom', true);
             updateMemoryView();
         }
 
-        // Intel HEX format generator
+        // Intel HEX format generator with range parameters
+        function generateIntelHexWithRange(memoryType, fromAddress, toAddress) {
+            let hexData = '';
+            
+            // Get memory data based on type and address range
+            const getMemoryByte = (address) => {
+                if (memoryType === 'rom') {
+                    // ROM: 16-bit words converted to bytes
+                    const wordIndex = Math.floor(address / 2);
+                    if (wordIndex < simulator.rom.length) {
+                        if (address % 2 === 0) {
+                            return (simulator.rom[wordIndex] >> 8) & 0xFF; // High byte
+                        } else {
+                            return simulator.rom[wordIndex] & 0xFF; // Low byte
+                        }
+                    }
+                } else if (memoryType === 'ram') {
+                    // RAM: Address relative to 0x8000
+                    const ramAddress = address - 0x8000;
+                    const wordIndex = Math.floor(ramAddress / 2);
+                    if (wordIndex >= 0 && wordIndex < simulator.ram.length) {
+                        if (ramAddress % 2 === 0) {
+                            return (simulator.ram[wordIndex] >> 8) & 0xFF; // High byte
+                        } else {
+                            return simulator.ram[wordIndex] & 0xFF; // Low byte
+                        }
+                    }
+                }
+                return 0;
+            };
+            
+            let addr = fromAddress;
+            while (addr <= toAddress) {
+                let lineData = [];
+                let hasData = false;
+                
+                // Collect up to 16 bytes for this line
+                const bytesToRead = Math.min(16, toAddress - addr + 1);
+                
+                for (let i = 0; i < bytesToRead; i++) {
+                    const byte = getMemoryByte(addr + i);
+                    lineData.push(byte);
+                    if (byte !== 0) hasData = true;
+                }
+                
+                // Only include lines that have non-zero data
+                if (hasData) {
+                    const byteCount = lineData.length;
+                    let line = ':' + 
+                              byteCount.toString(16).padStart(2, '0').toUpperCase() +
+                              addr.toString(16).padStart(4, '0').toUpperCase() +
+                              '00';
+                    
+                    let checksum = byteCount + (addr >> 8) + (addr & 0xFF);
+                    for (const byte of lineData) {
+                        line += byte.toString(16).padStart(2, '0').toUpperCase();
+                        checksum += byte;
+                    }
+                    
+                    checksum = (256 - (checksum & 0xFF)) & 0xFF;
+                    line += checksum.toString(16).padStart(2, '0').toUpperCase();
+                    hexData += line + '\n';
+                }
+                
+                addr += 16;
+            }
+            
+            // End of file record
+            hexData += ':00000001FF\n';
+            return hexData;
+        }
+
+        // Intel HEX format generator (legacy - for compatibility)
         function generateIntelHex() {
             let hexData = '';
             let addr = 0;
             
-            while (addr < 0x8000) {
+            // Get memory data from simulator (ROM and RAM combined)
+            const getMemoryByte = (address) => {
+                if (address < simulator.rom.length) {
+                    return (simulator.rom[address] >> 8) & 0xFF; // High byte first
+                } else if (address < simulator.rom.length * 2) {
+                    return simulator.rom[Math.floor((address) / 2)] & 0xFF; // Low byte
+                } else if (address >= 0x8000 && address < 0x8000 + simulator.ram.length * 2) {
+                    const ramAddr = address - 0x8000;
+                    if (ramAddr % 2 === 0) {
+                        return (simulator.ram[Math.floor(ramAddr / 2)] >> 8) & 0xFF; // High byte
+                    } else {
+                        return simulator.ram[Math.floor(ramAddr / 2)] & 0xFF; // Low byte
+                    }
+                }
+                return 0;
+            };
+            
+            // Generate Intel HEX for ROM area (0x0000 - ROM size * 2)
+            const maxAddr = Math.max(simulator.rom.length * 2, 0x100);
+            
+            while (addr < maxAddr) {
                 let lineData = [];
                 let hasData = false;
                 
                 // Collect up to 16 bytes
-                for (let i = 0; i < 16 && addr + i < 0x8000; i++) {
-                    const byte = memory[addr + i] || 0;
+                for (let i = 0; i < 16 && addr + i < maxAddr; i++) {
+                    const byte = getMemoryByte(addr + i);
+                    lineData.push(byte);
+                    if (byte !== 0) hasData = true;
+                }
+                
+                // Only include lines that have non-zero data
+                if (hasData) {
+                    const byteCount = lineData.length;
+                    let line = ':' + 
+                              byteCount.toString(16).padStart(2, '0').toUpperCase() +
+                              addr.toString(16).padStart(4, '0').toUpperCase() +
+                              '00';
+                    
+                    let checksum = byteCount + (addr >> 8) + (addr & 0xFF);
+                    for (const byte of lineData) {
+                        line += byte.toString(16).padStart(2, '0').toUpperCase();
+                        checksum += byte;
+                    }
+                    
+                    checksum = (256 - (checksum & 0xFF)) & 0xFF;
+                    line += checksum.toString(16).padStart(2, '0').toUpperCase();
+                    hexData += line + '\n';
+                }
+                
+                addr += 16;
+            }
+            
+            // Add RAM data if it exists
+            const ramStartAddr = 0x8000;
+            const ramSize = simulator.ram.length * 2;
+            addr = ramStartAddr;
+            
+            while (addr < ramStartAddr + ramSize) {
+                let lineData = [];
+                let hasData = false;
+                
+                // Collect up to 16 bytes
+                for (let i = 0; i < 16 && addr + i < ramStartAddr + ramSize; i++) {
+                    const byte = getMemoryByte(addr + i);
                     lineData.push(byte);
                     if (byte !== 0) hasData = true;
                 }
@@ -1544,12 +2073,24 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
             updateMemoryDisplay();
         }
 
-        function showMemoryTab(tab) {
+        function showMemoryTab(tab, event) {
             currentMemoryTab = tab;
             
             // Update tab appearance
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // Add active class to the target element (either from event or find by tab)
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Find the tab element by matching the tab name
+                const tabs = document.querySelectorAll('.tab');
+                const tabNames = ['rom', 'ram', 'hexedit', 'symbols'];
+                const tabIndex = tabNames.indexOf(tab);
+                if (tabIndex >= 0 && tabs[tabIndex]) {
+                    tabs[tabIndex].classList.add('active');
+                }
+            }
             
             updateMemoryDisplay();
         }
@@ -1832,6 +2373,191 @@ RESET:	LOADIMM R0,32767	; Virtual UART address
             }
         }
 
+        function runSelfTest() {
+            console.log('=== F00 CPU Self Test Starting ===');
+            
+            // Comprehensive test program
+            const testProgram = `; F00 CPU Comprehensive Self Test
+; Tests all implemented opcodes and CPU functionality
+
+CODEORG 0
+
+START:
+    ; Test 1: LOADIMM - Load immediate values
+    LOADIMM R0, 32767    ; UART address
+    LOADIMM R1, 65       ; 'A' 
+    LOADIMM R2, 66       ; 'B'
+    LOADIMM R3, 10       ; Newline
+    LOADIMM R4, 5        ; Test value
+    LOADIMM R5, 3        ; Test value
+    
+    ; Test 2: STORE - Write to UART
+    STORE R1, R0         ; Output 'A'
+    STORE R2, R0         ; Output 'B'
+    STORE R3, R0         ; Output newline
+    
+    ; Test 3: MOVE - Register to register
+    MOVE R6, R4          ; R6 = R4 (5)
+    MOVE R7, R5          ; R7 = R5 (3)
+    
+    ; Test 4: ADD - Addition (2-operand: ADD Ra,Rb means Rb = Ra + Rb)
+    MOVE R8, R7          ; R8 = R7 (3)
+    ADD R6, R8           ; R8 = R6 + R8 (5 + 3 = 8) 
+    LOADIMM R1, 56       ; '8'
+    STORE R1, R0         ; Output result
+    STORE R3, R0         ; Newline
+    
+    ; Test 5: SUB - Subtraction (2-operand: SUB Ra,Rb means Rb = Ra - Rb)
+    MOVE R9, R7          ; R9 = R7 (3)
+    SUB R6, R9           ; R9 = R6 - R9 (5 - 3 = 2)
+    LOADIMM R1, 50       ; '2' 
+    STORE R1, R0         ; Output result
+    STORE R3, R0         ; Newline
+    
+    ; Test 6: AND - Bitwise AND (2-operand: AND Ra,Rb means Rb = Ra & Rb)
+    LOADIMM R10, 15      ; 0x0F
+    LOADIMM R11, 51      ; 0x33  
+    MOVE R12, R11        ; R12 = R11 (0x33)
+    AND R10, R12         ; R12 = R10 & R12 (0x0F & 0x33 = 0x03)
+    LOADIMM R1, 51       ; '3' (display '3' for the result)
+    STORE R1, R0         ; Output result  
+    STORE R3, R0         ; Newline
+    
+    ; Test 7: OR - Bitwise OR (2-operand: OR Ra,Rb means Rb = Ra | Rb)
+    MOVE R13, R11        ; R13 = R11 (0x33)
+    OR R10, R13          ; R13 = R10 | R13 (0x0F | 0x33 = 0x3F)
+    LOADIMM R1, 63       ; '?' (ASCII 63 = 0x3F)
+    STORE R1, R0         ; Output result
+    STORE R3, R0         ; Newline
+    
+    ; Test 8: NOT - Bitwise NOT (2-operand: NOT Ra,Rb means Rb = ~Ra)
+    NOT R4, R14          ; R14 = ~R4 = ~5 = 0xFFFA
+    LOADIMM R1, 78       ; 'N' for NOT test
+    STORE R1, R0         ; Output marker
+    STORE R3, R0         ; Newline
+    
+    ; Test 9: SHIFTL - Shift left (2-operand: SHIFTL Ra,Rb means Rb = Ra << 1)
+    SHIFTL R4, R15       ; R15 = R4 << 1 = 5 << 1 = 10
+    LOADIMM R1, 49       ; '1' 
+    STORE R1, R0         ; Output '1'
+    LOADIMM R1, 48       ; '0'
+    STORE R1, R0         ; Output '0' (for "10")
+    STORE R3, R0         ; Newline
+    
+    ; Test 10: SHIFTR - Shift right (2-operand: SHIFTR Ra,Rb means Rb = Ra >> 1)
+    SHIFTR R15, R16      ; R16 = R15 >> 1 = 10 >> 1 = 5
+    LOADIMM R1, 53       ; '5'
+    STORE R1, R0         ; Output result
+    STORE R3, R0         ; Newline
+    
+    ; Test 11: Memory operations with different addresses
+    LOADIMM R17, 32768   ; RAM address  
+    LOADIMM R18, 42      ; Test value
+    STORE R18, R17       ; Store to RAM
+    LOAD R19, R17        ; Load from RAM
+    LOADIMM R1, 52       ; '4'
+    STORE R1, R0         ; Output '4'
+    LOADIMM R1, 50       ; '2' 
+    STORE R1, R0         ; Output '2' (for "42")
+    STORE R3, R0         ; Newline
+    
+    ; Test 12: Jump operations
+    LOADIMM R20, 0       ; Jump target (START)
+    LOADIMM R1, 68       ; 'D' for Done
+    STORE R1, R0         ; Output 'D'
+    LOADIMM R1, 79       ; 'O'
+    STORE R1, R0         ; Output 'O' 
+    LOADIMM R1, 78       ; 'N'
+    STORE R1, R0         ; Output 'N'
+    LOADIMM R1, 69       ; 'E'
+    STORE R1, R0         ; Output 'E'
+    STORE R3, R0         ; Newline
+    
+    ; Halt execution by jumping to self (safe infinite loop)
+HALT:
+    LOADIMM R31, HALT    ; Load address of HALT into R31
+    JUMPABS R31          ; Jump to HALT (safe infinite loop)
+`;
+
+            // Expected output from the test
+            const expectedOutput = "AB\n8\n2\n3\n?\nN\n10\n5\n42\nDONE\n";
+            
+            // Save current editor content
+            const originalContent = document.getElementById('codeEditor').value;
+            
+            // Load test program
+            document.getElementById('codeEditor').value = testProgram;
+            setStatus('Running Self Test...', 'warning');
+            
+            // Assemble test program
+            assembleCode();
+            
+            if (!assemblyResult || !assemblyResult.success) {
+                alert('Self Test FAILED: Assembly errors\n' + assemblyResult.errors.join('\n'));
+                document.getElementById('codeEditor').value = originalContent;
+                return;
+            }
+            
+            // Reset simulator and run test
+            resetSimulator();
+            simulator.output = ''; // Clear UART output
+            
+            // Run test with timeout
+            let steps = 0;
+            const maxSteps = 1000;
+            const startTime = Date.now();
+            
+            const runTest = () => {
+                if (steps < maxSteps && !simulator.halted) {
+                    const canContinue = simulator.step();
+                    steps++;
+                    
+                    // Check if we have the expected output (test complete)
+                    if (simulator.output === expectedOutput) {
+                        finishTest();
+                        return;
+                    }
+                    
+                    if (canContinue) {
+                        // Continue running (async to avoid blocking UI)
+                        setTimeout(runTest, 1);
+                    } else {
+                        finishTest();
+                    }
+                } else {
+                    finishTest();
+                }
+            };
+            
+            const finishTest = () => {
+                const endTime = Date.now();
+                const actualOutput = simulator.output;
+                const success = actualOutput === expectedOutput;
+                
+                console.log('=== Self Test Results ===');
+                console.log('Steps executed:', steps);
+                console.log('Time taken:', endTime - startTime, 'ms');
+                console.log('Expected output:', JSON.stringify(expectedOutput));
+                console.log('Actual output:', JSON.stringify(actualOutput));
+                console.log('Test result:', success ? 'PASS' : 'FAIL');
+                
+                if (success) {
+                    setStatus('Self Test PASSED ✅', 'success');
+                    alert(`🎉 F00 CPU Self Test PASSED!\n\nAll opcodes working correctly:\n✅ LOADIMM, STORE, MOVE\n✅ ADD, SUB, AND, OR, NOT\n✅ SHIFTL, SHIFTR, LOAD\n✅ JUMPABS\n✅ Memory operations\n✅ UART output\n\nSteps: ${steps}\nTime: ${endTime - startTime}ms`);
+                } else {
+                    setStatus('Self Test FAILED ❌', 'error');
+                    alert(`❌ F00 CPU Self Test FAILED!\n\nExpected: ${JSON.stringify(expectedOutput)}\nActual: ${JSON.stringify(actualOutput)}\n\nCheck console for details.`);
+                }
+                
+                // Restore original content
+                document.getElementById('codeEditor').value = originalContent;
+                document.getElementById('fileMenu').style.display = 'none';
+            };
+            
+            // Start the test
+            runTest();
+        }
+
         function loadExample() {
             document.getElementById('codeEditor').value = `; F00 CPU Example Program
 ; Prints "HELLO WORLD" and loops
@@ -1962,5 +2688,90 @@ TEST:	LOADIMM R10,0x1234
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', initIDE);
     </script>
+
+    <!-- Save HEX File Modal -->
+    <div class="modal-overlay" id="saveHexModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">Save Intel HEX File</div>
+                <button class="modal-close" onclick="closeSaveHexModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Memory Type:</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="saveRom" name="memoryType" value="rom" checked onchange="updateSaveHexAddressRanges()">
+                            <label for="saveRom">ROM (Program Memory)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="saveRam" name="memoryType" value="ram" onchange="updateSaveHexAddressRanges()">
+                            <label for="saveRam">RAM (Data Memory)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Address Range:</label>
+                    <div class="address-range">
+                        <input type="text" id="fromAddress" value="0000" maxlength="4" placeholder="0000">
+                        <span>to</span>
+                        <input type="text" id="toAddress" value="0FFF" maxlength="4" placeholder="0FFF">
+                        <span>(hex)</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hexFilename">Filename:</label>
+                    <input type="text" id="hexFilename" value="program.hex" placeholder="program.hex">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="closeSaveHexModal()">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="doSaveHexFile()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load HEX File Modal -->
+    <div class="modal-overlay" id="loadHexModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">Load Intel HEX File</div>
+                <button class="modal-close" onclick="closeLoadHexModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Target Memory:</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="loadRom" name="loadMemoryType" value="rom" checked>
+                            <label for="loadRom">ROM (Program Memory)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="loadRam" name="loadMemoryType" value="ram">
+                            <label for="loadRam">RAM (Data Memory)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loadHexFileInput">HEX File:</label>
+                    <input type="file" id="loadHexFileInput" accept=".hex,.ihex" style="width: 100%; background: #3c3c3c; border: 1px solid #3e3e42; color: #d4d4d4; padding: 8px 12px; font-family: inherit; font-size: 12px; border-radius: 3px;">
+                </div>
+                
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="clearBeforeLoad" checked>
+                        <span>Clear existing memory before loading</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="closeLoadHexModal()">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="doLoadHexFile()">Load</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -3,6 +3,7 @@
 # F00 CPU Project
 
 A complete development environment and implementation for the F00 16-bit embedded CPU, originally designed by Jeff Davies in 1999.
+[try IDE](https://raw.githack.com/hipparchus2000/f00/master/F00-CPU-Project/web-ide/f00-web-ide.html)
 
 ## 🚀 Quick Start
 

@@ -91,16 +91,11 @@ START:  LOADIMM R0,32767    ; UART address
 ## 📚 Documentation
 
 ### For Programmers
-- **[F00 CPU Programmer's Reference](documentation/F00-CPU-Programmers-Reference.md)** - Complete instruction set and architecture guide
-- **[Web IDE User Guide](web-ide/README.md)** - How to use the development environment
+- **[F00 CPU Programmer's Reference](F00-CPU-Project/documentation/F00-CPU-Programmers-Reference.md)** - Complete instruction set and architecture guide
+- **[Web IDE User Guide](F00-CPU-Project/web-ide/README.md)** - How to use the development environment
 
 ### For Hardware Engineers  
-- **[VHDL Implementation](archive/vhdl-translation/)** - Synthesizable VHDL translation
-- **[Original Design Documents](archive/original-documentation/)** - Jeff Davies' specifications
-
-### Historical Reference
-- **[Original Abel Source](archive/original-abel/)** - HDL state machine definitions
-- **[Original C Tools](archive/original-c-tools/)** - First assembler and simulator
+- **[VHDL Implementation](F00-CPU-Project/archive/vhdl-translation/)** - Synthesizable VHDL translation
 
 ## 🎮 Instruction Set Highlights
 
